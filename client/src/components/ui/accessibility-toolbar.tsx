@@ -32,7 +32,7 @@ export const AccessibilityToolbar = () => {
   const handleOpen = () => {
     console.log('Opening accessibility toolbar...');
     console.log('Current state before:', isOpen);
-    setIsOpen(true);
+    setIsOpen(!isOpen);
     console.log('State change triggered');
   };
 
@@ -65,16 +65,16 @@ export const AccessibilityToolbar = () => {
         type="button"
         data-accessibility-exempt="true"
         style={{ 
-          filter: 'none !important',
-          position: 'fixed !important',
-          bottom: '24px !important',
-          right: '24px !important',
-          display: 'flex !important',
+          filter: 'none',
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          display: 'flex',
           zIndex: 999999,
-          pointerEvents: 'auto !important',
-          background: '#2563eb !important',
-          color: 'white !important',
-          border: '2px solid white !important'
+          pointerEvents: 'auto',
+          background: '#2563eb',
+          color: 'white',
+          border: '2px solid white'
         }}
       >
         <span className="text-2xl accessibility-exempt" style={{ fontSize: '24px', lineHeight: '1' }}>♿</span>
@@ -106,17 +106,20 @@ export const AccessibilityToolbar = () => {
         aria-labelledby="accessibility-title"
         data-accessibility-exempt="true"
         style={{ 
-          filter: 'none !important',
-          transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+          filter: 'none',
+          transform: isOpen ? 'translateX(0px)' : 'translateX(320px)',
           visibility: 'visible',
           display: 'block',
           position: 'fixed',
-          top: 0,
-          right: 0,
+          top: '0px',
+          right: '0px',
           height: '100vh',
           width: '320px',
-          zIndex: 99998
+          zIndex: 99998,
+          backgroundColor: 'white',
+          borderLeft: '1px solid #ccc'
         }}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-golden/20 bg-white">

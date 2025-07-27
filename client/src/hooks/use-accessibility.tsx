@@ -69,11 +69,15 @@ export const useAccessibility = () => {
           filter: invert(1) hue-rotate(180deg);
         }
         .accessibility-exempt, 
-        [data-accessibility-exempt], 
+        [data-accessibility-exempt="true"], 
         .accessibility-toolbar,
         [aria-label*="נגישות"],
-        [title*="נגישות"] {
+        [title*="נגישות"],
+        button[aria-label*="נגישות"],
+        button[title*="נגישות"] {
           filter: invert(1) hue-rotate(180deg) !important;
+          position: relative !important;
+          z-index: 999999 !important;
         }
       `;
       document.head.appendChild(style);
@@ -144,12 +148,20 @@ export const useAccessibility = () => {
     // Reset DOM immediately
     document.documentElement.style.fontSize = '100%';
     document.documentElement.classList.remove('high-contrast');
-    document.body.style.filter = 'none';
-    document.body.style.background = '';
+    document.documentElement.style.removeProperty('--background');
+    document.documentElement.style.removeProperty('--foreground');
+    document.documentElement.style.removeProperty('--muted');
+    document.documentElement.style.removeProperty('--border');
     
-    const existingStyle = document.getElementById('accessibility-underline-links');
-    if (existingStyle) {
-      existingStyle.remove();
+    // Remove all accessibility styles
+    const existingInvert = document.getElementById('accessibility-invert-colors');
+    if (existingInvert) {
+      existingInvert.remove();
+    }
+    
+    const existingLinks = document.getElementById('accessibility-underline-links');
+    if (existingLinks) {
+      existingLinks.remove();
     }
   };
 

@@ -63,8 +63,11 @@ export const AccessibilityToolbar = () => {
           bottom: '24px !important',
           right: '24px !important',
           display: 'flex !important',
-          zIndex: 99999,
-          pointerEvents: 'auto !important'
+          zIndex: 999999,
+          pointerEvents: 'auto !important',
+          background: '#2563eb !important',
+          color: 'white !important',
+          border: '2px solid white !important'
         }}
       >
         <span className="text-2xl accessibility-exempt" style={{ fontSize: '24px', lineHeight: '1' }}>♿</span>

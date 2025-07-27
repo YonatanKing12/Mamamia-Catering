@@ -84,14 +84,28 @@
   }
   
   /* Accessibility button specific */
-  .accessibility-exempt[aria-label*="נגישות"] {
+  .accessibility-exempt[aria-label*="נגישות"],
+  button[aria-label*="נגישות"],
+  button[title*="נגישות"] {
     position: fixed !important;
     bottom: 1.5rem !important;
     right: 1.5rem !important;
-    z-index: 99999 !important;
-    display: block !important;
+    z-index: 999999 !important;
+    display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  
+  /* High contrast and invert protection */
+  html.high-contrast .accessibility-exempt,
+  html.high-contrast [data-accessibility-exempt="true"],
+  body[style*="filter"] .accessibility-exempt,
+  body[style*="filter"] [data-accessibility-exempt="true"] {
+    filter: none !important;
+    background: #2563eb !important;
+    color: white !important;
+    border: 2px solid white !important;
   }
 }
 

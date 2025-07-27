@@ -1,5 +1,5 @@
 // Import components one by one to avoid bundling issues
-import { AccessibilityToolbar } from '@/components/ui/accessibility-toolbar';
+
 import { BackToTop } from '@/components/ui/back-to-top';
 
 // Lazy import for better performance
@@ -21,7 +21,7 @@ const Footer = lazy(() => import('@/components/layout/footer').then(m => ({ defa
 export default function Home() {
   return (
     <div className="min-h-screen bg-warm-white">
-      <AccessibilityToolbar />
+
       <Suspense fallback={<div className="h-16 bg-dark-brown"></div>}>
         <Header />
       </Suspense>

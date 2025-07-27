@@ -16,12 +16,16 @@ export const AccessibilityToolbar = () => {
     toggleUnderlineLinks,
     resetAccessibility
   } = useAccessibility();
+  
+  console.log('AccessibilityToolbar rendered, isOpen:', isOpen);
 
   const handleClose = () => {
+    console.log('Closing accessibility toolbar...');
     setIsOpen(false);
   };
 
   const handleOpen = () => {
+    console.log('Opening accessibility toolbar...');
     setIsOpen(true);
   };
 
@@ -43,9 +47,15 @@ export const AccessibilityToolbar = () => {
       {/* Accessibility Button - Always visible */}
       <button
         onClick={handleOpen}
+        onMouseDown={(e) => {
+          console.log('Button clicked!', e);
+          e.preventDefault();
+          handleOpen();
+        }}
         className="accessibility-exempt fixed bottom-6 right-6 z-[99999] bg-blue-600 hover:bg-blue-700 text-white w-16 h-16 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 border-2 border-white flex items-center justify-center"
         aria-label="פתח תפריט נגישות"
         title="נגישות"
+        type="button"
         data-accessibility-exempt="true"
         style={{ 
           filter: 'none !important',
@@ -53,7 +63,8 @@ export const AccessibilityToolbar = () => {
           bottom: '24px !important',
           right: '24px !important',
           display: 'flex !important',
-          zIndex: 99999
+          zIndex: 99999,
+          pointerEvents: 'auto !important'
         }}
       >
         <span className="text-2xl accessibility-exempt" style={{ fontSize: '24px', lineHeight: '1' }}>♿</span>

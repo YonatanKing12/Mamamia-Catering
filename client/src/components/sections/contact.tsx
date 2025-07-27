@@ -206,6 +206,7 @@ export const Contact = () => {
                             {...field} 
                             type="date"
                             className="bg-white text-dark-brown"
+                            value={field.value || ''}
                           />
                         </FormControl>
                         <FormMessage />
@@ -250,6 +251,7 @@ export const Contact = () => {
                           rows={4}
                           placeholder="ספרו לנו עוד על האירוע שלכם, העדפות מיוחדות, אלרגיות או כל פרט שחשוב לכם..."
                           className="bg-white text-dark-brown"
+                          value={field.value || ''}
                         />
                       </FormControl>
                       <FormMessage />
@@ -362,22 +364,18 @@ export const Contact = () => {
             
             {/* Map Placeholder */}
             <div className="bg-white bg-opacity-10 glass-effect rounded-3xl p-8">
-              <h3 className="text-2xl font-bold mb-6">מיקום המסעדה</h3>
-              <div className="bg-gray-300 h-64 rounded-2xl flex items-center justify-center">
+              <h3 className="text-xl font-bold mb-4">איך מגיעים אלינו</h3>
+              <div className="bg-gray-300 rounded-xl h-48 flex items-center justify-center">
                 <div className="text-center text-gray-600">
-                  <i className="fas fa-map text-4xl mb-4"></i>
-                  <p className="font-semibold">מפה אינטראקטיבית</p>
+                  <i className="fas fa-map-marked-alt text-4xl mb-2"></i>
+                  <p>מפה אינטראקטיבית</p>
                   <p className="text-sm">מדינת היהודים 85, הרצליה פיתוח</p>
-                  <Button
-                    asChild
-                    variant="link"
-                    className="text-golden hover:text-dark-golden font-semibold mt-2"
-                  >
-                    <a href="https://maps.google.com/?q=מדינת+היהודים+85+הרצליה+פיתוח" target="_blank" rel="noopener noreferrer">
-                      פתח ב-Google Maps <i className="fas fa-external-link-alt mr-1"></i>
-                    </a>
-                  </Button>
                 </div>
+              </div>
+              <div className="mt-4 text-sm text-gray-300">
+                <p>• חניה חינם זמינה</p>
+                <p>• נגיש לנכים</p>
+                <p>• תחבורה ציבורית קרובה</p>
               </div>
             </div>
           </div>

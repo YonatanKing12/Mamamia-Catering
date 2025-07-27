@@ -29,7 +29,7 @@ export const AccessibilityToolbar = () => {
       </Button>
 
       {/* Accessibility Toolbar */}
-      <div className={`accessibility-toolbar fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-40 p-6 ${isOpen ? 'open' : ''}`}>
+      <div className={`accessibility-toolbar fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-40 p-6 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-bold text-dark-brown">נגישות</h3>
           <Button

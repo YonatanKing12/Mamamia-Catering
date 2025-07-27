@@ -18,7 +18,7 @@ export const Gallery = () => {
           <span className="text-golden font-semibold text-lg tracking-wide">הגלריה שלנו</span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 mt-2">רגעים מתוקים מהאירועים שלנו</h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            כל תמונה מספרת סיפור של שמחה, טעם ורגעים בלתי נשכחים שיצרנו עם הלקוchouts שלנו.
+            כל תמונה מספרת סיפור של שמחה, טעם ורגעים בלתי נשכחים שיצרנו עם הלקוחות שלנו.
           </p>
           <div className="w-24 h-1 bg-golden mx-auto mt-6"></div>
         </div>

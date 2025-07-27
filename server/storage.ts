@@ -19,7 +19,12 @@ export class MemStorage implements IStorage {
   async createContactSubmission(insertSubmission: InsertContactSubmission): Promise<ContactSubmission> {
     const id = randomUUID();
     const submission: ContactSubmission = { 
-      ...insertSubmission, 
+      ...insertSubmission,
+      email: insertSubmission.email || null,
+      guestCount: insertSubmission.guestCount || null,
+      eventDate: insertSubmission.eventDate || null,
+      budget: insertSubmission.budget || null,
+      details: insertSubmission.details || null,
       id,
       createdAt: new Date()
     };

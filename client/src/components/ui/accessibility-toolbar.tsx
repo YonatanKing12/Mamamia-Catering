@@ -26,7 +26,9 @@ export const AccessibilityToolbar = () => {
 
   const handleOpen = () => {
     console.log('Opening accessibility toolbar...');
+    console.log('Current state before:', isOpen);
     setIsOpen(true);
+    console.log('State change triggered');
   };
 
   // Prevent body scroll when toolbar is open
@@ -76,22 +78,34 @@ export const AccessibilityToolbar = () => {
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-60 z-[9998] transition-opacity duration-300"
+          className="fixed inset-0 bg-black bg-opacity-60 z-[99997] transition-opacity duration-300"
           onClick={handleClose}
           aria-hidden="true"
+          style={{ 
+            display: 'block',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+          }}
         />
       )}
 
       {/* Accessibility Toolbar */}
       <div 
-        className={`accessibility-toolbar accessibility-exempt fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-white to-cream shadow-2xl z-[9997] transform transition-transform duration-300 ease-out ${
+        className={`accessibility-toolbar accessibility-exempt fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-white to-cream shadow-2xl z-[99998] transform transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="accessibility-title"
         data-accessibility-exempt="true"
-        style={{ filter: 'none !important' }}
+        style={{ 
+          filter: 'none !important',
+          display: isOpen ? 'block' : 'block',
+          visibility: isOpen ? 'visible' : 'visible'
+        }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-golden/20 bg-white">

@@ -8,11 +8,15 @@ import Home from "@/pages/home-full";
 import Accessibility from "@/pages/accessibility";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
+import BlogList from "@/pages/blog-list";
+import BlogPost from "@/pages/blog-post";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home}/>
+      <Route path="/blog" component={BlogList}/>
+      <Route path="/blog/:id" component={BlogPost}/>
       <Route path="/accessibility" component={Accessibility}/>
       <Route path="/privacy" component={Privacy}/>
       <Route path="/terms" component={Terms}/>

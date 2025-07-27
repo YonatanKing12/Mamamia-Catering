@@ -4,15 +4,15 @@ import { useScroll } from '@/hooks/use-scroll';
 
 const heroImages = [
   {
-    src: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
+    src: "/src/assets/images/hero/hero1.svg",
     alt: "מבחר מנות מזרח תיכוניות מסורתיות"
   },
   {
-    src: "https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
+    src: "/src/assets/images/hero/hero2.svg",
     alt: "שולחן חגיגי מעוצב לאירוע מיוחד"
   },
   {
-    src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
+    src: "/src/assets/images/hero/hero3.svg",
     alt: "שף מקצועי מכין מרכיבים טריים במטבח"
   }
 ];

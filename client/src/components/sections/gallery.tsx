@@ -62,7 +62,10 @@ export const Gallery = () => {
         </div>
         
         <div className="text-center mt-12">
-          <Button className="bg-golden hover:bg-dark-golden text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift shadow-lg">
+          <Button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="bg-golden hover:bg-dark-golden text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift shadow-lg"
+          >
             <i className="fas fa-images ml-2"></i>
             עוד תמונות בגלריה המלאה
           </Button>

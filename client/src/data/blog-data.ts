@@ -17,7 +17,7 @@ export const blogData: BlogPost[] = [
     content: "תוכן מלא של הפוסט יהיה כאן...",
     category: "טיפים מקצועיים",
     date: "לפני שבוע",
-    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300",
+    image: "/src/assets/images/blog/tips.svg",
     alt: "הגשה מקצועית של מנות קייטרינג מעוצבות"
   },
   {
@@ -27,7 +27,7 @@ export const blogData: BlogPost[] = [
     content: "מתכון מפורט יהיה כאן...",
     category: "מתכונים",
     date: "לפני שבועיים",
-    image: "https://images.unsplash.com/photo-1574484284002-952d92456975?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300",
+    image: "/src/assets/images/blog/recipe.svg",
     alt: "בישול מסורתי במטבח עם מרכיבים טריים"
   },
   {
@@ -37,7 +37,7 @@ export const blogData: BlogPost[] = [
     content: "סיפור מלא של החתונה יהיה כאן...",
     category: "סיפורי לקוחות",
     date: "לפני חודש",
-    image: "https://images.unsplash.com/photo-1529636798458-92182e662485?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300",
+    image: "/src/assets/images/blog/success-story.svg",
     alt: "לקוחות מרוצים נהנים מאירוע עם אוכל איכותי"
   }
 ];

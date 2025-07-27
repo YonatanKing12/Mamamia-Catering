@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { blogData } from '@/data/blog-data';
+import { Link } from 'wouter';
 
 export const Blog = () => {
   return (
@@ -37,22 +38,26 @@ export const Blog = () => {
                 <p className="text-gray-600 leading-relaxed mb-4">
                   {post.excerpt}
                 </p>
-                <Button
-                  variant="link"
-                  className="text-golden hover:text-dark-golden font-semibold p-0"
-                >
-                  קראו עוד <i className="fas fa-arrow-left mr-1"></i>
-                </Button>
+                <Link href={`/blog/${post.id}`}>
+                  <Button
+                    variant="link"
+                    className="text-golden hover:text-dark-golden font-semibold p-0"
+                  >
+                    קראו עוד <i className="fas fa-arrow-left mr-1"></i>
+                  </Button>
+                </Link>
               </div>
             </article>
           ))}
         </div>
         
         <div className="text-center mt-12">
-          <Button className="bg-golden hover:bg-dark-golden text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift shadow-lg">
-            <i className="fas fa-blog ml-2"></i>
-            לכל הפוסטים בבלוג
-          </Button>
+          <Link href="/blog">
+            <Button className="bg-golden hover:bg-dark-golden text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift shadow-lg">
+              <i className="fas fa-blog ml-2"></i>
+              לכל הפוסטים בבלוג
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useScroll } from '@/hooks/use-scroll';
+import { Link, useLocation } from 'wouter';
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isScrolledDown, scrollToSection } = useScroll();
+  const [location] = useLocation();
 
   const navigation = [
-    { href: "hero", label: "בית" },
-    { href: "story", label: "הסיפור" },
-    { href: "events", label: "אירועים" },
-    { href: "menu", label: "תפריט" },
-    { href: "gallery", label: "גלריה" },
-    { href: "blog", label: "בלוג" },
+    { href: "hero", label: "בית", isSection: true },
+    { href: "story", label: "הסיפור", isSection: true },
+    { href: "events", label: "אירועים", isSection: true },
+    { href: "menu", label: "תפריט", isSection: true },
+    { href: "gallery", label: "גלריה", isSection: true },
+    { href: "/blog", label: "בלוג", isSection: false },
   ];
 
   return (
@@ -30,16 +32,36 @@ export const Header = () => {
           
           <div className="hidden lg:flex items-center space-x-8 space-x-reverse">
             {navigation.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => scrollToSection(item.href)}
-                className="text-dark-brown hover:text-golden transition-colors font-medium"
-              >
-                {item.label}
-              </button>
+              item.isSection ? (
+                <button
+                  key={item.href}
+                  onClick={() => {
+                    if (location !== '/') {
+                      window.location.href = '/#' + item.href;
+                    } else {
+                      scrollToSection(item.href);
+                    }
+                  }}
+                  className="text-dark-brown hover:text-golden transition-colors font-medium"
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link key={item.href} href={item.href}>
+                  <span className="text-dark-brown hover:text-golden transition-colors font-medium cursor-pointer">
+                    {item.label}
+                  </span>
+                </Link>
+              )
             ))}
             <Button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => {
+                if (location !== '/') {
+                  window.location.href = '/#contact';
+                } else {
+                  scrollToSection('contact');
+                }
+              }}
               className="bg-golden text-white px-6 py-2 rounded-full hover:bg-dark-golden hover-lift font-semibold"
             >
               <i className="fas fa-phone ml-2"></i>
@@ -74,20 +96,39 @@ export const Header = () => {
           </div>
           <nav className="space-y-4">
             {navigation.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => {
-                  scrollToSection(item.href);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="block py-3 text-dark-brown hover:text-golden transition-colors font-medium w-full text-right"
-              >
-                {item.label}
-              </button>
+              item.isSection ? (
+                <button
+                  key={item.href}
+                  onClick={() => {
+                    if (location !== '/') {
+                      window.location.href = '/#' + item.href;
+                    } else {
+                      scrollToSection(item.href);
+                    }
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="block py-3 text-dark-brown hover:text-golden transition-colors font-medium w-full text-right"
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link key={item.href} href={item.href}>
+                  <span 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-3 text-dark-brown hover:text-golden transition-colors font-medium w-full text-right cursor-pointer"
+                  >
+                    {item.label}
+                  </span>
+                </Link>
+              )
             ))}
             <Button
               onClick={() => {
-                scrollToSection('contact');
+                if (location !== '/') {
+                  window.location.href = '/#contact';
+                } else {
+                  scrollToSection('contact');
+                }
                 setIsMobileMenuOpen(false);
               }}
               className="block bg-golden text-white px-6 py-3 rounded-full hover:bg-dark-golden font-semibold text-center mt-6 w-full"

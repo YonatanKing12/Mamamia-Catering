@@ -43,13 +43,20 @@ export const AccessibilityToolbar = () => {
       {/* Accessibility Button - Always visible */}
       <button
         onClick={handleOpen}
-        className="accessibility-exempt fixed bottom-6 right-6 z-[99999] bg-blue-600 hover:bg-blue-700 text-white w-16 h-16 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 border-2 border-white"
+        className="accessibility-exempt fixed bottom-6 right-6 z-[99999] bg-blue-600 hover:bg-blue-700 text-white w-16 h-16 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 border-2 border-white flex items-center justify-center"
         aria-label="פתח תפריט נגישות"
         title="נגישות"
         data-accessibility-exempt="true"
-        style={{ filter: 'none !important' }}
+        style={{ 
+          filter: 'none !important',
+          position: 'fixed !important',
+          bottom: '24px !important',
+          right: '24px !important',
+          display: 'flex !important',
+          zIndex: 99999
+        }}
       >
-        <i className="fas fa-universal-access text-2xl accessibility-exempt"></i>
+        <span className="text-2xl accessibility-exempt" style={{ fontSize: '24px', lineHeight: '1' }}>♿</span>
       </button>
 
       {/* Overlay */}

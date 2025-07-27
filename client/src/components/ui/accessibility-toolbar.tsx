@@ -18,6 +18,11 @@ export const AccessibilityToolbar = () => {
   } = useAccessibility();
   
   console.log('AccessibilityToolbar rendered, isOpen:', isOpen);
+  
+  // Debug effect
+  useEffect(() => {
+    console.log('useEffect triggered, isOpen changed to:', isOpen);
+  }, [isOpen]);
 
   const handleClose = () => {
     console.log('Closing accessibility toolbar...');
@@ -87,24 +92,30 @@ export const AccessibilityToolbar = () => {
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0
+            bottom: 0,
+            zIndex: 99997
           }}
         />
       )}
 
       {/* Accessibility Toolbar */}
       <div 
-        className={`accessibility-toolbar accessibility-exempt fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-white to-cream shadow-2xl z-[99998] transform transition-transform duration-300 ease-out ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className="accessibility-toolbar accessibility-exempt bg-gradient-to-b from-white to-cream shadow-2xl transition-transform duration-300 ease-out"
         role="dialog"
         aria-modal="true"
         aria-labelledby="accessibility-title"
         data-accessibility-exempt="true"
         style={{ 
           filter: 'none !important',
-          display: isOpen ? 'block' : 'block',
-          visibility: isOpen ? 'visible' : 'visible'
+          transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+          visibility: 'visible',
+          display: 'block',
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          height: '100vh',
+          width: '320px',
+          zIndex: 99998
         }}
       >
         {/* Header */}

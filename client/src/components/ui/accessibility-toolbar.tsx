@@ -43,17 +43,19 @@ export const AccessibilityToolbar = () => {
       {/* Accessibility Button - Always visible */}
       <button
         onClick={handleOpen}
-        className="fixed top-1/2 -translate-y-1/2 left-4 z-50 bg-golden hover:bg-dark-golden text-white w-14 h-14 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-golden focus:ring-opacity-50"
+        className="accessibility-exempt fixed top-1/2 -translate-y-1/2 left-4 z-[9999] bg-golden hover:bg-dark-golden text-white w-14 h-14 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-golden focus:ring-opacity-50"
         aria-label="פתח תפריט נגישות"
         title="נגישות"
+        data-accessibility-exempt="true"
+        style={{ filter: 'none !important' }}
       >
-        <i className="fas fa-universal-access text-xl"></i>
+        <i className="fas fa-universal-access text-xl accessibility-exempt"></i>
       </button>
 
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-60 z-40 transition-opacity duration-300"
+          className="fixed inset-0 bg-black bg-opacity-60 z-[9998] transition-opacity duration-300"
           onClick={handleClose}
           aria-hidden="true"
         />
@@ -61,12 +63,14 @@ export const AccessibilityToolbar = () => {
 
       {/* Accessibility Toolbar */}
       <div 
-        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-white to-cream shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
+        className={`accessibility-toolbar accessibility-exempt fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-white to-cream shadow-2xl z-[9997] transform transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="accessibility-title"
+        data-accessibility-exempt="true"
+        style={{ filter: 'none !important' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-golden/20 bg-white">

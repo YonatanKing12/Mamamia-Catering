@@ -60,13 +60,28 @@ export const useAccessibility = () => {
 
   // Invert colors effect
   useEffect(() => {
-    const body = document.body;
     if (invertColors) {
-      body.style.filter = 'invert(1) hue-rotate(180deg)';
-      body.style.background = 'invert(1) hue-rotate(180deg)';
+      // Apply invert filter to everything except accessibility elements
+      const style = document.createElement('style');
+      style.id = 'accessibility-invert-colors';
+      style.textContent = `
+        html {
+          filter: invert(1) hue-rotate(180deg);
+        }
+        .accessibility-exempt, 
+        [data-accessibility-exempt], 
+        .accessibility-toolbar,
+        [aria-label*="נגישות"],
+        [title*="נגישות"] {
+          filter: invert(1) hue-rotate(180deg) !important;
+        }
+      `;
+      document.head.appendChild(style);
     } else {
-      body.style.filter = 'none';
-      body.style.background = '';
+      const existingStyle = document.getElementById('accessibility-invert-colors');
+      if (existingStyle) {
+        existingStyle.remove();
+      }
     }
     localStorage.setItem('accessibility-invert-colors', invertColors.toString());
   }, [invertColors]);

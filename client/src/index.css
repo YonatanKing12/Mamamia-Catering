@@ -72,6 +72,17 @@
     font-family: 'Assistant', 'Rubik', system-ui, sans-serif;
     direction: rtl;
   }
+
+  /* Accessibility exemptions */
+  .accessibility-exempt,
+  [data-accessibility-exempt="true"],
+  .accessibility-toolbar,
+  [aria-label*="נגישות"],
+  [title*="נגישות"] {
+    filter: none !important;
+    position: relative !important;
+    z-index: 9999 !important;
+  }
 }
 
 @layer utilities {

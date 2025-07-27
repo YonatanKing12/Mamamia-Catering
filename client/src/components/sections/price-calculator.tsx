@@ -105,7 +105,7 @@ export const PriceCalculator = () => {
         <div className="text-center mb-16">
           <span className="text-cornsilk font-semibold text-lg tracking-wide">מחשבון מחיר</span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 mt-2">חשבו את עלות האירוע שלכם</h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-200 font-medium max-w-3xl mx-auto">
             קבלו הערכת מחיר מדויקת לאירוע שלכם תוך דקות ספורות. המחירים כוללים את כל השירותים הנלווים.
           </p>
           <div className="w-24 h-1 bg-cornsilk mx-auto mt-6"></div>
@@ -199,7 +199,7 @@ export const PriceCalculator = () => {
                     onChange={(e) => setEventDate(e.target.value)}
                     className="w-full p-4 rounded-xl bg-white text-dark-brown font-medium"
                   />
-                  <p className="text-sm text-gray-300 mt-2">אירועי סוף שבוע עם תוספת 15%</p>
+                  <p className="text-sm text-gray-200 font-medium mt-2">אירועי סוף שבוע עם תוספת 15%</p>
                 </div>
               </div>
               

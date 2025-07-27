@@ -72,7 +72,7 @@ export const Contact = () => {
         <div className="text-center mb-16">
           <span className="text-cornsilk font-semibold text-lg tracking-wide">צרו קשר</span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 mt-2">בואו נתכנן יחד את האירוע המושלם</h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-200 font-medium max-w-3xl mx-auto">
             הצוות המקצועי שלנו כאן כדי להפוך את החלום שלכם למציאות. צרו קשר עכשיו לייעוץ חינם ומקצועי.
           </p>
           <div className="w-24 h-1 bg-cornsilk mx-auto mt-6"></div>
@@ -279,7 +279,7 @@ export const Contact = () => {
                   </Button>
                 </div>
                 
-                <p className="text-sm text-gray-300 text-center">
+                <p className="text-sm text-gray-200 font-medium text-center">
                   נחזור אליכם תוך 24 שעות עם הצעת מחיר מפורטת
                 </p>
               </form>
@@ -299,7 +299,7 @@ export const Contact = () => {
                   <div>
                     <h4 className="font-semibold">טלפון</h4>
                     <a href="tel:052-1234567" className="text-cornsilk hover:text-golden transition-colors">052-123-4567</a>
-                    <p className="text-sm text-gray-300">זמינים 24/7</p>
+                    <p className="text-sm text-gray-200 font-medium">זמינים 24/7</p>
                   </div>
                 </div>
                 
@@ -310,7 +310,7 @@ export const Contact = () => {
                   <div>
                     <h4 className="font-semibold">WhatsApp</h4>
                     <a href="https://wa.me/972521234567" target="_blank" rel="noopener noreferrer" className="text-cornsilk hover:text-golden transition-colors">052-123-4567</a>
-                    <p className="text-sm text-gray-300">תגובה מיידית</p>
+                    <p className="text-sm text-gray-200 font-medium">תגובה מיידית</p>
                   </div>
                 </div>
                 

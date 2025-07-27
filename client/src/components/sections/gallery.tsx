@@ -17,7 +17,7 @@ export const Gallery = () => {
         <div className="text-center mb-16">
           <span className="text-golden font-semibold text-lg tracking-wide">הגלריה שלנו</span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 mt-2">רגעים מתוקים מהאירועים שלנו</h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-200 font-medium max-w-3xl mx-auto">
             כל תמונה מספרת סיפור של שמחה, טעם ורגעים בלתי נשכחים שיצרנו עם הלקוחות שלנו.
           </p>
           <div className="w-24 h-1 bg-golden mx-auto mt-6"></div>
@@ -52,9 +52,9 @@ export const Gallery = () => {
                 className="w-full h-64 object-cover"
               />
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
-                <div className="text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <h4 className="text-xl font-bold mb-2">{item.title}</h4>
-                  <p className="text-sm">{item.description}</p>
+                <div className="text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
+                  <h4 className="text-xl font-bold mb-2 text-white">{item.title}</h4>
+                  <p className="text-sm text-gray-200 font-medium">{item.description}</p>
                 </div>
               </div>
             </div>

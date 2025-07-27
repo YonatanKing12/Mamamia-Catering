@@ -24,7 +24,7 @@ export const FAQ = () => {
         <div className="text-center mb-16">
           <span className="text-golden font-semibold text-lg tracking-wide">שאלות נפוצות</span>
           <h2 className="text-4xl md:text-5xl font-bold text-dark-brown mb-6 mt-2">תשובות לכל השאלות שלכם</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-800 font-medium max-w-3xl mx-auto">
             אספנו עבורכם את השאלות הנפוצות ביותר שאנחנו מקבלים מלקוחותינו, עם תשובות מפורטות ומקצועיות.
           </p>
           <div className="w-24 h-1 bg-golden mx-auto mt-6"></div>
@@ -59,7 +59,7 @@ export const FAQ = () => {
                 </button>
                 
                 {expandedFAQ === faq.id && (
-                  <div className="p-6 pt-0 text-gray-700 leading-relaxed">
+                  <div className="p-6 pt-0 text-gray-800 font-medium leading-relaxed">
                     <div className="whitespace-pre-line">{faq.answer}</div>
                   </div>
                 )}
@@ -69,7 +69,7 @@ export const FAQ = () => {
         </div>
         
         <div className="text-center mt-12">
-          <p className="text-lg text-gray-600 mb-6">לא מצאתם תשובה לשאלה שלכם?</p>
+          <p className="text-lg text-gray-800 font-medium mb-6">לא מצאתם תשובה לשאלה שלכם?</p>
           <Button
             onClick={() => scrollToSection('contact')}
             className="bg-golden hover:bg-dark-golden text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift shadow-lg"

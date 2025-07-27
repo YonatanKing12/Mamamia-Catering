@@ -43,13 +43,13 @@ export const AccessibilityToolbar = () => {
       {/* Accessibility Button - Always visible */}
       <button
         onClick={handleOpen}
-        className="accessibility-exempt fixed top-1/2 -translate-y-1/2 left-4 z-[9999] bg-golden hover:bg-dark-golden text-white w-14 h-14 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-golden focus:ring-opacity-50"
+        className="accessibility-exempt fixed top-1/2 -translate-y-1/2 right-4 z-[9999] bg-blue-600 hover:bg-blue-700 text-white w-16 h-16 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 border-2 border-white"
         aria-label="פתח תפריט נגישות"
         title="נגישות"
         data-accessibility-exempt="true"
         style={{ filter: 'none !important' }}
       >
-        <i className="fas fa-universal-access text-xl accessibility-exempt"></i>
+        <i className="fas fa-universal-access text-2xl accessibility-exempt"></i>
       </button>
 
       {/* Overlay */}
@@ -63,8 +63,8 @@ export const AccessibilityToolbar = () => {
 
       {/* Accessibility Toolbar */}
       <div 
-        className={`accessibility-toolbar accessibility-exempt fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-white to-cream shadow-2xl z-[9997] transform transition-transform duration-300 ease-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`accessibility-toolbar accessibility-exempt fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-white to-cream shadow-2xl z-[9997] transform transition-transform duration-300 ease-out ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         role="dialog"
         aria-modal="true"

@@ -85,7 +85,7 @@ The application follows a monorepo structure with clear separation between clien
 1. **Monorepo Structure**: Chosen for easier development and deployment of both frontend and backend together
 2. **TypeScript Throughout**: Ensures type safety across the entire stack
 3. **Drizzle ORM**: Provides type-safe database operations with PostgreSQL support
-4. **In-Memory Storage**: Current implementation for development, easily switchable to PostgreSQL
+4. **Database Storage**: Currently using PostgreSQL with DatabaseStorage implementation
 5. **Component-Based Architecture**: Modular design for maintainability and reusability
 6. **RTL Support**: Built-in Hebrew and RTL layout support for target market
 7. **Accessibility Features**: Dedicated accessibility toolbar and ARIA compliance

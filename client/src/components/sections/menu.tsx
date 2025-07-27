@@ -17,7 +17,7 @@ export const Menu = () => {
         <div className="text-center mb-16">
           <span className="text-golden font-semibold text-lg tracking-wide">הטעמים שלנו</span>
           <h2 className="text-4xl md:text-5xl font-bold text-dark-brown mb-6 mt-2">תפריט מאמאמיה - כל מנה עם סיפור</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-800 font-medium max-w-3xl mx-auto">
             מבחר מנות עיקריות ותוספות שכל אחת מהן מכינה בעצמה מעשרות של מתכונים מסורתיים ומוכחים.
           </p>
           <div className="w-24 h-1 bg-golden mx-auto mt-6"></div>
@@ -49,7 +49,7 @@ export const Menu = () => {
                           <div className="flex justify-between items-start">
                             <div className="flex-1">
                               <h4 className="font-bold text-lg text-dark-brown mb-1">{item.name}</h4>
-                              <p className="text-gray-600 text-sm">{item.description}</p>
+                              <p className="text-gray-700 text-sm font-medium">{item.description}</p>
                             </div>
                             {item.price && (
                               <span className="text-golden font-semibold text-lg mr-4">₪{item.price}</span>
@@ -66,7 +66,7 @@ export const Menu = () => {
         </div>
         
         <div className="text-center mt-12">
-          <p className="text-lg text-gray-600 mb-6">רוצים תפריט מותאם אישית? אנחנו כאן בשבילכם!</p>
+          <p className="text-lg text-gray-800 font-medium mb-6">רוצים תפריט מותאם אישית? אנחנו כאן בשבילכם!</p>
           <Button
             onClick={() => scrollToSection('contact')}
             className="bg-golden hover:bg-dark-golden text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift shadow-lg"

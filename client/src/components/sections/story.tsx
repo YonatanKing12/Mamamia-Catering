@@ -15,11 +15,11 @@ export const Story = () => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
             <h3 className="text-2xl font-bold text-saddle-brown">איפה כל מנה מתחילה באהבה</h3>
-            <p className="text-lg leading-relaxed text-gray-700">
+            <p className="text-lg leading-relaxed text-gray-800 font-medium">
               במאמאמיה, אנחנו לא רק מבשלים – אנחנו יוצרים זיכרונות. הסיפור שלנו נרקם בין סירים מהבילים במטבח הביתי, 
               עם מתכונים סודיים שעברו במשפחה מדור לדור, ניחוחות ילדות, ותשוקה אמיתית לארח ולהאכיל.
             </p>
-            <p className="text-lg leading-relaxed text-gray-700">
+            <p className="text-lg leading-relaxed text-gray-800 font-medium">
               את כל החום, האכפתיות והטעמים האותנטיים האלה, אנחנו מביאים היום ישירות אליכם, עם שירותי קייטרינג 
               כשרים ומוקפדים. כל מנה מוכנה מחומרי הגלם הטריים והאיכותיים ביותר, תוך שמירה על כשרות מהודרת של בד"ץ מהדרין.
             </p>
@@ -32,7 +32,7 @@ export const Story = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-dark-brown">1995 - ההתחלה</h4>
-                  <p className="text-gray-600">מתכונים משפחתיים במטבח הביתי</p>
+                  <p className="text-gray-700 font-medium">מתכונים משפחתיים במטבח הביתי</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4 space-x-reverse">
@@ -41,7 +41,7 @@ export const Story = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-dark-brown">2005 - התרחבות</h4>
-                  <p className="text-gray-600">תחילת שירותי הקייטרינג המקצועיים</p>
+                  <p className="text-gray-700 font-medium">תחילת שירותי הקייטרינג המקצועיים</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4 space-x-reverse">
@@ -50,7 +50,7 @@ export const Story = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-dark-brown">2020 - הישג</h4>
-                  <p className="text-gray-600">קייטרינג מוביל באזור המרכז והשרון</p>
+                  <p className="text-gray-700 font-medium">קייטרינג מוביל באזור המרכז והשרון</p>
                 </div>
               </div>
             </div>
@@ -58,7 +58,7 @@ export const Story = () => {
           
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+              src="/src/assets/images/story/family-kitchen.svg" 
               alt="מטבח משפחתי חם עם בישול מסורתי" 
               className="rounded-2xl shadow-2xl hover-lift"
             />

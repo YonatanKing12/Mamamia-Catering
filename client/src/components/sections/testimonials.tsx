@@ -30,7 +30,7 @@ export const Testimonials = () => {
         <div className="text-center mb-16">
           <span className="text-golden font-semibold text-lg tracking-wide">מה אומרים עלינו</span>
           <h2 className="text-4xl md:text-5xl font-bold text-dark-brown mb-6 mt-2">הלקוחות שלנו הם השגרירים הטובים ביותר</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-800 font-medium max-w-3xl mx-auto">
             אלפי לקוחות מרוצים בחרו במאמאמיה לאירועים הכי חשובים בחייהם. הנה מה שהם אומרים עלינו.
           </p>
           <div className="w-24 h-1 bg-golden mx-auto mt-6"></div>
@@ -49,12 +49,12 @@ export const Testimonials = () => {
                   ))}
                 </div>
               </div>
-              <p className="text-lg italic text-gray-700 mb-6">
+              <p className="text-lg italic text-gray-800 font-medium mb-6">
                 "{testimonial.text}"
               </p>
               <div className="border-t pt-4">
                 <h4 className="font-bold text-dark-brown">{testimonial.author}</h4>
-                <p className="text-sm text-gray-600">{testimonial.event}</p>
+                <p className="text-sm text-gray-700 font-medium">{testimonial.event}</p>
               </div>
             </div>
           ))}

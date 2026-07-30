@@ -11,13 +11,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { insertContactSubmissionSchema } from '@shared/schema';
+import { bandFromCount, generateRef, toE164 } from '@shared/lead-schema';
 
-const contactFormSchema = insertContactSubmissionSchema.extend({
-  name: z.string().min(2, 'שם חייב להכיל לפחות 2 תווים'),
-  phone: z.string().min(9, 'מספר טלפון חייב להכיל לפחות 9 ספרות'),
-  email: z.string().email('כתובת אימייל לא תקינה').optional().or(z.literal('')),
+/*
+ * הסכימה מוגדרת כאן ב־zod בלבד.
+ * הגרסה הקודמת ייבאה מ־@shared/schema, מה שגרר את drizzle-orm/pg-core
+ * לבאנדל של הדפדפן (כ־45KB) וגם פרסם את שמות הטבלאות והעמודות של
+ * Postgres בתוך קובץ JS ציבורי.
+ */
+const contactFormSchema = z.object({
+  name: z.string().trim().min(2, 'שם חייב להכיל לפחות 2 תווים').max(80),
+  phone: z.string().trim().refine((v) => toE164(v) !== null, 'מספר הטלפון לא נראה תקין'),
+  email: z.string().trim().email('כתובת אימייל לא תקינה').optional().or(z.literal('')),
   eventType: z.string().min(1, 'נא לבחור סוג אירוע'),
+  guestCount: z.coerce.number().int().min(1).max(5000).optional(),
+  eventDate: z.string().optional().or(z.literal('')),
+  budget: z.string().optional().or(z.literal('')),
+  details: z.string().max(2000).optional().or(z.literal('')),
 });
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
@@ -41,7 +51,25 @@ export const Contact = () => {
 
   const contactMutation = useMutation({
     mutationFn: async (data: ContactFormData) => {
-      const response = await apiRequest('POST', '/api/contact', data);
+      /* התקציב מקופל להערות: הסכימה החדשה מאפיינת ליד לפי טווח סועדים
+         ופורמט שירות, ולא לפי תקציב מוצהר. הטקסט לא נזרק. */
+      const notes = [data.details, data.budget && `תקציב שצוין: ${data.budget}`]
+        .filter(Boolean)
+        .join('\n');
+
+      const response = await apiRequest('POST', '/api/quote', {
+        ref: generateRef(),
+        name: data.name,
+        phone: data.phone,
+        email: data.email || undefined,
+        eventType: data.eventType,
+        guestBand: bandFromCount(data.guestCount) ?? 'lt25',
+        eventDate: data.eventDate || undefined,
+        area: '',
+        notes: notes || undefined,
+        sourcePage: window.location.pathname,
+        referrer: document.referrer || undefined,
+      });
       return response.json();
     },
     onSuccess: () => {

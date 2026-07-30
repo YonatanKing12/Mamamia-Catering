@@ -14,7 +14,7 @@ import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { storageKind } from "./storage";
+import { storageKind, assertLeadParity } from "./storage";
 import { closeDatabase, hasDatabase } from "./db";
 
 const app = express();
@@ -78,6 +78,13 @@ app.use((req, res, next) => {
 
   const port = parseInt(process.env.PORT || "3000", 10);
   const host = process.env.HOST || "0.0.0.0";
+
+  /* עמודה שנוספה לסכימה בלי שורה מקבילה ב־MemoryStorage תתגלה כאן,
+     ולא בעוד חודש כשמסתכלים על נתוני ייחוס חסרים בפרודקשן */
+  const missing = await assertLeadParity();
+  if (missing.length) {
+    log(`אזהרה: MemoryStorage לא כותב ${missing.length} עמודות: ${missing.join(", ")}`, "error");
+  }
 
   server.listen(port, host, () => {
     log(`השרת עלה על פורט ${port}`);

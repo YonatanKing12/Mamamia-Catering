@@ -23,10 +23,24 @@ const needsSsl = Boolean(
   url && !/localhost|127\.0\.0\.1|(\?|&)sslmode=disable/.test(url),
 );
 
+/**
+ * אימות שרת מלא, לא רק הצפנה.
+ *
+ * `rejectUnauthorized: false` מצפין את החיבור אבל לא מוודא מול מי מדברים,
+ * כלומר החיבור שנושא את השם והטלפון של כל ליד חשוף ל־MITM. במקביל דף
+ * הפרטיות מבטיח למשתמשים "הצפנת נתונים בהעברה" — והפער בין ההבטחה לקוד
+ * הוא מה שהופך חולשה טכנית להצהרה לא נכונה כלפי צרכן.
+ *
+ * ספק שמשתמש ב־CA פרטי (Supabase, RDS) — יש לספק את התעודה ב־DATABASE_CA_CERT.
+ */
+const caCert = process.env.DATABASE_CA_CERT?.trim();
+
 export const pool = url
   ? new Pool({
       connectionString: url,
-      ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
+      ssl: needsSsl
+        ? { rejectUnauthorized: true, ...(caCert ? { ca: caCert } : {}) }
+        : undefined,
       max: 10,
       idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 10_000,

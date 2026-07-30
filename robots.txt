@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# להחליף בדומיין האמיתי לאחר העלייה לאוויר
+Sitemap: https://example.com/sitemap.xml

@@ -6,7 +6,11 @@
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
     "noEmit": true,
     "module": "ESNext",
+    /* לא הוגדר target, כלומר TypeScript נפל חזרה ל־ES5 — מה שאסר שימוש
+       ב־Map/Set iteration ובתחביר מודרני. Node 20+ ו־Vite תומכים ב־ES2022. */
+    "target": "ES2022",
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "preserve",
     "esModuleInterop": true,

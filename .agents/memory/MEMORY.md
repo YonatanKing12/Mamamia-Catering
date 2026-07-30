@@ -1,1 +1,0 @@
-- [Git auth in this repl](git-auth.md) — shell git auth fails; use gitPush/gitPull callbacks; origin is Jonatan49/MamaMiaCatering itself.

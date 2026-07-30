@@ -1,121 +1,138 @@
-import { db } from './db';
-import { blogPosts, testimonials, galleryItems } from '@shared/schema';
+/**
+ * הזרעת מסד הנתונים.
+ *
+ * הגרסה שנוצרה ברפליט הזריעה המלצות בשמות אנשים שלא קיימים ("שרה כהן",
+ * דירוג 5), פוסטי בלוג ופריטי גלריה — כולם מומצאים. על אתר של עסק אמיתי
+ * אלה ביקורות כזב: הטעיית צרכן לפי חוק הגנת הצרכן, וגם הדרך הקצרה ביותר
+ * לאבד אמון של לקוח שיגלה. התוכן הומצא הוסר.
+ *
+ * במקומו: הסקריפט קורא תוכן אמיתי מ־content/seed.json אם הקובץ קיים.
+ * אין קובץ — לא מוזרק כלום, וזה המצב התקין.
+ *
+ *   npx tsx server/seed.ts
+ *
+ * המלצות מותר להזריק רק אחרי שהלקוח אישר במפורש שימוש בשמו.
+ */
+
+import "dotenv/config";
+import fs from "fs";
+import path from "path";
+import { z } from "zod";
+import { db, hasDatabase, closeDatabase } from "./db";
+import { blogPosts, testimonials, galleryItems } from "@shared/schema";
+
+const SEED_FILE = path.resolve(process.cwd(), "content", "seed.json");
+
+const seedSchema = z.object({
+  testimonials: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        eventType: z.string().min(1),
+        rating: z.number().int().min(1).max(5),
+        content: z.string().min(1),
+        imageUrl: z.string().optional(),
+        eventDate: z.string().optional(),
+        featured: z.boolean().optional(),
+        /* חובה מפורשת: בלי אישור הלקוח ההמלצה לא נכנסת */
+        consentGiven: z.literal(true, {
+          errorMap: () => ({
+            message: 'consentGiven חייב להיות true — אישור הלקוח לשימוש בשמו',
+          }),
+        }),
+      }),
+    )
+    .default([]),
+  blogPosts: z
+    .array(
+      z.object({
+        title: z.string().min(1),
+        slug: z.string().min(1),
+        excerpt: z.string().min(1),
+        content: z.string().min(1),
+        imageUrl: z.string().optional(),
+        category: z.string().min(1),
+        tags: z.array(z.string()).optional(),
+      }),
+    )
+    .default([]),
+  galleryItems: z
+    .array(
+      z.object({
+        title: z.string().min(1),
+        description: z.string().optional(),
+        imageUrl: z.string().min(1),
+        category: z.string().min(1),
+        eventType: z.string().optional(),
+        featured: z.boolean().optional(),
+      }),
+    )
+    .default([]),
+});
 
 async function seedDatabase() {
-  console.log('🌱 Starting database seeding...');
+  if (!hasDatabase || !db) {
+    console.error("✖ אין DATABASE_URL. הגדירו אותו ב־.env לפני הזרעה.");
+    process.exit(1);
+  }
 
-  // Seed blog posts
-  const blogPostsData = [
-    {
-      title: 'טיפים לתכנון תפריט חתונה מושלם',
-      slug: 'wedding-menu-tips',
-      excerpt: 'כיצד לבחור תפריט שיתאים לכל האורחים ויביא לכם המון מחמאות',
-      content: 'תכנון תפריט לחתונה הוא אחד השלבים החשובים ביותר בארגון האירוע. הנה המדריך המלא שלנו...',
-      imageUrl: '/images/wedding-table.jpg',
-      category: 'חתונות',
-      tags: ['חתונות', 'תפריט', 'טיפים'],
-    },
-    {
-      title: 'המדריך המלא לאירועי בר מצווה',
-      slug: 'bar-mitzvah-guide',
-      excerpt: 'כל מה שצריך לדעת על ארגון אירוע בר מצווה בלתי נשכח',
-      content: 'אירוע בר מצווה הוא רגע מיוחד במחזור החיים היהודי. הנה איך להפוך אותו לבלתי נשכח...',
-      imageUrl: '/images/bar-mitzvah.jpg',
-      category: 'בר מצווה',
-      tags: ['בר מצווה', 'אירועים', 'משפחה'],
-    },
-    {
-      title: 'קייטרינג כשר: מה חשוב לדעת',
-      slug: 'kosher-catering-guide',
-      excerpt: 'המדריך המקיף לכשרות בקייטרינג והדרישות השונות',
-      content: 'כשרות בקייטרינג היא נושא מורכב ורגיש. הנה כל מה שצריך לדעת...',
-      imageUrl: '/images/kosher-kitchen.jpg',
-      category: 'כשרות',
-      tags: ['כשרות', 'הלכה', 'מטבח'],
-    }
-  ];
+  if (!fs.existsSync(SEED_FILE)) {
+    console.log("ℹ אין content/seed.json — לא הוזרק תוכן. זה המצב התקין.");
+    console.log("  צרו את הקובץ עם תוכן אמיתי בלבד. המבנה:");
+    console.log(
+      JSON.stringify(
+        {
+          testimonials: [
+            {
+              name: "שם הלקוח כפי שאישר",
+              eventType: "סוג האירוע",
+              rating: 5,
+              content: "מה הלקוח כתב, כלשונו",
+              eventDate: "2026-05",
+              featured: true,
+              consentGiven: true,
+            },
+          ],
+          blogPosts: [],
+          galleryItems: [],
+        },
+        null,
+        2,
+      ),
+    );
+    return;
+  }
 
-  await db.insert(blogPosts).values(blogPostsData);
+  const parsed = seedSchema.parse(JSON.parse(fs.readFileSync(SEED_FILE, "utf8")));
 
-  // Seed testimonials
-  const testimonialsData = [
-    {
-      name: 'שרה כהן',
-      eventType: 'חתונה',
-      rating: 5,
-      content: 'הקייטרינג של מאמאמיה הפך את החתונה שלנו לבלתי נשכחת! האוכל היה מדהים והשירות מעולה.',
-      imageUrl: '/images/sarah-cohen.jpg',
-      eventDate: '2023-12-15',
-      featured: true,
-    },
-    {
-      name: 'דוד לוי',
-      eventType: 'בר מצווה',
-      rating: 5,
-      content: 'ארגון מושלם! כל האורחים התלהבו מהאוכל והשירות. ממליץ בחום!',
-      imageUrl: '/images/david-levi.jpg',
-      eventDate: '2023-11-20',
-      featured: true,
-    },
-    {
-      name: 'מרים גולדשטיין',
-      eventType: 'אירוע עסקי',
-      rating: 5,
-      content: 'קייטרינג ברמה גבוהה מאוד! הצוות מקצועי ואדיב, והאוכל טעים ומגוון.',
-      imageUrl: '/images/miriam-gold.jpg',
-      eventDate: '2023-10-05',
-      featured: false,
-    }
-  ];
+  if (parsed.testimonials.length) {
+    /* consentGiven אינו עמודה בטבלה — הוא שער כניסה בלבד */
+    const rows = parsed.testimonials.map(({ consentGiven, ...t }) => t);
+    await db.insert(testimonials).values(rows);
+    console.log(`✓ ${rows.length} המלצות`);
+  }
 
-  await db.insert(testimonials).values(testimonialsData);
+  if (parsed.blogPosts.length) {
+    await db.insert(blogPosts).values(parsed.blogPosts);
+    console.log(`✓ ${parsed.blogPosts.length} פוסטים`);
+  }
 
-  // Seed gallery items
-  const galleryData = [
-    {
-      title: 'חתונה מפוארת בירושלים',
-      description: 'אירוע חתונה מרהיב עם 200 אורחים',
-      imageUrl: '/images/gallery/wedding-1.jpg',
-      category: 'חתונות',
-      eventType: 'חתונה',
-      featured: true,
-    },
-    {
-      title: 'בר מצווה בגן אירועים',
-      description: 'חגיגת בר מצווה משפחתית וחמה',
-      imageUrl: '/images/gallery/bar-mitzvah-1.jpg',
-      category: 'בר מצווה',
-      eventType: 'בר מצווה',
-      featured: true,
-    },
-    {
-      title: 'כנס עסקי בתל אביב',
-      description: 'קייטרינג מקצועי לכנס חברתי',
-      imageUrl: '/images/gallery/corporate-1.jpg',
-      category: 'אירועי עסקים',
-      eventType: 'אירוע עסקי',
-      featured: false,
-    },
-    {
-      title: 'ארוחת שבת משפחתית',
-      description: 'ארוחה ביתית ומסורתית',
-      imageUrl: '/images/gallery/shabbat-1.jpg',
-      category: 'אירועי משפחה',
-      eventType: 'חגיגה משפחתית',
-      featured: true,
-    }
-  ];
+  if (parsed.galleryItems.length) {
+    await db.insert(galleryItems).values(parsed.galleryItems);
+    console.log(`✓ ${parsed.galleryItems.length} פריטי גלריה`);
+  }
 
-  await db.insert(galleryItems).values(galleryData);
-
-  console.log('✅ Database seeded successfully!');
+  console.log("✅ ההזרעה הושלמה.");
 }
 
-// Run if called directly
 seedDatabase()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error('❌ Error seeding database:', error);
+  .then(async () => {
+    await closeDatabase();
+    process.exit(0);
+  })
+  .catch(async (error) => {
+    console.error("✖ ההזרעה נכשלה:", error instanceof z.ZodError ? error.issues : error);
+    await closeDatabase();
     process.exit(1);
   });
 

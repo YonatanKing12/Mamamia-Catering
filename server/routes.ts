@@ -208,18 +208,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   /* ───── ליד מלא מהטופס ───── */
   app.post("/api/quote", rateLimit({ windowMs: 10 * 60_000, max: 8 }), async (req, res, next) => {
     try {
-      /* מלכודת בוט: לבוט מחזירים הצלחה כדי שלא ינסה בדרך אחרת */
+      /* מלכודת בוט: מחזירים הצלחה כדי שלא ינסה בדרך אחרת.
+         ה־ref מוחזר תמיד — קליינט שלא מקבל אותו מייצר ref מקומי משלו,
+         ואז מספר הסימוכין שהמשתמש רואה לא תואם לשום דבר. */
       if (req.body?.company_website) {
-        res.status(201).json({ success: true });
+        res.status(201).json({ success: true, ref: req.body?.ref });
         return;
       }
 
       const v = quoteLeadSchema.parse(req.body);
 
-      /* מילוי טופס מהיר מדי הוא חתימה של בוט, לא של אדם */
-      if (v.mountedAt && Date.now() - v.mountedAt < 2500) {
-        res.status(201).json({ success: true, ref: v.ref });
-        return;
+      /*
+       * מילוי מהיר מדי הוא חתימה של בוט — אבל `mountedAt` נוצר בשעון של
+       * מכשיר המשתמש, והשוואה שלו מול שעון השרת היא באג ולא בדיקה.
+       *
+       * הגרסה הקודמת כאן בדקה `Date.now() - v.mountedAt < 2500` בלבד.
+       * טלפון ששעונו מקדים את השרת — סטייה שכיחה לגמרי, ובוודאי כששעון
+       * המכשיר הוגדר ידנית — מייצר דלתא שלילית, שהיא תמיד קטנה מ־2500.
+       * התוצאה: כל פנייה מהמכשיר הזה נזרקה בשקט, והמשתמש קיבל מסך תודה
+       * ומספר סימוכין שלא קיים במסד. אובדן לידים מלא עם הצלחה מזויפת.
+       *
+       * לכן הדלתא נחסמת לתחום [0, 2500): דלתא שלילית היא סטיית שעון,
+       * לא בוט, והיא ממשיכה למסלול השמירה הרגיל.
+       *
+       * TODO: להעביר את חותמת פתיחת הטופס לשרת — nonce חתום או עוגייה —
+       * כדי שההשוואה תהיה שעון־שרת מול שעון־שרת ולא תלויה בלקוח כלל.
+       */
+      if (v.mountedAt) {
+        const elapsed = Date.now() - v.mountedAt;
+        if (elapsed >= 0 && elapsed < 2500) {
+          res.status(201).json({ success: true, ref: v.ref });
+          return;
+        }
       }
 
       const e164 = toE164(v.phone)!;

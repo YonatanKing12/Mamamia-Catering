@@ -1,130 +1,171 @@
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
-import { AccessibilityToolbar } from '@/components/ui/accessibility-toolbar';
-import { BackToTop } from '@/components/ui/back-to-top';
+/**
+ * ═══════════════════════════════════════════════════════════════════════
+ *  P-23 · `/accessibility` — הצהרת נגישות. spec 01 §4 P-23, §0.1.
+ * ═══════════════════════════════════════════════════════════════════════
+ *
+ * ‎01 §0.1 מסמן את הקובץ הקודם כ־«False accessibility conformance claims»
+ * בשורות `32,48,56,88-97,118`. הוא הצהיר על התאמה ל־WCAG 2.1 AA, על ניגודיות
+ * מינימלית של 4.5:1, על טקסט חלופי «לכל התמונות», ועל בדיקות שוטפות בידי
+ * מומחי נגישות עם NVDA, JAWS, VoiceOver, axe ו־WAVE. לא נערכה שום בדיקה
+ * כזאת. בנוסף הוא פירט «סרגל נגישות מתקדם» — רכיב ש־§5.5 מחק, כלומר תיאור
+ * של פקד שאינו קיים במסך.
+ *
+ * הצהרת נגישות שקרית גרועה מהיעדר הצהרה: היא בדיוק המסמך שרשות האכיפה
+ * קוראת ראשון, והיא מתעדת בכתב שהעסק ידע מה נדרש והצהיר שעמד בו.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  הכלל שהחליף אותו
+ * ─────────────────────────────────────────────────────────────────────
+ * ‎**מוצהר רק מה שאפשר לפתוח בעורך ולראות.** כל שורה ב־`IMPLEMENTED` נגזרת
+ * מקוד קיים:
+ *
+ *   קישור דילוג ו־<main> יחיד   `layout/page-shell.tsx`
+ *   ‎lang="he" dir="rtl"          `client/index.html:2,39`
+ *   טבעת פוקוס גלויה             `index.css:234` (ו־`:235` שלא מכבה אותה)
+ *   כיבוד prefers-reduced-motion `index.css:195,314`
+ *   שדות טופס מקושרים לשגיאה     `primitives/field.tsx` — aria-describedby,
+ *                                aria-invalid, aria-required
+ *   הודעת שגיאה מוכרזת           `quote/quote-builder.tsx` — role="alert"
+ *   אפס רכיבי צד שלישי           INV-10
+ *
+ * ו־`NOT_VERIFIED` מפרט מה שבאמת לא נבדק. זו הצהרת התאמה חלקית, וזה
+ * המצב האמיתי. **רמת התאמה אינה מוצהרת בשום מקום בעמוד** — לא AA ולא
+ * אחרת — כי איש לא בדק, וטענת רמה היא בדיוק סוג העובדה שחוק 1 אוסר להמציא.
+ *
+ * ‎`SLOTS` של רכז נגישות ושל נגישות פיזית בסניפים ריקים ⇒ אותם גושים אינם
+ * מרונדרים. תקנה 35 לתקנות שוויון זכויות דורשת רכז נגישות בהצהרה, ולכן זהו
+ * **חוסם עלייה לאוויר** — מדווח בדוח החזרה, ולא מגושר בשם מומצא.
+ */
+
+import { Head } from "@/components/seo/head";
+import { Button, Num, Prose, Rule } from "@/components/primitives";
+import { PHONE, telLink, waLink } from "@/content/business";
+import { capturePhoneClick } from "@/lib/lead-client";
+import { buildBreadcrumbList, buildWebPage, PAGE_META } from "@/lib/seo";
+
+const META = PAGE_META["/accessibility"];
+
+/** כל שורה מצביעה על קוד קיים. אין להוסיף כאן שורה בלי להצביע על המימוש. */
+const IMPLEMENTED = [
+  "האתר כתוב בעברית בכיוון ימין־לשמאל, ומוצהר ככזה לדפדפן ולקורא מסך.",
+  "קישור «דלגו לתוכן הראשי» הוא הפקד הראשון בכל עמוד, ומעביר פוקוס אמיתי.",
+  "אפשר להגיע לכל קישור, כפתור ושדה טופס במקלדת בלבד, וטבעת הפוקוס גלויה תמיד. היא לא מכובה בשום מקום באתר.",
+  "שדות הטופס מקושרים לתוויות ולהודעות השגיאה שלהם, ושגיאה מוכרזת לקורא מסך ולא רק נצבעת באדום.",
+  "הכותרות בנויות בסדר היררכי, וכל עמוד מתחיל בכותרת ראשית אחת.",
+  "מי שהגדיר במערכת ההפעלה «צמצום תנועה» מקבל אתר בלי אנימציות ובלי גלילה רכה.",
+  "הטקסט נמדד ביחידות יחסיות, ומתרחב עם הגדלת הגופן בדפדפן בלי שתוכן ייעלם.",
+  "אין באתר קרוסלות, אין ניגון אוטומטי, ואין תוכן שמתחלף מעצמו.",
+  "אין באתר וידג׳טים חיצוניים — לא צ׳אט, לא מפה מוטמעת ולא סרגל נגישות של ספק — כלומר אין רכיב שיכול לשבור ניווט מקלדת או להתנגש עם קורא מסך.",
+] as const;
+
+/** מה שבאמת לא נבדק. הרשימה הזאת היא מה שהופך את המסמך לאמין. */
+const NOT_VERIFIED = [
+  "לא נערכה בדיקת נגישות חיצונית בידי מורשה נגישות, ולא נבדקה התאמה מלאה לת״י 5568.",
+  "לא הושלמה בדיקה ידנית מקצה לקצה עם קוראי מסך.",
+  "יחסי הניגודיות נבחרו לפי חישוב, אך טרם עברו ביקורת חיצונית על כל מצב ומצב.",
+  "האתר עדיין בבנייה, ועמודים שייווספו לא ייבדקו אוטומטית עם פרסומם.",
+] as const;
+
+/*
+ * ─────────────────────────────────────────────────────────────────────
+ *  שני גושים שאינם כאן, במכוון
+ * ─────────────────────────────────────────────────────────────────────
+ *  · **רכז נגישות.** תקנה 35 דורשת שם ודרך התקשרות בהצהרה. אין ל־
+ *    `content/business.ts` Slot לרכז נגישות, ולכן הגוש פשוט אינו קיים.
+ *    מפורשות **לא** גושר ב־`legalName`: שם חברה תחת הכותרת «רכז הנגישות»
+ *    הוא עובדה שגויה, לא גיזום.
+ *  · **נגישות פיזית בסניפים.** `SLOTS.addresses` הוא כתובת, ולא מידע
+ *    נגישות — חניה, כניסה, שירותים, מעלית. רינדור כתובת תחת הכותרת הזאת
+ *    היה טענת נגישות שלא נבדקה. שני ה־Slots מבוקשים בדוח החזרה.
+ */
 
 export default function Accessibility() {
   return (
-    <div className="min-h-screen bg-warm-white text-dark-brown">
-      <AccessibilityToolbar />
-      <Header />
-      
-      <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-dark-brown mb-4">הצהרת נגישות</h1>
-            <p className="text-xl text-gray-600">מחויבות מאמאמיה לנגישות דיגיטלית</p>
-            <div className="w-24 h-1 bg-golden mx-auto mt-6"></div>
-          </div>
-          
-          <div className="bg-white rounded-2xl shadow-xl p-8 space-y-8">
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">מחויבותנו לנגישות</h2>
-              <p className="text-gray-700 leading-relaxed">
-                מאמאמיה מחויבת להנגשת האתר שלה לכל הציבור, כולל אנשים עם מוגבלויות. אנו פועלים להבטיח שהאתר שלנו 
-                נגיש ושמיש לכולם, בהתאם לתקנות הנגישות הישראליות ולסטנדרטים הבינלאומיים.
+    <>
+      <Head
+        meta={META}
+        jsonLd={[buildWebPage(META), buildBreadcrumbList(META.breadcrumb)]}
+      />
+
+      <section className="pb-sec pt-[clamp(2.5rem,7vw,4.5rem)]">
+        <div className="wrap">
+          <div className="max-w-answer">
+            <p className="eyebrow m-0">הצהרת נגישות</p>
+
+            <h1 className="mt-4 text-3xl">מה נגיש באתר היום, ומה עדיין לא</h1>
+
+            <Prose size="lede" measure="lede" className="mt-5">
+              <p>
+                האתר נבנה מתוך כוונה לעמוד בת״י 5568. הוא עדיין בבנייה, ולא
+                נערכה בדיקה חיצונית. לכן זו הצהרת התאמה חלקית, ולא הצהרת עמידה.
               </p>
+            </Prose>
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">מה כבר מיושם</h2>
+              <Prose measure="answer" className="mt-4">
+                <ul>
+                  {IMPLEMENTED.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </Prose>
             </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">תקני נגישות</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                האתר שלנו מיועד להתאים לרמת AA של הנחיות WCAG 2.1 (Web Content Accessibility Guidelines), 
-                הכוללות את העקרונות הבאים:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li>תוכן ניתן לתפיסה - מידע ורכיבי ממשק משתמש חייבים להיות ניתנים להצגה בפני המשתמשים</li>
-                <li>תוכן ניתן להפעלה - רכיבי ממשק משתמש וניווט חייבים להיות ניתנים להפעלה</li>
-                <li>תוכן מובן - מידע והפעלת ממשק המשתמש חייבים להיות מובנים</li>
-                <li>תוכן חזק - התוכן חייב להיות חזק מספיק כדי שיהיה ניתן לפירוש על ידי מגוון רחב של סוכני משתמש</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">תכונות נגישות באתר</h2>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start space-x-3 space-x-reverse">
-                  <i className="fas fa-check text-golden mt-1"></i>
-                  <span>ניווט במקלדת - כל תכונות האתר נגישות באמצעות מקלדת בלבד</span>
-                </li>
-                <li className="flex items-start space-x-3 space-x-reverse">
-                  <i className="fas fa-check text-golden mt-1"></i>
-                  <span>תאימות לקוראי מסך - האתר תואם לקוראי מסך מובילים</span>
-                </li>
-                <li className="flex items-start space-x-3 space-x-reverse">
-                  <i className="fas fa-check text-golden mt-1"></i>
-                  <span>ניגודיות צבעים - שמירה על ניגודיות מינימלית של 4.5:1</span>
-                </li>
-                <li className="flex items-start space-x-3 space-x-reverse">
-                  <i className="fas fa-check text-golden mt-1"></i>
-                  <span>גדלי טקסט ניתנים לשינוי - עד 200% ללא אובדן תוכן או פונקציונליות</span>
-                </li>
-                <li className="flex items-start space-x-3 space-x-reverse">
-                  <i className="fas fa-check text-golden mt-1"></i>
-                  <span>טקסט חלופי לתמונות - כל התמונות כוללות תיאור חלופי</span>
-                </li>
-                <li className="flex items-start space-x-3 space-x-reverse">
-                  <i className="fas fa-check text-golden mt-1"></i>
-                  <span>כותרות מבניות - שימוש נכון בכותרות H1-H6 לניווט קל</span>
-                </li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">כלי נגישות</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                האתר כולל סרגל נגישות מתקדם המאפשר התאמה אישית של חוויית הגלישה:
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li>• הגדלה/הקטנה של טקסט</li>
-                <li>• ניגודיות גבוהה</li>
-                <li>• הפיכת צבעים</li>
-                <li>• קו תחתון לקישורים</li>
-                <li>• איפוס הגדרות</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">בדיקות נגישות</h2>
-              <p className="text-gray-700 leading-relaxed">
-                האתר נבדק באופן קבוע על ידי מומחי נגישות וכלים אוטומטיים, כולל:
-              </p>
-              <ul className="list-disc list-inside mt-4 space-y-2 text-gray-700">
-                <li>בדיקות ידניות עם קוראי מסך (NVDA, JAWS, VoiceOver)</li>
-                <li>בדיקות ניווט במקלדת</li>
-                <li>בדיקות ניגודיות צבעים</li>
-                <li>בדיקות עם כלים אוטומטיים (axe, WAVE)</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">משוב ופניות</h2>
-              <div className="bg-cream p-6 rounded-xl">
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  אנו מקבלים בברכה משוב על נגישות האתר ופועלים ללא הרף לשיפורו. 
-                  אם נתקלתם בבעיות נגישות או יש לכם הצעות לשיפור, אנא צרו איתנו קשר:
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">מה עוד לא נבדק</h2>
+              <Prose measure="answer" className="mt-4">
+                <p>
+                  אנחנו מעדיפים לומר את זה מראש ולא להצהיר על רמת התאמה שלא
+                  נבדקה:
                 </p>
-                <div className="space-y-2">
-                  <p><strong>טלפון:</strong> <a href="tel:052-1234567" className="text-golden hover:text-dark-golden">052-123-4567</a></p>
-                  <p><strong>אימייל:</strong> <a href="mailto:accessibility@mamamia.co.il" className="text-golden hover:text-dark-golden">accessibility@mamamia.co.il</a></p>
-                  <p><strong>כתובת:</strong> מדינת היהודים 85, הרצליה פיתוח</p>
-                </div>
-              </div>
+                <ul>
+                  {NOT_VERIFIED.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </Prose>
             </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">עדכונים</h2>
-              <p className="text-gray-700 leading-relaxed">
-                הצהרת נגישות זו עודכנה בתאריך: ינואר 2024<br/>
-                האתר נבדק לאחרונה בתאריך: ינואר 2024
-              </p>
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">נתקלתם במשהו שלא עובד?</h2>
+              <Prose measure="answer" className="mt-4">
+                <p>
+                  ספרו לנו מה ניסיתם לעשות ואיפה זה נתקע — נתקן, ובינתיים נסגור
+                  את מה שרציתם בטלפון או בוואטסאפ. אפשר להזמין קייטרינג מאיתנו
+                  לגמרי בעל פה; אין שום דבר באתר שחייבים למלא לבד.
+                </p>
+              </Prose>
+
+              <div className="mt-6 flex flex-wrap items-center gap-4">
+                <Button
+                  variant="wa"
+                  size="sm"
+                  href={waLink("היי, נתקלתי בבעיית נגישות באתר.")}
+                  target="_blank"
+                >
+                  וואטסאפ
+                </Button>
+
+                <a
+                  href={telLink()}
+                  data-tel=""
+                  className="text-sm text-fg no-underline hover:text-accent"
+                  onClick={() => capturePhoneClick({ callLocation: "accessibility" })}
+                >
+                  <Num>{PHONE.display}</Num>
+                </a>
+              </div>
             </section>
           </div>
         </div>
-      </main>
-      
-      <Footer />
-      <BackToTop />
-    </div>
+      </section>
+    </>
   );
 }

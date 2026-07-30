@@ -1,182 +1,234 @@
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
-import { AccessibilityToolbar } from '@/components/ui/accessibility-toolbar';
-import { BackToTop } from '@/components/ui/back-to-top';
+/**
+ * ═══════════════════════════════════════════════════════════════════════
+ *  P-21 · `/privacy` — מדיניות פרטיות. spec 01 §4 P-21, §0.1.
+ * ═══════════════════════════════════════════════════════════════════════
+ *
+ * הגרסה שהוחלפה כאן הייתה קובץ רפליט שלא נגע בו אף אחד מגל הכתיבה, והיא
+ * הפרה את חוק 1 בשש נקודות נפרדות: ממונה פרטיות בשם בדוי («דוד כהן»),
+ * טלפון ממלא מקום `052-123-4567`, כתובת מומצאת, מייל שאיש אינו קורא,
+ * תקופות שמירה מומצאות (3 שנים / 7 שנים / «לצמיתות»), והתחייבות להודעה
+ * מוקדמת של 30 יום על שינוי מדיניות. אף אחת מהן אינה עובדה שבידינו.
+ * ‎01 §0.1 מסמן את השורה `privacy.tsx:161` בשמה.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  מה נשאר, ולמה דווקא זה
+ * ─────────────────────────────────────────────────────────────────────
+ * כל טענה בעמוד הזה נגזרת מקוד שאפשר לפתוח ולקרוא, ולא מהצהרה של אף אחד:
+ *
+ *   · רשימת השדות     — `shared/lead-schema.ts` §quoteSchema. זה בדיוק
+ *                        מה שהטופס שולח, לא מה שנחמד לכתוב שהוא שולח.
+ *   · שדות הייחוס      — `lib/attribution.ts`. sessionStorage, פר־לשונית.
+ *   · העדר עוגיות צד ג׳ — INV-10. `lib/analytics.ts` הוא no-op כל עוד אין
+ *                        `window.gtag`, ואין היום תג באתר.
+ *   · הזכויות          — חוק הגנת הפרטיות התשמ״א־1981. ציטוט דין, לא הבטחה.
+ *
+ * ‎`legalName` / `companyId` / `privacyEmail` ריקים ⇒ גוש זהות בעל המאגר
+ * **אינו מרונדר כלל**, ולא כמסגרת ריקה. אותו היגיון בדיוק כמו
+ * ‎`CollectionNotice` ב־`quote/legal-blocks.tsx`, ומאותה סיבה.
+ *
+ * ‎`leadRetentionMonths` ריק ⇒ אין כאן שום מספר חודשים. מדיניות שמירה היא
+ * התחייבות, וניחוש שלה הוא בדיוק הכשל שהקובץ הקודם הדגים. העמוד אומר
+ * שאפשר לבקש מחיקה בטלפון — וזה נכון היום.
+ *
+ * ‎**חוסם עלייה לאוויר:** בלי זהות בעל המאגר ובלי תקופת שמירה זה אינו
+ * מסמך שמשחרר חובת גילוי. מדווח ככזה בדוח החזרה.
+ */
+
+import { Head } from "@/components/seo/head";
+import { Num, Prose, Rule } from "@/components/primitives";
+import { PHONE, SLOTS, filled, telLink } from "@/content/business";
+import { capturePhoneClick } from "@/lib/lead-client";
+import { buildBreadcrumbList, buildWebPage, PAGE_META } from "@/lib/seo";
+
+const META = PAGE_META["/privacy"];
+
+/** מה שהטופס באמת שולח — `shared/lead-schema.ts`. */
+const COLLECTED = [
+  "שם וטלפון — בלעדיהם אין למי לחזור.",
+  "כתובת מייל, אם מסרתם. אינה שדה חובה.",
+  "הערוץ שבו אתם מעדיפים שנחזור אליכם: וואטסאפ או טלפון.",
+  "פרטי האירוע: סוג, טווח סועדים, תאריך (או שהוא עוד לא נקבע), אזור, פורמט הגשה, ומנות שסימנתם.",
+  "טקסט חופשי, אם כתבתם משהו בשדה ההערות.",
+  "האם סימנתם הסכמה לדיוור שיווקי. ברירת המחדל היא שלא.",
+] as const;
+
+/** מה שנאסף טכנית — `lib/attribution.ts`. */
+const TECHNICAL = [
+  "הדף שממנו נשלחה הפנייה, דף הנחיתה שאליו הגעתם, והאתר שהפנה אתכם.",
+  "מזהה מושב זמני, שנשמר ב־sessionStorage של הלשונית ונמחק כשסוגרים אותה.",
+  "פרמטרי קמפיין (UTM) ומזהי הקלקה של מערכות הפרסום, אם הגעתם ממודעה.",
+] as const;
+
+/** ציטוט דין — חוק הגנת הפרטיות התשמ״א־1981. */
+const RIGHTS = [
+  "לדעת אם מוחזק עליכם מידע, ולעיין בו.",
+  "לבקש לתקן מידע שאינו נכון.",
+  "לבקש למחוק את הפנייה.",
+  "לבטל הסכמה לדיוור בכל רגע, גם אם נתתם אותה קודם.",
+  "להגיש תלונה לרשות להגנת הפרטיות.",
+] as const;
+
+/** גוש זהות בעל המאגר. ריק לגמרי ⇒ null, ולא מסגרת ריקה. */
+function Custodian() {
+  const name = SLOTS.legalName;
+  const companyId = SLOTS.companyId;
+  const email = SLOTS.privacyEmail;
+
+  if (!filled(name) && !filled(email)) return null;
+
+  return (
+    <>
+      <Rule />
+      <section className="pt-8">
+        <h2 className="text-xl">מי מחזיק במידע</h2>
+        <Prose measure="answer" className="mt-4">
+          <p>
+            {filled(name) ? (
+              <>
+                {name}
+                {filled(companyId) ? (
+                  <>
+                    , ח.פ. <Num inline>{companyId}</Num>
+                  </>
+                ) : null}
+                .{" "}
+              </>
+            ) : null}
+            {filled(email) ? <>לפניות בנושא פרטיות: {email}.</> : null}
+          </p>
+        </Prose>
+      </section>
+    </>
+  );
+}
 
 export default function Privacy() {
   return (
-    <div className="min-h-screen bg-warm-white text-dark-brown">
-      <AccessibilityToolbar />
-      <Header />
-      
-      <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-dark-brown mb-4">מדיניות פרטיות</h1>
-            <p className="text-xl text-gray-600">איך אנחנו שומרים על הפרטיות שלכם במאמאמיה</p>
-            <div className="w-24 h-1 bg-golden mx-auto mt-6"></div>
-          </div>
-          
-          <div className="bg-white rounded-2xl shadow-xl p-8 space-y-8">
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">הקדמה</h2>
-              <p className="text-gray-700 leading-relaxed">
-                מאמאמיה ("החברה", "אנחנו", "שלנו") מחויבת להגנה על הפרטיות של לקוחותיה ומבקרי האתר. 
-                מדיניות פרטיות זו מסבירה כיצד אנו אוספים, משתמשים ומגנים על המידע האישי שלכם.
+    <>
+      <Head
+        meta={META}
+        jsonLd={[buildWebPage(META), buildBreadcrumbList(META.breadcrumb)]}
+      />
+
+      <section className="pb-sec pt-[clamp(2.5rem,7vw,4.5rem)]">
+        <div className="wrap">
+          <div className="max-w-answer">
+            <p className="eyebrow m-0">מדיניות פרטיות</p>
+
+            <h1 className="mt-4 text-3xl">מה נשמר מהפנייה שלכם, ולמה</h1>
+
+            <Prose size="lede" measure="lede" className="mt-5">
+              <p>
+                אנחנו אוספים את מה שדרוש כדי לחזור אליכם עם הצעה, ולא מעבר לזה.
+                מה שכתוב כאן הוא מה שהטופס באמת שולח.
               </p>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">איזה מידע אנחנו אוספים</h2>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-saddle-brown mb-2">מידע שאתם מספקים לנו:</h3>
-                  <ul className="list-disc list-inside space-y-2 text-gray-700">
-                    <li>שם מלא</li>
-                    <li>מספר טלפון</li>
-                    <li>כתובת אימייל</li>
-                    <li>פרטי האירוע (סוג, תאריך, מספר אורחים)</li>
-                    <li>העדפות תזונתיות ואלרגיות</li>
-                    <li>תקציב משוער</li>
-                    <li>פרטים נוספים על האירוע</li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold text-saddle-brown mb-2">מידע שנאסף אוטומטית:</h3>
-                  <ul className="list-disc list-inside space-y-2 text-gray-700">
-                    <li>כתובת IP</li>
-                    <li>סוג דפדפן ומערכת הפעלה</li>
-                    <li>דפים שביקרתם באתר</li>
-                    <li>זמן הביקור ומשך השהייה</li>
-                    <li>מקור ההפניה (איך הגעתם לאתר)</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">איך אנחנו משתמשים במידע</h2>
-              <ul className="space-y-2 text-gray-700">
-                <li>• יצירת קשר איתכם בנוגע לפנייתכם</li>
-                <li>• הכנת הצעת מחיר מותאמת לאירוע שלכם</li>
-                <li>• תיאום האירוע ומתן השירות</li>
-                <li>• שיפור השירותים שלנו</li>
-                <li>• שליחת עדכונים על השירותים שלנו (רק אם הסכמתם)</li>
-                <li>• עמידה בחובות החוקיות שלנו</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">שיתוף מידע עם צדדים שלישיים</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                אנחנו לא מוכרים, משכירים או מעבירים את המידע האישי שלכם לצדדים שלישיים, 
-                למעט במקרים הבאים:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li>ספקי שירות הנדרשים לביצוע האירוע (קייטרינג, מלצרים, הובלה)</li>
-                <li>ספקי שירותים טכניים (אירוח אתר, מערכות CRM)</li>
-                <li>כאשר נדרש על פי חוק</li>
-                <li>בהסכמתכם המפורשת</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">אבטחת המידע</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                אנו נוקטים באמצעי אבטחה מתקדמים להגנה על המידע שלכם:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li>הצפנת נתונים בהעברה ובאחסון</li>
-                <li>גישה מוגבלת למידע רק לעובדים המורשים</li>
-                <li>עדכונים שוטפים של מערכות האבטחה</li>
-                <li>גיבוי קבוע של המידע</li>
-                <li>פיקוח ובקרה מתמשכת על מערכות המידע</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">זכויותיכם</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                בהתאם לחוק הגנת הפרטיות התשמ"א-1981 ותקנות הגנת הפרטיות, אתם זכאים:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li>לדעת איזה מידע אישי מוחזק עליכם</li>
-                <li>לקבל עותק מהמידע</li>
-                <li>לתקן מידע שגוי</li>
-                <li>למחוק מידע (בכפוף לחובות שמירה חוקיות)</li>
-                <li>להתנגד לעיבוד המידע למטרות שיווק</li>
-                <li>להגיש תלונה לרשות להגנת הפרטיות</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">עוגיות (Cookies)</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                האתר שלנו משתמש בעוגיות לשיפור חוויית הגלישה:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li>עוגיות הכרחיות לפעולת האתר</li>
-                <li>עוגיות לשיפור הביצועים</li>
-                <li>עוגיות אנליטיות (Google Analytics) - רק בהסכמתכם</li>
-              </ul>
-              <p className="text-gray-700 leading-relaxed mt-4">
-                אתם יכולים לנהל את העדפות העוגיות דרך הגדרות הדפדפן שלכם.
-              </p>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">שמירת מידע</h2>
-              <p className="text-gray-700 leading-relaxed">
-                אנו שומרים את המידע האישי שלכם למשך התקופה הנדרשת לביצוע השירותים ובהתאם לחובות החוקיות שלנו:
-              </p>
-              <ul className="list-disc list-inside mt-4 space-y-2 text-gray-700">
-                <li>פרטי יצירת קשר: עד 3 שנים ממועד האירוע</li>
-                <li>חשבוניות ומסמכים כספיים: 7 שנים</li>
-                <li>תיעוד אלרגיות ומגבלות תזונתיות: לצמיתות (לבטיחות)</li>
-              </ul>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">קטינים</h2>
-              <p className="text-gray-700 leading-relaxed">
-                השירותים שלנו מיועדים למבוגרים. איננו אוספים מידע אישי מקטינים מתחת לגיל 18 ללא הסכמת הורים.
-              </p>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">שינויים במדיניות</h2>
-              <p className="text-gray-700 leading-relaxed">
-                אנו עשויים לעדכן מדיניות פרטיות זו מעת לעת. שינויים מהותיים יפורסמו באתר עם הודעה מוקדמת של 30 יום.
-              </p>
-            </section>
-            
-            <section>
-              <h2 className="text-2xl font-bold text-dark-brown mb-4">יצירת קשר</h2>
-              <div className="bg-cream p-6 rounded-xl">
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  לשאלות או בקשות בנוגע למדיניות הפרטיות, אנא צרו קשר:
+            </Prose>
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">מה נאסף בטופס</h2>
+              <Prose measure="answer" className="mt-4">
+                <p>
+                  מסירת הפרטים היא מרצונכם ואין חובה חוקית למסור אותם. בלי שם
+                  וטלפון פשוט אין לנו דרך לחזור אליכם.
                 </p>
-                <div className="space-y-2">
-                  <p><strong>ממונה על הגנת הפרטיות:</strong> דוד כהן</p>
-                  <p><strong>טלפון:</strong> <a href="tel:052-1234567" className="text-golden hover:text-dark-golden">052-123-4567</a></p>
-                  <p><strong>אימייל:</strong> <a href="mailto:privacy@mamamia.co.il" className="text-golden hover:text-dark-golden">privacy@mamamia.co.il</a></p>
-                  <p><strong>כתובת:</strong> מדינת היהודים 85, הרצליה פיתוח</p>
-                </div>
-              </div>
+                <ul>
+                  {COLLECTED.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </Prose>
             </section>
-            
-            <section>
-              <p className="text-sm text-gray-600 text-center">
-                מדיניות פרטיות זו עודכנה לאחרונה: ינואר 2024
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">מה נאסף טכנית</h2>
+              <Prose measure="answer" className="mt-4">
+                <ul>
+                  {TECHNICAL.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+                <p>
+                  זה משמש כדי לדעת אילו עמודים מייצרים פניות. אין באתר עוגיות
+                  פרסום של צד שלישי, ואין בו כרגע כלי מדידה חיצוני כלשהו. אם
+                  ייווסף אחד, העמוד הזה יעודכן לפני שהוא נדלק.
+                </p>
+                <p>
+                  דבר אחד כן נטען מגורם חיצוני: הגופנים של האתר נטענים כרגע
+                  משרתי הגופנים של גוגל, וכתובת ה־IP שלכם מגיעה אליהם בעת
+                  הטעינה. אנחנו עובדים על העברת הגופנים לשרת שלנו, וכשזה יקרה
+                  הפסקה הזאת תימחק.
+                </p>
+              </Prose>
+            </section>
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">למה זה משמש</h2>
+              <Prose measure="answer" className="mt-4">
+                <p>
+                  כדי לחזור אליכם בנוגע לפנייה, להכין הצעת מחיר, ולתאם את
+                  האירוע. דיוור שיווקי נשלח רק אם סימנתם אותו במפורש, וכל הודעה
+                  כזאת נושאת דרך להסיר את ההסכמה.
+                </p>
+              </Prose>
+            </section>
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">מי רואה את זה</h2>
+              <Prose measure="answer" className="mt-4">
+                <p>
+                  מי שמטפל בהזמנות בשלוש המסעדות, וספק התוכנה שמאחסן את האתר
+                  ואת מסד הנתונים. איננו מוכרים ואיננו משכירים את המידע לאף אחד.
+                  מסירה לגורם נוסף תיעשה רק אם חובה שבדין מחייבת אותה.
+                </p>
+              </Prose>
+            </section>
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">הזכויות שלכם</h2>
+              <Prose measure="answer" className="mt-4">
+                <p>לפי חוק הגנת הפרטיות התשמ״א־1981 אתם רשאים:</p>
+                <ul>
+                  {RIGHTS.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+                <p>
+                  כדי לממש כל אחת מהן — התקשרו, ונטפל בזה. אין צורך בנוסח מיוחד
+                  ואין טופס למלא.
+                </p>
+              </Prose>
+            </section>
+
+            <Custodian />
+
+            <Rule />
+
+            <section className="pt-8">
+              <h2 className="text-xl">לדבר איתנו על זה</h2>
+              <p className="mt-4">
+                <a
+                  href={telLink()}
+                  data-tel=""
+                  className="text-fg no-underline hover:text-accent"
+                  onClick={() => capturePhoneClick({ callLocation: "privacy" })}
+                >
+                  <Num>{PHONE.display}</Num>
+                </a>
               </p>
             </section>
           </div>
         </div>
-      </main>
-      
-      <Footer />
-      <BackToTop />
-    </div>
+      </section>
+    </>
   );
 }

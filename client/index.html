@@ -5,10 +5,12 @@
     <!-- maximum-scale הוסר: הוא חוסם זום בפינץ' וזו הפרה של WCAG 1.4.4 -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>מאמא מיה קייטרינג | קייטרינג לאירועים בהרצליה פיתוח, רעננה ופתח תקווה</title>
+    <!-- זהה מילה במילה ל־PAGE_META["/"] (lib/seo.ts, 01 §4 P-01) — לעדכן יחד.
+         זמן תגובה נמחק מכאן: SLOTS.responseTime הוא null. אין להחזיר בלי ערך חתום. -->
+    <title>קייטרינג מאמא מיה | מהמטבח של המסעדה האיטלקית בהרצליה פיתוח, רעננה ופתח תקווה</title>
     <meta
       name="description"
-      content="קייטרינג מהמטבחים של מאמא מיה — אירועי חברות, שמחות פרטיות ואירוח משפחתי. שלוש מסעדות פעילות בהרצליה פיתוח, רעננה ופתח תקווה. הצעת מחיר תוך 24 שעות."
+      content="התפריט של המסעדה, אצלכם באירוע. שלושה מטבחים פעילים בהרצליה פיתוח, רעננה ופתח תקווה."
     />
     <meta name="theme-color" content="#fbf8f3" />
 
@@ -18,10 +20,14 @@
     <meta property="og:title" content="מאמא מיה קייטרינג — מהמטבח שלנו לאירוע שלכם" />
     <meta
       property="og:description"
-      content="שלוש מסעדות פעילות, צוות שמבשל כל יום, ואירוע שאתם רק מארחים בו."
+      content="התפריט של המסעדה, אצלכם באירוע. שלושה מטבחים פעילים בהרצליה פיתוח, רעננה ופתח תקווה."
     />
     <meta name="twitter:card" content="summary_large_image" />
 
+    <!-- חוב פתוח — מפר INV-10 (01 §0.4, "no Google Fonts"): משדר IP של כל מבקר.
+         נשאר עד שיהיו גופנים מוקטנים ב־client/public/fonts/ — ראו index.css §4.2:
+         @font-face מקומי מול 404 מפיל את העמוד ל־fallback, ולכן מחיקה לבדה מזיקה.
+         להסיר יחד עם הוספת ה־@font-face, ואז למחוק את ההצהרה ב־/privacy. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -234,7 +234,7 @@ export const COPY = {
   legend5: "לאן נחזור אליכם?",
 
   next: "הלאה",
-  back: "← חזרה",
+  back: "→ חזרה",
   submit: "שלחו לי הצעה",
   submitWa: "עדיף לי בוואטסאפ",
   restart: "להתחיל מחדש",

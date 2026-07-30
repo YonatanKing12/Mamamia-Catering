@@ -137,6 +137,15 @@ export const RadioCardGroup = React.forwardRef<HTMLFieldSetElement, RadioCardGro
         {error ? (
           <p
             id={errorId}
+            /*
+             * role="alert" ולא רק aria-describedby על ה־fieldset.
+             * VoiceOver ב־Safari אינו מקריא aria-describedby של role=group
+             * כשהמיקוד נוחת על רדיו בתוכו, ו־JAWS לא עקבי בזה. בלי זה,
+             * משתמש קורא־מסך שלוחץ «הלאה» בלי לבחור שומע את תווית הרדיו
+             * ותו לא — והרעידה החזותית מושתקת ב־prefers-reduced-motion.
+             * שלבים 1, 2 ו־4 הם כל מסלול ההמרה.
+             */
+            role="alert"
             className="mt-[.6rem] flex max-w-body items-start gap-[.35rem] text-xs text-danger"
           >
             <X

@@ -134,12 +134,14 @@ export function EstimateRange({ className, ...input }: EstimateRangeProps) {
       {/* הסייג מעל המספר, באותו גודל ואותו משקל — spec 02 §2.3. */}
       <p className="max-w-body text-lg font-medium leading-sub">{resolved.qualifier}</p>
 
-      {/* טווח מספרי חייב מכולה LTR שלמה. bdi אינו פותר: האיזולט מוחלף
-          ב־U+FFFC שהוא עצמו מחלקה ON, ושני רצפי הספרות עדיין מתחלפים. */}
+      {/*
+        מחבר עברי במקום מקף בין שני סכומים.
+        מקף בין שני רצפי ספרות בפסקה RTL מתהפך — ו־U+2013 בין ספרות הוא
+        גם הפרה של L-14. מילות החיבור «בין» ו«ל־» הן תווים RTL חזקים,
+        ולכן כל סכום נשאר במקומו ואין צורך במכולת LTR עוטפת בכלל.
+      */}
       <p className="mt-3 text-lg font-medium">
-        <Ltr className="num">
-          <Money value={resolved.lo} /> – <Money value={resolved.hi} />
-        </Ltr>
+        בין <Money value={resolved.lo} /> ל־<Money value={resolved.hi} />
       </p>
 
       <p className="mt-3 max-w-body text-xs text-fg-subtle">{resolved.vatLine}</p>

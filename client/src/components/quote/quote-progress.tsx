@@ -31,6 +31,8 @@ export function QuoteProgress({ step, className }: QuoteProgressProps) {
       <div
         className="h-[2px] overflow-hidden rounded-pill bg-rule"
         role="progressbar"
+        /* בלי שם נגיש קורא־מסך מכריז «progressbar» בלבד — WCAG 4.1.2 */
+        aria-label="התקדמות בקבלת הצעה"
         aria-valuemin={1}
         aria-valuemax={STEP_COUNT}
         aria-valuenow={step}

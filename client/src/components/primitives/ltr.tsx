@@ -76,7 +76,22 @@ export const Money = React.forwardRef<HTMLSpanElement, MoneyProps>(function Mone
   { value, className, ...rest },
   ref,
 ) {
-  const parts = ils.formatToParts(value);
+  /*
+   * Intl מזריק U+200F (RLM) לתוך הפלט של he-IL. אומת:
+   *   formatToParts(7100) → ["‏", "7", ",", "100", " ‏", "₪"]
+   *   קודים:               U+200F, 7, ",", 100, U+00A0 U+200F, ₪
+   *
+   * RLM הוא תו RTL חזק. מספר בודד נראה תקין איתו, אבל שני סכומים
+   * באותה מכולה — טווח מחיר — מקבלים שניהם רמת bidi 1, וכלל L2 מהפך
+   * את סדרם: «₪7,100 – ₪8,300» מוצג כ־«8,300 – ₪ 7,100 ₪», כלומר
+   * האגפים מתחלפים וסימני השקל מתנתקים מהמספרים שלהם.
+   *
+   * הסימנים מיותרים כאן ממילא: המכולה עצמה נושאת את הכיוון.
+   */
+  const parts = ils.formatToParts(value).map((p) => ({
+    ...p,
+    value: p.value.replace(/[‎‏]/g, ""),
+  }));
 
   return (
     <span ref={ref} className={cn("num", "nowrap", className)} {...rest}>

@@ -314,7 +314,7 @@ Markup order — the qualifier is the **same type size, weight and colour** as t
 ```
 טווח מחירים משוער
 {{LEGAL.PRICE_ESTIMATE_NOTE}}                 ← same size, same weight, above the number
-‹span dir="ltr"›8,000 – 14,000 ₪‹/span›       ← tabular-nums, LTR-wrapped
+‹span dir="ltr"›{{LO}} – {{HI}} ₪‹/span›       ← tabular-nums, LTR-wrapped
 {{VAT_LINE}}                                   ← derived from PRICING.vatStatus, never invented
 מבוסס על מחירון {{PRICING.approvedAt}}. הערכה בלבד ואינה הצעה מחייבת.
 המחיר הסופי ייקבע בהצעה בכתב לאחר בירור פרטי האירוע.
@@ -606,7 +606,7 @@ The marketing checkbox is not optional to *build*. `ס' 30א לחוק התקשו
 Directly under the submit button:
 
 ```
-לא שולחים ניוזלטר ולא מעבירים את הפרטים לאף אחד.
+לא שולחים ניוזלטר.
 שיחה או וואטסאפ אחד בנוגע לאירוע — וזה הכל.
 ```
 
@@ -720,7 +720,7 @@ The best top-of-funnel mechanic in any of the three judged directions, and the m
 - Clicking it is **PII-free**, requires no scroll, and produces a one-line acknowledgement in place: `נוסף לתפריט שלכם · {n} מנות`.
 - A small persistent counter appears in the sticky bar (`{n} מנות`) linking to `#quote`. It is a text affordance, not a button, and does not count against the two-CTA rule.
 - Selections persist in `localStorage` under the builder draft (§5.1) and are sent to the draft row.
-- On entering the builder, selections appear as a row in the brief card: `מהתפריט: פפרדלה רגו · קרפצ׳ו · טירמיסו`. They are removable there.
+- On entering the builder, selections appear as a row in the brief card: `מהתפריט: {{DISH_1}} · {{DISH_2}} · {{DISH_3}}`. They are removable there.
 - Selecting a dish that belongs to exactly one service format seeds `service_format`. Selecting dishes across formats seeds nothing and is not an error — the builder simply asks nothing extra.
 - Analytics: `add_to_brief` with `dish_id`, `source_page`, `brief_size` (§11.2).
 
@@ -931,7 +931,7 @@ Written in **first person as the customer** — the customer is the sender, and 
 תאריך משוער: 15/09/2026
 אזור: הרצליה
 סניף מועדף: הרצליה פיתוח
-מהתפריט: פפרדלה רגו, קרפצ׳ו, טירמיסו
+מהתפריט: {{DISH_1}}, {{DISH_2}}, {{DISH_3}}
 
 מספר פנייה:
 MM-7F3K2Q

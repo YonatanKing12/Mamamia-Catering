@@ -235,7 +235,7 @@ Every contract is complete enough to build from alone. `SLOT.X` does not exist y
 - **Description:** `התפריט של המסעדה, אצלכם באירוע. שלושה מטבחים פעילים בהרצליה פיתוח, רעננה ופתח תקווה.`
 - **H1 (fixed, three typographic lines, no rotation, no carousel):**
   `התפריט של המסעדה — אצלכם באירוע.`
-- **Lede:** `מאמא מיה היא מסעדה איטלקית עם שלושה מטבחים פעילים: הרצליה פיתוח, רעננה ופתח תקווה. מה שכתוב כאן מתבשל שם כל יום.`
+- **Lede:** `מאמא מיה היא מסעדה איטלקית עם שלושה מטבחים פעילים: הרצליה פיתוח, רעננה ופתח תקווה. מה שכתוב כאן מתבשל במטבחי המסעדה.`
   *(The second sentence of the direction's lede — the walk-in-tonight promise — moves into `TastingBand` and renders only when `SLOT.TASTING_POLICY` is filled. It is a policy, not a fact we hold.)*
 - **Fact line, clause-level pruning (G5):** `תשובה תוך {{RESPONSE_TIME}} · מ־{{MIN_GUESTS}} ועד {{MAX_GUESTS}} סועדים · שלושה מטבחים`. With `RESPONSE_TIME`, `MIN_GUESTS` and `MAX_GUESTS` all unset the line renders as `שלושה מטבחים` alone — the one clause that is a fact we hold. With every clause empty the line does not render.
   **There is no dateline.** A "updated today" eyebrow on a static marketing page is a manufactured freshness signal, is not an owner fact, breaks head-layer cacheability, and creates an SSR/CSR mismatch. If a real `dateModified` is ever wanted it comes from the content module's last git commit, nowhere else.
@@ -338,7 +338,7 @@ One contract, three instances, authored separately. These are **entity** pages: 
 - **Search intent:** transactional, high-frequency, low-drama. An office manager who needs platters on a date.
 - **Cluster A:** `מגשי אירוח` · `מגשי אירוח לחברות` · `מגשי אירוח משלוח` · `כיבוד לישיבות` · `כיבוד לישיבת הנהלה` · `קייטרינג לחברות` · `קייטרינג לכנס` · `קייטרינג להשקה` + geo variants + `מגשי כיבוד` / `מגש אירוח` singular.
 - **Title:** `מגשי אירוח וקייטרינג לחברות בהרצליה פיתוח | מאמא מיה — מטבח מסעדה`
-- **H1:** `ארוחת צוות שמגיעה בשעה שאמרנו, ומחזירה את כולם לעבודה.`
+- **H1:** `ארוחת צוות מהמטבח של המסעדה, בהרצליה פיתוח.`
 - **Conversion goal:** `generate_lead` via the structured builder. Corporate converts on a form plus email follow-up; the phone stays visible as a text link for same-day.
 - **Section order (inverted, G12):** `MenuHero` (no dish lines, no photo) → **`OpsFacts` above the fold on mobile** → `DecisionChecklist` → **01** `InclusionsExclusions` → **02** `MenuSheet` (platter-oriented, `הוסיפו לתפריט שלי`) → **03** `ServiceMenus` → `TastingBand` → **04** `LimitsBlock` → **05** `KitchensBand` *(ink; Herzliya first, its office-district proximity stated as a fact, not a boast)* → `ProcessSteps` + `TermsStrip` → `PastEvents` (corporate rows only) → **06** `QuoteBuilder` (`eventType` pre-seeded, visible, editable; step 5 gains an optional `מספר הזמנת רכש` field) → **07** `Faq` (procurement-shaped) → **08** `Colophon` → anchor `#gibush` linking to `/catering/fun-day` while that page is unbuilt.
 - **`OpsFacts` rows — four Slots, four questions an office manager asks before anything else.** Each row prunes independently: `שעת קאט־אוף להזמנה להיום {{CUTOFF_TIME}}` · `מינימום {{MIN_PORTIONS_TRAYS}}` · `משלוח {{DELIVERY_WINDOW}}` · `חשבונית והזמנת רכש {{PROCUREMENT_TERMS}}`. No row carries a default. All four unfilled ⇒ the block does not render and the page falls back to the `menu` register order.
@@ -354,7 +354,7 @@ One contract, three instances, authored separately. These are **entity** pages: 
 - **Search intent:** transactional, considered, emotionally loaded. Also carries the near-empty **private-dining-in-a-real-restaurant** cluster — the cheapest cluster in the map, because caterer-vs-caterer bidding never touches it.
 - **Cluster B + home hosting:** `מסעדה לאירוע פרטי` · `סגירת מסעדה לאירוע` · `מסעדה לאירוע קטן` · `חדר פרטי במסעדה` · `אירוע במסעדה הרצליה פיתוח` · `ארוחת שף בבית` · `אירוח בבית` · `מסיבת יום הולדת במסעדה`.
 - **Title:** `אירוע פרטי במסעדה או קייטרינג בבית | מאמא מיה — הרצליה פיתוח, רעננה, פתח תקווה`
-- **H1:** `בר מצווה, אירוסין, יום הולדת — עם התפריט שלנו ועם הצוות שלנו בשטח.`
+- **H1:** `בר מצווה, אירוסין, יום הולדת — מהמטבח של המסעדה, אצלכם.`
   *(`ברית` is deliberately absent from the H1: it carries kosher-mehadrin intent this business may not be able to serve, and putting it in an H1 is a targeting decision, not a copy decision.)*
 - **Conversion goal:** `generate_lead`, with the service-format question doing the qualifying work.
 - **Section order:** `MenuHero` → `DecisionChecklist` → **01** `ServiceMenus` (promoted above the dish list on this page — format is the decision here) → **02** `MenuSheet` → **03** `InclusionsExclusions` → `TastingBand` → **04** `LimitsBlock` → **05** `KitchensBand` (ink) → `ProcessSteps` + `TermsStrip` → `PastEvents` → **06** `QuoteBuilder` (service format surfaced on step 2) → **07** `Faq` → **08** `Colophon`.
@@ -370,7 +370,7 @@ One contract, three instances, authored separately. These are **entity** pages: 
 - **Search intent:** transactional but long-cycle (3–9 months out) and heavily price-compared.
 - **Cluster G:** `קייטרינג לבר מצווה` · `קייטרינג לבת מצווה` · `מחיר מנה בר מצווה`. **`קייטרינג חתונה` is an account-wide negative keyword, not a target** — wedding searchers are 6–12 months out, compare 5+ vendors, demand kashrut, and a restaurant group without a banquet hall loses them at high cost-per-lead.
 - **Title:** `קייטרינג לבר מצווה ולבת מצווה | מאמא מיה — מטבח מסעדה איטלקית`
-- **H1:** `בר מצווה ובת מצווה — מהמטבח של המסעדה, עם הצוות שלנו בשטח.`
+- **H1:** `בר מצווה ובת מצווה — מהמטבח של המסעדה, אצלכם.`
 - **Conversion goal:** `generate_lead` with a **long-lead date capture** — the `התאריך עוד לא נקבע` escape is the important control on this page — plus retargeting eligibility.
 - **Section order:** as P-09, with `ServiceMenus` returned to position 02 and a `GuestBands` explainer replacing it at 01.
 - **Kashrut handling — the whole page hangs on it, and this spec supplies no wording.** Kashrut is asked as a **requested constraint** on builder step 2 (a chip the buyer selects, which routes to a human answer), never asserted as a certification. The only kashrut text that may ever appear on this site is `locations[branch].kashrutStatementHe`, **rendered verbatim exactly as the owner wrote it**, in the FAQ, per branch. No composed sentence, no template, no ready-to-paste "safe formulation" — the first pass shipped one and it is deleted. If that Slot is empty for a branch, that branch has no kashrut text at all. If it is empty for every branch, this page ships in an explicitly kashrut-agnostic framing and the `ברית` / `שבת חתן` / `חינה` variants are negative-keyworded out rather than targeted. The word `כשר` in any inflection may not appear absent a current certificate.
@@ -402,7 +402,7 @@ If it is built, it is likely the highest-intent, lowest-competition entry point 
 - **Cluster H:** `קייטרינג ראש השנה` · `קייטרינג סוכות` · `קייטרינג שבועות` · `מגשי גבינות שבועות` · `ארוחת שבועות חלבית` · `קייטרינג חנוכה` · `קייטרינג סילבסטר`.
 - **The seasonality inversion is the strategic point of this page.** ראש השנה / סוכות is the market's peak. **פסח is a structural revenue hole for a pasta-and-bread kitchen — spend nothing on פסח keywords.** **שבועות is the one holiday where an Italian dairy kitchen is the best-positioned vendor in the entire market** — own `קייטרינג שבועות` and `מגשי גבינות` hard, where competition is thinnest and fit is perfect.
 - **Title pattern:** `קייטרינג ל{חג} {{YEAR}} | מאמא מיה — מטבח מסעדה איטלקית`. Appending the current year is a category freshness convention (competitors ship `תפריט 2026` in titles); `{{YEAR}}` is derived from `Asia/Jerusalem` at build time, never hardcoded.
-- **H1 pattern:** `ארוחת {חג} מהמטבח של המסעדה — ארוזה, מסומנת ומוכנה להגשה.`
+- **H1 pattern:** `ארוחת {חג} מהמטבח של המסעדה.`
 - **Conversion goal:** `generate_lead` with a hard order-by date.
 - **Architecture requirement — one reusable route with a date-driven seasonal slot, not five thin pages.** `client/src/content/seasons.ts`:
   ```ts
@@ -440,7 +440,7 @@ If it is built, it is likely the highest-intent, lowest-competition entry point 
 
 - **Search intent:** research → transactional. Mostly SEO/organic plus a cheap always-on ad group; must not carry the account.
 - **Cluster C:** `קייטרינג חלבי` · `קייטרינג חלבי לאירועים` · `קייטרינג חלבי לאירועים קטנים` · `קייטרינג איטלקי` · `קייטרינג גבינות` · `מגשי גבינות` · `בר גבינות לאירוע`.
-- **H1:** `קייטרינג חלבי איטלקי — אותו תקציב, שולחן עשיר יותר.`
+- **H1:** `קייטרינג חלבי איטלקי — מהמטבח של המסעדה.`
 - **Framing:** dairy is not a limitation, it is the reason the same budget buys a richer table. This is already the Israeli market's own argument, so it is pre-validated with buyers.
 - **Section order:** the canonical spine, `MenuSheet` filtered to dairy dishes.
 - **Links out:** `/catering/holidays` (שבועות), `/menus`, `/quote`.

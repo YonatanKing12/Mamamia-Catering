@@ -2,6 +2,8 @@
 
 כל פריט כאן הוא עובדה עסקית שאסור לנחש. אוחד מ-14 סוכני מחקר.
 
+**נסגר:** טלפון ווואטסאפ — 054-784-2680.
+
 1. Kashrut status per branch — certified or not, and by which body (rabbanut / בד"ץ / none). This is a strategy-blocking fact: it determines whether the אזכרה / ברית / שבת חתן / בר מצווה occasion pages can be built at all, and whether a kashrut trust badge exists to display. Must never be guessed.
 2. Minimum order per format (מגשי אירוח / בופה / מוגש בצלחות / עם מלצרים) — in portions and/or ₪. Competitors publish 12 units, 25 portions, 20 diners, 8 dishes.
 3. Lead time per format — hours or days of advance notice, and whether same-day or next-day is possible. Competitors publish 24 hours to 3–4 days.

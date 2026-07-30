@@ -55,8 +55,21 @@ const SIZE: Record<ButtonSize, string> = {
 /** ל־link אין מילוי ולכן גם לא ריפוד אופקי — רק יעד מגע של 44px (§10.6). */
 const LINK_SIZE = "min-h-[44px] px-0 py-2";
 
+/**
+ * ה־Button מרנדר `<a>` כשיש `href`, ו־`<button>` אחרת, ולכן הוא מעביר
+ * ל־onClick אירוע משני העולמות. הטיפוס הורש מ־ButtonHTMLAttributes בלבד,
+ * כך שכל קורא שכתב handler של עוגן — למשל בלוק וואטסאפ שחוטף את הניווט —
+ * נכשל בקומפילציה. הטיפוס מורחב לצומת של שני האלמנטים, שזה מה שהקומפוננטה
+ * באמת מעבירה.
+ */
+export type ButtonClickHandler = React.MouseEventHandler<HTMLButtonElement & HTMLAnchorElement>;
+
 export interface ButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "type" | "disabled"> {
+  extends Omit<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    "type" | "disabled" | "onClick"
+  > {
+  onClick?: ButtonClickHandler;
   variant?: ButtonVariant;
   size?: ButtonSize;
   /** נותן <a> במקום <button>. כל CTA שמנווט הוא קישור. */

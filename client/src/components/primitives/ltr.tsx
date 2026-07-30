@@ -1,0 +1,94 @@
+/**
+ * Ltr · Num · Money — §7.32, §4.6, §4.7, §4.9.
+ *
+ * ─── Ltr ───────────────────────────────────────────────────────
+ * טווח מספרים המחובר במקף עברי או en-dash מתהפך חזותית ב־RTL. אומת מול
+ * FriBidi ו־python-bidi, שניהם בהסכמה: U+2013 הוא מחלקה ON, כלל N1 חל,
+ * ספרות נספרות כ־R, ושני הצדדים מחליפים מקום. bdi ובידוד לא מתקנים את זה,
+ * כי איזולט מוחלף ב־U+FFFC שהוא עצמו ON. רק מכולה LTR סביב הטווח **כולו**
+ * עובדת. הניסוח המועדף הוא בכלל חיבור עברי («מ־… ועד …»), ו־Ltr הוא
+ * המוצא כשטווח מילולי הוא בלתי נמנע.
+ *
+ * ─── Num ───────────────────────────────────────────────────────
+ * tabular-nums הוא no-op שקט ב־Assistant: אין לה tnum בכלל, וספרת ה־1 שלה
+ * צרה ב־0.038em מכל השאר, כך שטור עם 1 לא מתיישר ואין לזה תיקון ב־CSS.
+ * Frank Ruhl Libre היא נושאת הספרות. חובה על מחיר, טלפון, מספר סועדים,
+ * תאריך ושעה.
+ *
+ * ─── Money ─────────────────────────────────────────────────────
+ * התבנית הקנונית של CLDR לישראל היא מספר תחילה, עם NBSP לפני הסימן.
+ * הפורמט נבנה עם locale מפורש: toLocaleString בלי ארגומנט נפתר ללוקאל של
+ * זמן הריצה, וקיבוץ האלפים הופך ללא־דטרמיניסטי בין סביבות.
+ * הסימן עצמו משורטט לרצועה העברית ולכן נמוך מהספרות — .shekel מתקן אותו.
+ */
+
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+export interface LtrProps extends React.HTMLAttributes<HTMLSpanElement> {}
+
+export const Ltr = React.forwardRef<HTMLSpanElement, LtrProps>(function Ltr(
+  { className, ...rest },
+  ref,
+) {
+  return (
+    <span ref={ref} dir="ltr" className={cn("[unicode-bidi:isolate]", className)} {...rest} />
+  );
+});
+
+export interface NumProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /** ספרות בתוך פרוזה עברית רצה: 0.94em, כי ספרה גבוהה מאות ב־20%–26%. */
+  inline?: boolean;
+  /** ברירת מחדל: לא נשבר לשורה. כבו רק במספר ארוך בתוך פסקה. */
+  nowrap?: boolean;
+}
+
+export const Num = React.forwardRef<HTMLSpanElement, NumProps>(function Num(
+  { inline = false, nowrap = true, className, ...rest },
+  ref,
+) {
+  return (
+    <span
+      ref={ref}
+      className={cn("num", inline && "num-inline", nowrap && "nowrap", className)}
+      {...rest}
+    />
+  );
+});
+
+/* locale מפורש. maximumFractionDigits: 0 — אין אגורות בהצעת מחיר לאירוע. */
+const ils = new Intl.NumberFormat("he-IL", {
+  style: "currency",
+  currency: "ILS",
+  maximumFractionDigits: 0,
+});
+
+export interface MoneyProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+  value: number;
+}
+
+/**
+ * הדרך היחידה המאושרת שדמות מטבע מגיעה ל־DOM. שום קומפוננטה לא כותבת
+ * סכום כליטרל — כל מספר מגיע ממודול תוכן דרך Slot, ושער ה־CI אוכף את זה
+ * בשני סדרי הכתיבה.
+ */
+export const Money = React.forwardRef<HTMLSpanElement, MoneyProps>(function Money(
+  { value, className, ...rest },
+  ref,
+) {
+  const parts = ils.formatToParts(value);
+
+  return (
+    <span ref={ref} className={cn("num", "nowrap", className)} {...rest}>
+      {parts.map((part, i) =>
+        part.type === "currency" ? (
+          <span key={i} className="shekel">
+            {part.value}
+          </span>
+        ) : (
+          <React.Fragment key={i}>{part.value}</React.Fragment>
+        ),
+      )}
+    </span>
+  );
+});

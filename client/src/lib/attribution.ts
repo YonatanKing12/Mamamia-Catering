@@ -49,7 +49,8 @@ const K_LAST = "mm_attr_last";
  * אמיתי נכשל בשליחה בגלל תו אחד בפרמטר שאיש לא שלט בו.
  */
 const UTM_FORBIDDEN = /[^\w\-. |/]+/gu;
-const CLICK_FORBIDDEN = /[^\w\-.]+/g;
+/* בלי דגל g — `test` על ביטוי גלובלי שומר lastIndex ומחזיר תשובות לסירוגין */
+const CLICK_FORBIDDEN = /[^\w\-.]/;
 
 const cleanUtm = (v: string | null | undefined): string | undefined => {
   if (!v) return undefined;
@@ -57,10 +58,16 @@ const cleanUtm = (v: string | null | undefined): string | undefined => {
   return out.length ? out : undefined;
 };
 
+/**
+ * מזהה קליק **נפסל ולא מנוקה**. חיתוך תו מתוך gclid יוצר מזהה שנראה
+ * תקין, נשמר בבסיס הנתונים, ואז לא מתאים לשום קליק בהעלאה ל־Ads —
+ * כלומר נתון שקרי במקום נתון חסר. מזהה אמיתי לעולם אינו מכיל תו כזה.
+ */
 const cleanClickId = (v: string | null | undefined): string | undefined => {
   if (!v) return undefined;
-  const out = v.replace(CLICK_FORBIDDEN, "").trim().slice(0, 300);
-  return out.length ? out : undefined;
+  const out = v.trim();
+  if (!out.length || out.length > 300) return undefined;
+  return CLICK_FORBIDDEN.test(out) ? undefined : out;
 };
 
 const cap = (v: string | null | undefined, n: number): string | undefined => {
@@ -194,8 +201,15 @@ function readTouchFromUrl(): Touch | null {
   return carriesSignal ? t : null;
 }
 
+/**
+ * נתיב בלבד, בלי query.
+ *
+ * שתי סיבות: `source_page` הוא מימד ב־GA4 ולא כתובת — query משתנה מפצל
+ * אותו לאלף ערכים; ורצועת ה־utm הייתה נשמרת פעמיים, גם בעמודות שלה וגם
+ * כאן, ומבזבזת את תקרת 200 התווים של השדה.
+ */
 function currentPath(): string {
-  return cap(window.location.pathname + window.location.search, 200) ?? "/";
+  return cap(window.location.pathname, 200) ?? "/";
 }
 
 function externalReferrer(): string | undefined {

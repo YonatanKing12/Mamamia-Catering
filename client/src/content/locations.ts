@@ -1,59 +1,54 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════
- *  הסניפים — נתוני המקום. spec 01 §6.1.
+ *  המסעדות — הקשר מותג. והקייטרינג — אזור השירות שלו, בנפרד.
  * ═══════════════════════════════════════════════════════════════════════
  *
- * `business.ts` מחזיק את מה שמאומת על העסק כולו: הטלפון, השם המשפטי,
- * ושלושת שמות הסניפים. הקובץ הזה מחזיק את מה שנכון **לסניף** — כתובת,
- * שעות, אזור חלוקה, שף, איסוף עצמי, קיבולת לאירוע פרטי, נגישות פיזית,
- * וקישור לתפריט המסעדה החי ולפרופיל Google.
+ * הקובץ הזה מחזיק **שני דברים שאסור לערבב**, וכל המבנה שלו נועד למנוע
+ * את הערבוב הזה:
  *
- * שלושה כללים מחזיקים אותו:
- *
- *   1. **שמות הסניפים אינם נכתבים כאן.** הם מיובאים מ־`business.ts`
- *      ומיוצאים מחדש. שני מקומות שבהם כתוב «רעננה» הם שני מקומות
- *      שיכולים להיפרד; מזהה סניף חדש בעסק יישבר כאן בקומפילציה, וזה
- *      בדיוק מה שצריך לקרות.
- *
- *   2. **כל שדה תפעולי הוא `Slot` והוא `null` היום.** קומפוננטה
- *      שנתקלת ב־null משמיטה את מה שהיא הייתה מציגה. אין ברירת מחדל,
- *      אין «צור קשר לפרטים», ואין תא ריק בטבלה. שלושת דפי הסניף חייבים
- *      להיראות מכוונים ושלמים כשכל המשבצות ריקות — זה המצב היום.
- *
- *   3. **אין כאן העתק של עובדה שכבר יושבת ב־`business.ts`.** כתובת,
- *      שעות, אזורים ושפים קיימים שם כ־Slots שטוחים לכל העסק. הבוררים
- *      כאן קוראים משם כשאין להם צורה מובנית משלהם — כך שיש מקור אחד
- *      לכל עובדה גם כשיש לה שתי צורות ייצוג.
+ *   1. `RESTAURANTS` — שלוש המסעדות. כתובת, שעות, שף, תפריט חי, פרופיל
+ *      Google. אלה עובדות על **מסעדה שפועלת לקהל הרחב**, והן הקשר מותג.
+ *   2. `CATERING_SERVICE_AREA` — לאן הקייטרינג מגיע. עובדה **נפרדת**,
+ *      שאינה נגזרת ואינה ניתנת לגזירה משלוש הנקודות שלמעלה.
  *
  * ─────────────────────────────────────────────────────────────────────
- *  היכן זה יושב
+ *  למה ההפרדה הזאת היא כל הקובץ
  * ─────────────────────────────────────────────────────────────────────
- * spec 01 §6.1 קורא לקובץ `client/src/data/locations.ts`, ודוח הביקורת
- * (D3) מבקש להעביר אותו ל־`shared/` כדי שהשרת יוכל לייבא אותו ל־JSON-LD
- * ולניתוב אזור→סניף. הקובץ נכתב בהתאם: **אין בו React, אין JSX, ואין
- * ייבוא מ־`client/`** מלבד `content/business.ts`. העברה ל־`shared/`
- * היא הזזת שני קבצים ותיקון נתיבי ייבוא, לא כתיבה מחדש.
+ * הקייטרינג מבושל במטבח של **אחת** מהמסעדות (`business.ts`, מקטע המיצוב).
+ * איזו — לא נמסר, ולכן `SLOTS.cateringKitchenBranch` הוא `null`.
+ *
+ * מכאן נובע כלל שאין ממנו חריגה: **אזור שירות אינו נגזר ממיקומי המסעדות.**
+ * מפה עם שלוש נעצים ורדיוס סביבן היא ניחוש שנראה כמו נתון. אם המטבח
+ * המבשל הוא בפתח תקווה, «רדיוס סביב הרצליה פיתוח» הוא הבטחת חלוקה שאין
+ * מאחוריה כלום; ואם הוא בהרצליה — הוא עדיין לא מחויב לכל מה שנמצא בטווח
+ * נסיעה ממנו. לכן הגרסה הקודמת של הקובץ, שהחזיקה `servesAreas` לכל סניף
+ * ופונקציית ניתוב `branchForArea(city)` שהמירה עיר למטבח, נמחקה. אין
+ * תחליף לה עד שהלקוח ימסור אזור חלוקה בפועל, ואז הוא ייכנס למשבצת אחת.
+ *
+ * מכאן נובע גם מה שאין כאן: **אין דפי סניף.** הגרסה הקודמת ייצרה
+ * ‎`/kitchens/{slug}` לשלוש המסעדות והחזיקה מנגנון slugs, ספירת «עובדות
+ * ייחודיות» וסף שחרור לכל דף. שלושה דפי מטבח הם בדיוק הטענה שנדחתה —
+ * הם מציגים רשת קייטרינג בת שלושה מטבחים. המודול הזה משרת היום את דף
+ * ‎`/kitchen` **היחיד** ואת הפוטר, ותו לא.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  שלושה כללים
+ * ─────────────────────────────────────────────────────────────────────
+ *   · **שמות המסעדות אינם נכתבים כאן.** הם מיובאים מ־`business.ts`
+ *     ומיוצאים מחדש. שני מקומות שבהם כתוב «רעננה» הם שני מקומות שיכולים
+ *     להיפרד; שינוי ב־`BRANCHES` נשבר כאן בקומפילציה, וזה מה שצריך לקרות.
+ *   · **כל שדה תפעולי הוא `Slot`, וכולם `null` היום.** קומפוננטה שנתקלת
+ *     ב־null משמיטה את מה שהיא הייתה מציגה. אין ברירת מחדל, אין
+ *     «צור קשר לפרטים», ואין תא ריק בטבלה.
+ *   · **אין React ואין JSX כאן**, ואין ייבוא מ־`client/` מלבד מודולי
+ *     ‎`content/`. אם הקובץ יעבור ל־`shared/` כדי שהשרת יבנה ממנו JSON-LD,
+ *     זו הזזת קובץ ותיקון נתיב — לא כתיבה מחדש.
  */
 
 import { BRANCHES, PHONE, SLOTS, filled, type BranchId, type Slot } from "@/content/business";
 
 export { BRANCHES, filled } from "@/content/business";
 export type { BranchId, Slot } from "@/content/business";
-
-/* ═══════════════════ מזהים ═══════════════════ */
-
-/** `herzliya_pituach` → `herzliya-pituach`. נגזר מהמזהה, לא נכתב ביד. */
-type Dashed<S extends string> = S extends `${infer A}_${infer B}` ? `${A}-${Dashed<B>}` : S;
-
-/** ה־slug של הסניף בכתובת — `/kitchens/{slug}`. spec 01 §1. */
-export type BranchSlug = Dashed<BranchId>;
-
-/**
- * גזירה זהה יושבת ב־`lib/seo.ts` (`branchSlug`). שתיהן נגזרות מ־`BranchId`
- * ואף אחת מהן אינה מחזיקה טבלת slugs כתובה ביד, ולכן מקור האמת נשאר
- * `BRANCHES`. אם ה־SEO וה־תוכן יאוחדו — זו הפונקציה שנשארת.
- */
-export const branchSlug = (id: BranchId): BranchSlug => id.replace(/_/g, "-") as BranchSlug;
 
 /* ═══════════════════ טיפוסי המשבצות ═══════════════════ */
 
@@ -69,8 +64,11 @@ export type Weekday =
 
 /**
  * שורת שעות. `labelHe` היא מה שנקרא על המסך, `dayOfWeek` היא מה שנפלט
- * ל־`openingHoursSpecification`. מחרוזת עברית חופשית אינה תקפה ב־JSON-LD
- * (`lib/seo.ts` מתעד זאת), ולכן השורה נושאת את שתי הצורות או אינה קיימת.
+ * ל־`openingHoursSpecification`. מחרוזת עברית חופשית אינה תקפה ב־JSON-LD,
+ * ולכן השורה נושאת את שתי הצורות או אינה קיימת.
+ *
+ * שעות אלה הן **שעות המסעדה**. הן אינן שעות מענה לפניות קייטרינג ואינן
+ * חלון חלוקה, ואין לרנדר אותן במשמעות הזאת.
  */
 export interface OpeningHoursRow {
   labelHe: string;
@@ -80,7 +78,7 @@ export interface OpeningHoursRow {
   closes: string;
 }
 
-/** כתובת מובנית. `street` לבדו אינו כתובת — העיר מגיעה מהסניף. */
+/** כתובת מובנית. `streetHe` לבדו אינו כתובת — העיר מגיעה מהמסעדה. */
 export interface PostalAddressHe {
   streetHe: string;
   postalCode?: Slot<string>;
@@ -89,42 +87,24 @@ export interface PostalAddressHe {
 /**
  * שף או מנהל מטבח.
  *
- * `consent === false` ⇒ השם אינו מרונדר בשום מקום, כולל ב־JSON-LD
- * (spec 01 §6.1). זו הסיבה שהשדה הזה אינו נקרא מ־`SLOTS.chefs`: שם
- * יושב שם בלי רשומת הסכמה, ושם של עובד אינו מתפרסם על סמך היעדר סירוב.
+ * `consent === false` ⇒ השם אינו מרונדר בשום מקום, כולל ב־JSON-LD.
+ * זו הסיבה שהשדה הזה אינו נקרא מ־`SLOTS.chefs`: שם יושב שם בלי רשומת
+ * הסכמה, ושם של עובד אינו מתפרסם על סמך היעדר סירוב.
  */
-export interface BranchChef {
+export interface RestaurantChef {
   nameHe: string;
   roleHe: Slot<string>;
   /** הסכמה מפורשת לפרסום השם באתר. בלעדיה אין רינדור. */
   consent: boolean;
 }
 
-/** איסוף עצמי מהמטבח. */
-export interface BranchPickup {
-  offered: boolean;
-  /** מינימום להזמנת איסוף — כלשון הבעלים. התחייבות מסחרית. */
-  minimumHe: Slot<string>;
-  hoursHe: Slot<string>;
-  /** היכן עוצרים, האם יש פריקה, וכמה זמן. */
-  loadingHe: Slot<string>;
-}
-
-/** יישוב שהמטבח הזה משרת בפועל. לא לנחש לפי מרחק. */
-export interface ServedArea {
-  cityHe: string;
-  driveMinutes: Slot<number>;
-  /** מינימום ודמי הובלה — כלשון הבעלים, אם נמסרו. */
-  minimumHe: Slot<string>;
-  deliveryFeeHe: Slot<string>;
-}
-
 /**
- * קיבולת לאירוע פרטי במסעדה.
+ * קיבולת לאירוע פרטי **במסעדה**.
  *
- * spec 01 P-09: עצם הצגת «אירוח אצלנו במסעדה» היא מצג שהמסעדות מארחות
- * אירועים פרטיים. כל עוד אין כאן ולו סניף אחד מלא — הפורמט השלישי אינו
- * מרונדר, הצ׳יפ בבנאי אינו קיים, ושום דבר באתר אינו רומז על השכרת מקום.
+ * זו עובדה על המסעדה, לא על הקייטרינג. עצם הצגתה היא מצג שהמסעדה מארחת
+ * אירועים פרטיים; כל עוד אין כאן ולו מסעדה אחת מלאה — פורמט ההגשה
+ * `at_restaurant` נשמט לגמרי, הצ׳יפ המקביל בבנאי אינו קיים, ושום דבר
+ * באתר אינו רומז על השכרת מקום. (spec 01 P-09)
  */
 export interface PrivateEventCapacity {
   seated: Slot<number>;
@@ -136,13 +116,13 @@ export interface PrivateEventCapacity {
 }
 
 /**
- * נגישות פיזית לסניף.
+ * נגישות פיזית למסעדה.
  *
  * תקנות שוויון זכויות מחייבות שהצהרת הנגישות תתאר את המצב **בפועל**.
  * כל שדה כאן הוא תיאור שנמסר, לא הבטחה שהורכבה. ריק ⇒ הצהרת הנגישות
- * אינה אומרת דבר על הסניף הזה, וזו התשובה הנכונה.
+ * אינה אומרת דבר על המסעדה הזאת, וזו התשובה הנכונה.
  */
-export interface BranchAccessibility {
+export interface RestaurantAccessibility {
   parkingHe: Slot<string>;
   entranceHe: Slot<string>;
   toiletHe: Slot<string>;
@@ -150,140 +130,161 @@ export interface BranchAccessibility {
   liftHe: Slot<string>;
 }
 
-/** טלפון סניפי, אם קיים כזה בנפרד מהמספר המרכזי. */
-export interface BranchPhone {
+/** טלפון מסעדתי, אם קיים כזה בנפרד מהמספר המרכזי. */
+export interface RestaurantPhone {
   display: string;
   tel: string;
   wa: string;
 }
 
-/* ═══════════════════ המשבצות לכל סניף ═══════════════════ */
+/* ═══════════════════ המשבצות לכל מסעדה ═══════════════════ */
 
 /**
  * כל מה שאינו מאומת. כל שדה `null`, וזה המצב התקין.
  * כשממלאים שדה — למחוק את ה־TODO ולציין מקור ותאריך, כמו ב־`PHONE`.
+ *
+ * שימו לב למה שאין ברשימה הזאת, ולמה: **אזור חלוקה, מינימום הזמנה,
+ * קיבולת ליום ואיסוף עצמי אינם שדות של מסעדה.** הם שדות של מערך
+ * הקייטרינג, שיוצא ממטבח אחד שזהותו אינה ידועה, ולכן הם יושבים במקטע
+ * `CATERING_*` שלמטה — במשבצת אחת ולא בשלוש.
  */
-export interface BranchDetail {
+export interface RestaurantDetail {
   /** TODO(owner): רחוב ומספר, ומיקוד אם ידוע. */
   address: Slot<PostalAddressHe>;
 
   /** TODO(owner): קואורדינטות מדויקות של הכניסה, לא של מרכז העיר. */
   geo: Slot<{ lat: number; lng: number }>;
 
-  /** TODO(owner): טלפון ישיר לסניף. `null` ⇒ המספר המרכזי, דרך `phoneFor()`. */
-  phone: Slot<BranchPhone>;
+  /** TODO(owner): טלפון ישיר למסעדה. `null` ⇒ המספר המרכזי, דרך `phoneFor()`. */
+  phone: Slot<RestaurantPhone>;
 
-  /** TODO(owner): שעות פעילות המטבח. */
+  /** TODO(owner): שעות פעילות המסעדה לקהל. לא שעות מענה לקייטרינג. */
   hours: Slot<OpeningHoursRow[]>;
 
-  /** TODO(owner): השעות שבהן פניית קייטרינג נענית — עשויות להיות אחרות. */
-  answeringHoursHe: Slot<string>;
-
   /** TODO(owner): שם ותפקיד + הסכמה מפורשת לפרסום. בלי הסכמה אין שם. */
-  chef: Slot<BranchChef>;
+  chef: Slot<RestaurantChef>;
 
-  /** TODO(owner): האם יש איסוף עצמי, ובאילו תנאים. */
-  pickup: Slot<BranchPickup>;
-
-  /** TODO(owner): הערים שהמטבח הזה משרת בפועל, וזמני נסיעה. */
-  servesAreas: Slot<ServedArea[]>;
-
-  /** TODO(owner): כמה האירועים שהמטבח הזה מייצר ביום, כלשון הבעלים. */
-  capacityPerDayHe: Slot<string>;
-
-  /** TODO(owner): קיבולת אירוע פרטי במסעדה. שער הפורמט השלישי. */
+  /** TODO(owner): קיבולת אירוע פרטי במסעדה. שער הפורמט `at_restaurant`. */
   privateEventCapacity: Slot<PrivateEventCapacity>;
 
-  /** TODO(owner): קישור לתפריט המסעדה החי של הסניף. מזין את סימן «היום». */
+  /**
+   * TODO(owner): קישור לתפריט המסעדה החי.
+   *
+   * זה הנכס היחיד כאן שמוכיח את המיצוב במקום לטעון אותו: תפריט חי של
+   * מסעדה שמגישה לסועדים היום. בלעדיו אין לכתוב שום סימן «מוגש היום
+   * במסעדה», וגם לא גרסה מרוככת שלו.
+   */
   liveMenuUrl: Slot<string>;
 
-  /** TODO(owner): כתובת פרופיל Google של הסניף. נכנסת ל־`sameAs`. */
+  /** TODO(owner): כתובת פרופיל Google של המסעדה. נכנסת ל־`sameAs`. */
   gbpUrl: Slot<string>;
 
   /** TODO(owner): נגישות פיזית — כפי שהיא, לא כפי שהיינו רוצים. */
-  accessibility: Slot<BranchAccessibility>;
-
-  /** TODO(owner): למה הסניף הזה מתאים באמת. משפט אחד, כלשון הבעלים. */
-  bestSuitedForHe: Slot<string>;
-
-  /**
-   * TODO(owner): נוסח הכשרות **כלשונו**, בכתב, כולל שם הגוף המכשיר המלא.
-   *
-   * זה אינו העתק של `SLOTS.kashrutByBranch`. שם יושבת התשובה הכללית
-   * שנמסרה בעל־פה («כשר בד״ץ»), ו־`business.ts` מתעד שני פערים פתוחים
-   * בה: איזה בד״ץ, והאם על שלושת הסניפים. הנוסח כאן הוא המחרוזת
-   * **היחידה** שמותר לה להופיע כטענת כשרות בדף (spec 01 P-10), והוא
-   * גם מה שפותח את השער הקשיח של `/catering/shiva` (P-11). כל עוד הוא
-   * `null` — אין נוסח, ואין דף שבעה.
-   */
-  kashrutStatementHe: Slot<string>;
+  accessibility: Slot<RestaurantAccessibility>;
 }
 
-/** סניף שלם: הזהות המאומתת מ־`business.ts` + המשבצות שטרם מולאו. */
-export interface BranchLocation extends BranchDetail {
+/** מסעדה שלמה: הזהות המאומתת מ־`business.ts` + המשבצות שטרם מולאו. */
+export interface RestaurantLocation extends RestaurantDetail {
   id: BranchId;
-  slug: BranchSlug;
   /** מ־`BRANCHES`. מאומת. */
   nameHe: string;
-  /** היישוב. זהה לשם הסניף, מאותו מקור מאומת. */
+  /** היישוב. זהה לשם המסעדה, מאותו מקור מאומת. */
   cityHe: string;
   isFlagship: boolean;
 }
 
-const emptyDetail = (): BranchDetail => ({
+const emptyDetail = (): RestaurantDetail => ({
   address: null,
   geo: null,
   phone: null,
   hours: null,
-  answeringHoursHe: null,
   chef: null,
-  pickup: null,
-  servesAreas: null,
-  capacityPerDayHe: null,
   privateEventCapacity: null,
   liveMenuUrl: null,
   gbpUrl: null,
   accessibility: null,
-  bestSuitedForHe: null,
-  kashrutStatementHe: null,
 });
 
 /**
- * המצב היום: שלושה סניפים מאומתים, אפס פרטים תפעוליים.
+ * המצב היום: שלוש מסעדות מאומתות בשמן, אפס פרטים תפעוליים.
  *
- * כשמגיע מידע על סניף — מחליפים את `emptyDetail()` שלו באובייקט מפורש
- * ומשאירים את השאר כפי שהוא. אין למלא סניף אחד «לפי» סניף אחר, וגם לא
+ * כשמגיע מידע על מסעדה — מחליפים את `emptyDetail()` שלה באובייקט מפורש
+ * ומשאירים את השאר כפי שהוא. אין למלא מסעדה אחת «לפי» אחרת, ובוודאי לא
  * להסיק שעות של רעננה משעות הרצליה.
  */
-const DETAIL: Record<BranchId, BranchDetail> = {
+const DETAIL: Record<BranchId, RestaurantDetail> = {
   herzliya_pituach: emptyDetail(),
   raanana: emptyDetail(),
   petah_tikva: emptyDetail(),
 };
 
-/** שלושת הסניפים, בסדר שנקבע ב־`business.ts` — הדגל ראשון. */
-export const LOCATIONS: readonly BranchLocation[] = BRANCHES.map((b) => ({
+/** שלוש המסעדות, בסדר שנקבע ב־`business.ts` — הדגל ראשון. */
+export const RESTAURANTS: readonly RestaurantLocation[] = BRANCHES.map((b) => ({
   id: b.id,
-  slug: branchSlug(b.id),
   nameHe: b.name,
   cityHe: b.name,
   isFlagship: b.isFlagship,
   ...DETAIL[b.id],
 }));
 
-const BY_ID = new Map<string, BranchLocation>(LOCATIONS.map((l) => [l.id, l]));
-const BY_SLUG = new Map<string, BranchLocation>(LOCATIONS.map((l) => [l.slug, l]));
+const BY_ID = new Map<string, RestaurantLocation>(RESTAURANTS.map((r) => [r.id, r]));
 
-export const locationById = (id: BranchId): BranchLocation => BY_ID.get(id)!;
+export const restaurantById = (id: BranchId): RestaurantLocation => BY_ID.get(id)!;
 
-/** מחזיר `null` ל־slug שאינו אחד משלושת הסניפים — מזין 404 אמיתי. */
-export const locationBySlug = (slug: string): BranchLocation | null => BY_SLUG.get(slug) ?? null;
+/* ═══════════════════ הקייטרינג — משבצות נפרדות ═══════════════════ */
+
+/**
+ * אזור השירות של הקייטרינג.
+ *
+ * **אינו נגזר מ־`RESTAURANTS`, ולא ייגזר.** שלוש הנקודות שלמעלה הן
+ * מיקומי מסעדות; הקייטרינג יוצא ממטבח אחד שזהותו לא נמסרה, ואפילו
+ * כשתימסר — הטווח שהוא מוכן לנסוע הוא החלטה מסחרית של הבעלים ולא פונקציה
+ * של מרחק אווירי. עד שיימסר, אין באתר טענת אזור: לא רשימת ערים, לא מפה,
+ * לא «ובסביבה», ולא «גוש דן והשרון».
+ *
+ * זו גם המשבצת שחוסמת את `/areas/:city`. בלעדיה אין ולו עיר אחת שמותר
+ * לבנות לה דף אזור, וזה מכוון — דף אזור בלי התחייבות חלוקה הוא דלת כניסה.
+ */
+export interface CateringServiceArea {
+  /** הערים שהקייטרינג מחלק אליהן **בפועל**, כלשון הבעלים. לא לפי מרחק. */
+  citiesHe: readonly string[];
+  /** תיאור האזור במילים, אם הבעלים מנסח אותו כך ולא כרשימה. */
+  descriptionHe: Slot<string>;
+  /** דמי הובלה, אם יש. התחייבות מסחרית. */
+  deliveryFeeHe: Slot<string>;
+  /** מינימום הזמנה לחלוקה, כלשון הבעלים. */
+  minimumHe: Slot<string>;
+}
+
+/** TODO(owner): לאן הקייטרינג מגיע בפועל. אין לגזור ממיקומי המסעדות. */
+export const CATERING_SERVICE_AREA: Slot<CateringServiceArea> = null;
+
+/**
+ * נוסח הכשרות של הקייטרינג — **כלשונו, בכתב**, כולל שם הגוף המכשיר המלא.
+ *
+ * זה אינו העתק של `SLOTS.kashrutByBranch`. שם יושבת התשובה שנמסרה בעל־פה
+ * («כשר בד״ץ»), ו־`business.ts` מתעד בה פער פתוח: **איזה** בד״ץ. «בד״ץ»
+ * אינו גוף אחד, וללקוח שומר כשרות ההבדל הוא כל ההחלטה.
+ *
+ * המחרוזת הזאת היא היחידה שמותר לה להופיע כטענת כשרות בדף (spec 01 P-10),
+ * והיא גם מה שפותח את השער הקשיח של `/catering/shiva` (P-11). כל עוד היא
+ * `null` — אין נוסח, ואין דף שבעה.
+ *
+ * היא משבצת של **הקייטרינג** ולא של מסעדה, כי זה מה שהלקוח מזמין. הגרסה
+ * הקודמת דרשה נוסח בכתב לשלוש המסעדות בנפרד, וזו הייתה שארית של מודל
+ * שלושת המטבחים.
+ *
+ * TODO(owner): שם הגוף המכשיר המלא, נוסח מדויק, והעתק תעודה בתוקף.
+ * TODO(dev): כשיימסר — מקומו הטבעי הוא `business.ts` לצד `kashrutByBranch`,
+ * וכאן יישאר בורר בלבד. הקובץ ההוא בבעלות אחרת ולכן המשבצת יושבת כאן.
+ */
+export const CATERING_KASHRUT_STATEMENT: Slot<string> = null;
 
 /* ═══════════════════ בוררים ═══════════════════ */
 /*
  * לכל עובדה בורר אחד, והוא מחזיר `null` כשאין מה להציג. הדף שואל את
  * הבורר ולא את השדה, כדי שהכלל «יש צורה מובנית? קח אותה. אין? קח את
- * ה־Slot השטוח מ־business.ts» ייכתב פעם אחת ולא בשלושה דפים.
+ * ה־Slot השטוח מ־business.ts» ייכתב פעם אחת ולא בשלושה מקומות.
  */
 
 const flat = <T,>(rec: Slot<Record<BranchId, T>>, id: BranchId): T | null =>
@@ -291,9 +292,9 @@ const flat = <T,>(rec: Slot<Record<BranchId, T>>, id: BranchId): T | null =>
 
 /** שורת כתובת להצגה. מובנית אם יש, אחרת מ־`SLOTS.addresses`. */
 export function addressLineFor(id: BranchId): string | null {
-  const structured = locationById(id).address;
+  const structured = restaurantById(id).address;
   if (filled(structured) && filled(structured.streetHe)) {
-    return `${structured.streetHe}, ${locationById(id).cityHe}`;
+    return `${structured.streetHe}, ${restaurantById(id).cityHe}`;
   }
   return flat(SLOTS.addresses, id);
 }
@@ -302,215 +303,152 @@ export function addressLineFor(id: BranchId): string | null {
 export function postalAddressFor(
   id: BranchId,
 ): { streetAddress: string; addressLocality: string; postalCode?: string } | null {
-  const a = locationById(id).address;
+  const a = restaurantById(id).address;
   if (!filled(a) || !filled(a.streetHe)) return null;
   return {
     streetAddress: a.streetHe,
-    addressLocality: locationById(id).cityHe,
+    addressLocality: restaurantById(id).cityHe,
     ...(filled(a.postalCode) ? { postalCode: a.postalCode } : {}),
   };
 }
 
 /**
- * שעות. `rows` להצגה מובנית ול־JSON-LD, `textHe` לנפילה אחורה על
+ * שעות המסעדה. `rows` להצגה מובנית ול־JSON-LD, `textHe` לנפילה אחורה על
  * המחרוזת החופשית שב־`business.ts`. שניהם ריקים ⇒ `null`, והבלוק נעלם.
  */
 export function hoursFor(
   id: BranchId,
 ): { rows: OpeningHoursRow[] | null; textHe: string | null } | null {
-  const rows = locationById(id).hours;
+  const rows = restaurantById(id).hours;
   const structured = filled(rows) && rows.length > 0 ? rows : null;
   const textHe = flat(SLOTS.openingHours, id);
   if (!structured && !textHe) return null;
   return { rows: structured, textHe };
 }
 
-/** שעות מענה לפניות קייטרינג. `null` ⇒ אין הבטחה על שעות. */
-export const answeringHoursFor = (id: BranchId): string | null => {
-  const v = locationById(id).answeringHoursHe;
-  return filled(v) ? v : filled(SLOTS.staffedHours) ? SLOTS.staffedHours : null;
-};
-
-/** אזורי חלוקה. מובנה אם יש, אחרת שמות ערים בלבד מ־`SLOTS.servesAreas`. */
-export function servedAreasFor(id: BranchId): ServedArea[] | null {
-  const structured = locationById(id).servesAreas;
-  if (filled(structured) && structured.length > 0) return structured;
-
-  const names = flat(SLOTS.servesAreas, id);
-  if (!names || names.length === 0) return null;
-  return names.map((cityHe) => ({
-    cityHe,
-    driveMinutes: null,
-    minimumHe: null,
-    deliveryFeeHe: null,
-  }));
-}
-
 /**
  * שם השף — **רק** בהסכמה מפורשת.
  *
- * `SLOTS.chefs` אינו נקרא כאן במכוון: הוא מחזיק שם בלי רשומת הסכמה,
- * ושם של עובד אינו מתפרסם בהיעדר סירוב. סניף שיש לו שם שם ואין לו
- * רשומה כאן — לא יציג שף, וזו התנהגות תקינה.
+ * `SLOTS.chefs` אינו נקרא כאן במכוון: הוא מחזיק שם בלי רשומת הסכמה, ושם
+ * של עובד אינו מתפרסם בהיעדר סירוב.
  */
-export function chefFor(id: BranchId): BranchChef | null {
-  const chef = locationById(id).chef;
+export function chefFor(id: BranchId): RestaurantChef | null {
+  const chef = restaurantById(id).chef;
   if (!filled(chef) || !filled(chef.nameHe) || chef.consent !== true) return null;
   return chef;
 }
 
-export function pickupFor(id: BranchId): BranchPickup | null {
-  const p = locationById(id).pickup;
-  return filled(p) && p.offered === true ? p : null;
-}
-
 export function privateEventCapacityFor(id: BranchId): PrivateEventCapacity | null {
-  const c = locationById(id).privateEventCapacity;
+  const c = restaurantById(id).privateEventCapacity;
   if (!filled(c)) return null;
   const hasAny =
     filled(c.seated) || filled(c.standing) || c.canClose === true || filled(c.parkingHe);
   return hasAny ? c : null;
 }
 
-/**
- * שער «אירוח אצלנו במסעדה» (spec 01 P-09, 02 §3.4).
- * מזין גם את `offerAtRestaurant` בבנאי ההצעה.
- */
+/** שער «אירוח אצלנו במסעדה» (spec 01 P-09, 02 §3.4). */
 export const anyPrivateEventCapacity = (): boolean =>
-  LOCATIONS.some((l) => privateEventCapacityFor(l.id) !== null);
+  RESTAURANTS.some((r) => privateEventCapacityFor(r.id) !== null);
 
-/** הסניפים שיש להם קיבולת — כדי שהשורה תנקוב בהם בשמם ולא תדבר בכללי. */
-export const branchesWithPrivateEvents = (): BranchLocation[] =>
-  LOCATIONS.filter((l) => privateEventCapacityFor(l.id) !== null);
+/** המסעדות שיש להן קיבולת — כדי שהשורה תנקוב בהן בשמן ולא תדבר בכללי. */
+export const restaurantsWithPrivateEvents = (): RestaurantLocation[] =>
+  RESTAURANTS.filter((r) => privateEventCapacityFor(r.id) !== null);
 
-export function accessibilityFor(id: BranchId): BranchAccessibility | null {
-  const a = locationById(id).accessibility;
+export function accessibilityFor(id: BranchId): RestaurantAccessibility | null {
+  const a = restaurantById(id).accessibility;
   if (!filled(a)) return null;
   const hasAny = [a.parkingHe, a.entranceHe, a.toiletHe, a.seatingHe, a.liftHe].some(filled);
   return hasAny ? a : null;
 }
 
-/** תפריט המסעדה החי. בלעדיו סימן «מוגש היום ב…» אינו נכתב (spec 01 §3.2). */
+/** תפריט המסעדה החי. בלעדיו אין סימן «מוגש היום במסעדה» בשום ניסוח. */
 export const liveMenuUrlFor = (id: BranchId): string | null => {
-  const v = locationById(id).liveMenuUrl;
+  const v = restaurantById(id).liveMenuUrl;
   return filled(v) ? v : null;
 };
 
 export const gbpUrlFor = (id: BranchId): string | null => {
-  const v = locationById(id).gbpUrl;
+  const v = restaurantById(id).gbpUrl;
   return filled(v) ? v : null;
 };
 
-export const capacityPerDayFor = (id: BranchId): string | null => {
-  const v = locationById(id).capacityPerDayHe;
-  return filled(v) ? v : null;
-};
-
-export const bestSuitedForFor = (id: BranchId): string | null => {
-  const v = locationById(id).bestSuitedForHe;
-  return filled(v) ? v : null;
-};
-
-/**
- * נוסח הכשרות של הסניף, כלשון הבעלים.
- * **אין כאן נפילה אחורה על `SLOTS.kashrutByBranch`**: התשובה הכללית
- * שנמסרה בעל־פה אינה נוסח בכתב, והשער של P-11 נשען על ההבחנה הזאת.
- */
-export const kashrutStatementFor = (id: BranchId): string | null => {
-  const v = locationById(id).kashrutStatementHe;
-  return filled(v) ? v : null;
-};
-
-/** האם קיים נוסח כשרות בכתב לכל שלושת הסניפים. שער `/catering/shiva`. */
-export const kashrutStatementComplete = (): boolean =>
-  LOCATIONS.every((l) => kashrutStatementFor(l.id) !== null);
-
-/** טלפון הסניף אם נמסר, אחרת המספר המרכזי. לעולם לא מספר קשיח בקומפוננטה. */
-export const phoneFor = (id: BranchId): BranchPhone => {
-  const p = locationById(id).phone;
+/** טלפון המסעדה אם נמסר, אחרת המספר המרכזי. לעולם לא מספר קשיח בקומפוננטה. */
+export const phoneFor = (id: BranchId): RestaurantPhone => {
+  const p = restaurantById(id).phone;
   return filled(p) ? p : PHONE;
 };
 
 /**
- * ניתוב עיר → מטבח. מזין את שורת הניתוב בבנאי ואת שיוך הליד בשרת.
- * התאמה מדויקת בלבד — «כפר סבא» אינה «כפר סבא, שכונה» ואיננו מנחשים.
+ * המסעדה שבמטבח שלה מבושל הקייטרינג.
+ *
+ * `null` היום, ולכן **אין באתר שום מקום שנוקב בעיר כמוצא הקייטרינג**.
+ * הבורר קיים כדי שהתשובה תיכנס בנקודה אחת כשתימסר, ולא כדי שדף כלשהו
+ * ינחש בינתיים איזו מהשלוש זו.
  */
-export function branchForArea(cityHe: string): BranchId | null {
-  const needle = cityHe.trim();
-  if (!needle) return null;
-  for (const l of LOCATIONS) {
-    const areas = servedAreasFor(l.id);
-    if (areas?.some((a) => a.cityHe.trim() === needle)) return l.id;
-  }
-  return null;
+export const cateringKitchenRestaurant = (): RestaurantLocation | null =>
+  filled(SLOTS.cateringKitchenBranch) ? restaurantById(SLOTS.cateringKitchenBranch) : null;
+
+/** אזור השירות של הקייטרינג. `null` ⇒ אין באתר טענת אזור, בשום ניסוח. */
+export function cateringServiceArea(): CateringServiceArea | null {
+  const a = CATERING_SERVICE_AREA;
+  if (!filled(a)) return null;
+  const hasAny =
+    a.citiesHe.length > 0 || filled(a.descriptionHe) || filled(a.deliveryFeeHe) || filled(a.minimumHe);
+  return hasAny ? a : null;
 }
+
+/** הערים שמותר לבנות להן דף אזור. ריק היום ⇒ `/areas/:city` חסום. */
+export const cateringServiceCities = (): readonly string[] => cateringServiceArea()?.citiesHe ?? [];
+
+/**
+ * נוסח הכשרות בכתב. שער `/catering/shiva` (spec 01 P-11) ושער המילה
+ * «כשר» בכל דף (P-10) נשענים על זה, ולא על `SLOTS.kashrutByBranch`.
+ */
+export const kashrutStatement = (): string | null =>
+  filled(CATERING_KASHRUT_STATEMENT) ? CATERING_KASHRUT_STATEMENT : null;
+
+export const kashrutStatementWritten = (): boolean => kashrutStatement() !== null;
 
 /* ═══════════════════ שערי רינדור ═══════════════════ */
 
 /**
- * המשבצות שדף הסניף בונה מהן את גיליון הייצור (spec 01 P-04 `BranchFacts`).
- * הסדר הוא סדר ההצגה. שורה בלי ערך אינה מרונדרת.
+ * השורות שדף `/kitchen` בונה מהן את בלוק המסעדות. הסדר הוא סדר ההצגה,
+ * ושורה בלי ערך אינה מרונדרת.
+ *
+ * אין כאן `servesAreas` ואין `capacityPerDay`: הראשון אינו עובדה של
+ * מסעדה, והשני אינו עובדה שנמסרה.
  */
-export const BRANCH_FACT_KEYS = [
-  "address",
-  "hours",
-  "chef",
-  "pickup",
-  "servesAreas",
-  "capacityPerDay",
-  "accessibility",
-] as const;
+export const RESTAURANT_FACT_KEYS = ["address", "hours", "chef", "accessibility"] as const;
 
-export type BranchFactKey = (typeof BRANCH_FACT_KEYS)[number];
+export type RestaurantFactKey = (typeof RESTAURANT_FACT_KEYS)[number];
 
 /** תוויות שדה — לא קופי. הקופי של הדף יושב בדף. */
-export const BRANCH_FACT_LABEL_HE: Record<BranchFactKey, string> = {
+export const RESTAURANT_FACT_LABEL_HE: Record<RestaurantFactKey, string> = {
   address: "כתובת",
-  hours: "שעות המטבח",
-  chef: "מי מנהל",
-  pickup: "איסוף עצמי",
-  servesAreas: "אזור חלוקה",
-  capacityPerDay: "קיבולת ליום",
+  hours: "שעות המסעדה",
+  chef: "מי מנהל את המטבח",
   accessibility: "נגישות",
 };
 
-/** אילו שורות עובדה יש לסניף בפועל. ריק ⇒ `BranchFacts` אינו מרונדר. */
-export function filledFactKeys(id: BranchId): BranchFactKey[] {
-  const has: Record<BranchFactKey, boolean> = {
+/** אילו שורות עובדה יש למסעדה בפועל. ריק ⇒ הבלוק שלה אינו מרונדר. */
+export function filledFactKeys(id: BranchId): RestaurantFactKey[] {
+  const has: Record<RestaurantFactKey, boolean> = {
     address: addressLineFor(id) !== null,
     hours: hoursFor(id) !== null,
     chef: chefFor(id) !== null,
-    pickup: pickupFor(id) !== null,
-    servesAreas: servedAreasFor(id) !== null,
-    capacityPerDay: capacityPerDayFor(id) !== null,
     accessibility: accessibilityFor(id) !== null,
   };
-  return BRANCH_FACT_KEYS.filter((k) => has[k]);
+  return RESTAURANT_FACT_KEYS.filter((k) => has[k]);
 }
 
 export const hasAnyFacts = (id: BranchId): boolean => filledFactKeys(id).length > 0;
 
 /**
- * spec 01 P-04: דף סניף לא ישוחרר עם פחות משבע עובדות ייחודיות מלאות.
- * הפונקציה אינה חוסמת רינדור — היא מה שהבדיקה ומסך הבעלים שואלים.
- * היום היא מחזירה 0 לכל סניף, וזה הדיווח הנכון.
+ * האם ידוע על המסעדות משהו מעבר לשמן.
+ *
+ * `false` היום. דף `/kitchen` **נבנה בכל מקרה** — הטענה שהוא נושא היא
+ * «מבושל במטבח של מסעדה פעילה», והיא מאומתת ואינה תלויה בשום משבצת כאן.
+ * מה שהשער הזה קובע הוא רק אם מרונדר בלוק פרטי המסעדות, או שהדף עומד על
+ * הטענה בלבד.
  */
-export const uniqueFactCount = (id: BranchId): number => {
-  const l = locationById(id);
-  return [
-    postalAddressFor(id) !== null,
-    filled(l.geo),
-    filled(l.phone),
-    hoursFor(id) !== null,
-    chefFor(id) !== null,
-    pickupFor(id) !== null,
-    servedAreasFor(id) !== null,
-    capacityPerDayFor(id) !== null,
-    gbpUrlFor(id) !== null,
-    accessibilityFor(id) !== null,
-    bestSuitedForFor(id) !== null,
-    liveMenuUrlFor(id) !== null,
-  ].filter(Boolean).length;
-};
-
-export const BRANCH_PAGE_MIN_UNIQUE_FACTS = 7;
+export const anyRestaurantDetail = (): boolean => RESTAURANTS.some((r) => hasAnyFacts(r.id));

@@ -94,14 +94,25 @@ export type GateRequirementId =
   | "branch_hours"
   /** ‎`CATERING_DISHES` — לפחות מנה אחת שזמינה לקייטרינג. */
   | "catering_dishes"
-  /** ‎`locations[branch].kashrutStatementHe` — נוסח כשרות **בכתב**, לכל סניף. */
+  /** ‎`CATERING_KASHRUT_STATEMENT` — נוסח כשרות **בכתב** למערך הקייטרינג. */
   | "kashrut_statement_written"
   /** ‎`SLOTS.liveStations` — האם מוצעת עמדה חיה ומה מגבלותיה. */
   | "live_stations"
   /** ‎`SLOTS.servesAreas` + זמן נסיעה ומינימום לאזור — הבסיס היחיד לדף אזור. */
   | "area_facts"
   /** קופי קמפיין חתום. אין קמפיין ⇒ אין דף נחיתה. */
-  | "campaign_copy";
+  | "campaign_copy"
+  /*
+   * שני המזהים הבאים הם שערים **רכים** בלבד (`content/occasions.ts`): הם
+   * משמיטים בלוק בתוך דף ואינם חוסמים מסלול, ולכן אינם מופיעים באף
+   * `blockedBy` היום. הם נמנים כאן כדי שהאיחוד הזה יהיה מכיל־ממש את
+   * ‎`GateRequirement` שב־occasions.ts — אחרת ההצהרה «המזהים תואמים»
+   * שלמעלה אינה נכונה, ודוח «מה נפתח כשמוסרים מה» לא יוכל למפות את שניהם.
+   */
+  /** ‎`SLOTS.sameDayCutoff` — שעת חיתום להזמנה לאותו יום. שער רך של `/urgent`. */
+  | "same_day_cutoff"
+  /** קיבולת אירוע פרטי במסעדה. שער רך של `/catering/private-events`. */
+  | "private_event_capacity";
 
 /**
  * הסגמנט הדינמי של מסלול פרמטרי.
@@ -621,8 +632,13 @@ export function normalizePath(pathname: string): string {
  * היעד הקנוני ל־301, או `null` כשהכתובת כבר קנונית.
  *
  * spec 01 §1: אותיות קטנות, מקפים, בלי סלאש סופי. הפניה מוחזרת **רק**
- * כשהצורה הקנונית היא מסלול אמיתי — אחרת `/NO-SUCH-PAGE/` היה מקבל 301
- * ואז 404, שרשרת שמבזבזת תקציב סריקה במקום להחזיר 404 מיד.
+ * כשהצורה הקנונית היא מסלול ש**מוגש היום** — אחרת `/NO-SUCH-PAGE/` היה
+ * מקבל 301 ואז 404, שרשרת שמבזבזת תקציב סריקה במקום להחזיר 404 מיד.
+ *
+ * התנאי הוא `isServedPath` ולא `matchRoute` במכוון. `matchRoute` מתאים גם
+ * מסלול שהשער שלו סגור, ולכן `/Menus/` היה מקבל 301 אל `/menus` — שהוא
+ * עצמו 404 היום. זו בדיוק שרשרת ההפניה־אל־404 שהפסקה שלמעלה שוללת, והיא
+ * תיפתח מעצמה ברגע ש־`enabled` של המסלול יתהפך.
  *
  * ה־query נשמר: פרמטרי UTM ו־`?ref=` חייבים לשרוד את ההפניה, אחרת
  * הייחוס נמחק בדיוק בכניסה מקמפיין.
@@ -633,7 +649,7 @@ export function redirectTarget(rawPath: string): string | null {
   const canonical = normalizePath(rawPath).toLowerCase();
   const current = rawPath.slice(0, queryIndex === -1 ? undefined : queryIndex);
   if (canonical === current) return null;
-  return matchRoute(canonical) ? `${canonical}${suffix}` : null;
+  return isServedPath(canonical) ? `${canonical}${suffix}` : null;
 }
 
 /* ═══════════════════ ההתאמה ═══════════════════ */
@@ -769,6 +785,15 @@ export function sitemapPaths(): { path: string; id: RouteId }[] {
 /**
  * תחיליות ל־`robots.txt`. נגזרות ולא נכתבות ביד, כדי שמסלול `noindex`
  * חדש לא יישכח שם. `/404` אינו נחסם — צריך שיסרקו אותו ויראו 404.
+ *
+ * **הפשרה שיש לדעת עליה:** `Disallow` מונע *סריקה*, ו־`noindex` מונע
+ * *אינדוקס* — וחסימת סריקה מונעת מהזחלן לראות את ה־`noindex` מלכתחילה.
+ * בכתובת שיש אליה קישורים חיצוניים, הצירוף הזה גורם דווקא להופעה
+ * כתוצאה ריקה. כאן הוא בטוח משום שכל המסלולים שנפלטים — `/thanks`,
+ * `/summary`, `/unsubscribe`, `/admin/leads`, `/lp` — מגיעים אליהם רק
+ * אחרי שליחת טופס, מקישור בהודעה או מקמפיין ממומן, ואף אחד מהם אינו
+ * מקושר משום דף שנסרק. אם ייווצר מסלול `noindex` שכן מקושר בניווט,
+ * יש להוציא אותו מכאן ולהשאיר לו את ה־`noindex` בלבד.
  */
 export function robotsDisallow(): string[] {
   const out = new Set<string>();

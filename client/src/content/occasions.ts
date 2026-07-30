@@ -5,11 +5,20 @@
  *
  * זהו מודול **נתונים**. אין בו קופי שיווקי, אין כותרות, אין ledes ואין
  * שאלות נפוצות — כל אלה יושבים בדף שלהם, כי הם ייחודיים לו וזה מה שמונע
- * ממנו להיות אותו דף עם עיר או מילה מוחלפת (מבחן T-1, spec 01 P-04).
+ * ממנו להיות אותו דף עם מילה מוחלפת (מבחן T-1, spec 01 P-04).
  *
  * מה שכן יושב כאן הוא מה שחייב להיות זהה בכל מקום שמזכיר את האירוע:
- * המזהה, הכתובת, השם, שורת הכוונה, פורמטי ההגשה שרלוונטיים לו, החתך
- * מהתפריט שמתאים לו, ומה חוסם אותו.
+ * המזהה, הכתובת, השם, שורת הכוונה, פורמטי ההגשה הרלוונטיים, החיתוך
+ * מהתפריט, ומה חוסם אותו.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  שורת הכוונה — מה מותר לכתוב בה
+ * ─────────────────────────────────────────────────────────────────────
+ * `intentHe` מתארת **מה הקונה בא לפתור**, לא מה אנחנו מספקים. ההבחנה
+ * אינה סמנטית: «אותו יום או למחרת», «עם חשבונית» או «מועד איסוף» הן
+ * התחייבויות מסחריות, וכל אחת מהן תלויה במשבצת שהיא `null` היום
+ * (`sameDayCutoff`, `companyId`, איסוף עצמי). שורה שמנוסחת מצד הקונה
+ * נשארת נכונה גם כשאף משבצת אינה מלאה — וזה התנאי לשחרור האתר במצבו.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  השערים
@@ -17,12 +26,13 @@
  * שני שערים נושאים משקל, ושניהם סגורים היום:
  *
  *   **`/catering/shiva` — שער קשיח.** spec 01 P-11: הדף אינו נבנה כל עוד
- *   אין תשובת כשרות **בכתב**. כל תוצאה מתחרה בקלאסטר הזה נפתחת ב־`בד״ץ`
+ *   אין נוסח כשרות **בכתב**. כל תוצאה מתחרה בקלאסטר הזה נפתחת ב־`בד״ץ`
  *   או `למהדרין`; תנועה שמגיעה לשם נושאת כוונת כשרות ותנטוש על תג חסר,
  *   ובנייה בכל זאת מרמזת על מעמד שאין לנו. `SLOTS.kashrutByBranch`
  *   ב־`business.ts` **אינו** פותח את השער: שם יושבת תשובה כללית שנמסרה
- *   בעל־פה, ו־`business.ts` עצמו מתעד בה שני פערים פתוחים. השער נשען על
- *   `locations[branch].kashrutStatementHe` — הנוסח כלשונו, בכתב.
+ *   בעל־פה, ו־`business.ts` עצמו מתעד בה פער פתוח — איזה בד״ץ. השער
+ *   נשען על `CATERING_KASHRUT_STATEMENT` ב־`content/locations.ts`, שהוא
+ *   הנוסח כלשונו.
  *
  *   **עמדות חיות — שער `SLOTS.liveStations`.** כל טענה על בישול במקום
  *   (`/catering/fun-day`, `/pasta-bar`) חסומה עליו. הוא `null`, ולכן שני
@@ -31,53 +41,65 @@
  *
  * שער אינו קישוט: `isBuildable()` הוא מה שקובע אם מסלול נרשם, אם הוא
  * נכנס ל־sitemap, ואם קבוצת מודעות רצה.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  מה **אין** כאן
+ * ─────────────────────────────────────────────────────────────────────
+ * אין שיוך אירוע למסעדה, ואין לאירוע «אזור». הקייטרינג יוצא ממטבח אחד
+ * שזהותו לא נמסרה (`business.ts`, מקטע המיצוב), ואזור השירות הוא משבצת
+ * נפרדת ב־`content/locations.ts` שאינה נגזרת ממיקומי המסעדות. דף אירוע
+ * שנוקב בעיר, או שמציע «בוא לטעום במסעדה», חורג מהעובדות.
  */
 
 import { SLOTS, filled } from "@/content/business";
-import { anyPrivateEventCapacity, kashrutStatementComplete } from "@/content/locations";
+import { anyPrivateEventCapacity, kashrutStatementWritten } from "@/content/locations";
+import { menusForOccasion, type CateringMenu, type OccasionId as MenuTag } from "@/content/menus";
+import type { Course, DietaryFlag } from "@/content/dishes";
 import type { ServiceFormat } from "@shared/lead-schema";
 
 export type { ServiceFormat } from "@shared/lead-schema";
+export type { Course, DietaryFlag } from "@/content/dishes";
 
-/* ═══════════════════ חתך התפריט ═══════════════════ */
-
-/**
- * מדורי התפריט. spec 01 §6.2.
- *
- * `data/menus.ts` טרם נוצר; כשייווצר, הטיפוס הזה עובר לשם והמודול הזה
- * מייבא אותו. עד אז הוא מוגדר כאן פעם אחת, ולא בכל דף בנפרד.
- */
-export type CourseId = "antipasti" | "pasta" | "mains" | "dessert" | "platters";
+/* ═══════════════════ החיתוך מהתפריט ═══════════════════ */
 
 /**
- * תגית מנה שהדף דורש כדי להציג אותה.
+ * החיתוך שהדף מציג.
  *
- * `dairy` דרושה ל־`/catering/dairy`, ו־spec 01 §6.2 **אינו מגדיר אותה**:
- * `Dish.dietary` מכיר `vegetarian | vegan | gluten-free-ingredients` בלבד.
- * עד ש־`menus.ts` יוסיף אותה, הסינון מחזיר אפס מנות, ולפי spec 01 §3.3
- * שורת «0» הדף עובר לרג׳יסטר התפעולי ו־`MenuSheet` אינו מרונדר. זו
- * ההתנהגות הנכונה: עדיף דף חלבי בלי רשימת מנות מאשר דף חלבי שמציג
- * מנות בשריות.
+ * שני מנגנונים, ובכוונה:
+ *   · `menuTag` — תפריטי קייטרינג שלמים (`content/menus.ts`) שתויגו
+ *     לאירוע הזה. זה המנגנון המועדף כשיש תפריטים.
+ *   · `courses` + `requiresDietary` — חיתוך מנות גולמי, לגיבוי כשאין
+ *     תפריט מתאים. `MenuSheet` נבנה ממנו ישירות.
+ *
+ * שניהם ריקים בפועל היום (`MENUS` ו־`DISHES` ריקים), ולפי spec 01 §3.3
+ * הדף עובר במצב הזה לרג׳יסטר התפעולי ו־`MenuSheet` אינו מרונדר כלל.
  */
-export type DishTag = "dairy";
-
 export interface MenuCut {
-  /** מדורים, בסדר ההצגה. ריק ⇒ אין `MenuSheet` בדף הזה. */
-  courses: readonly CourseId[];
-  /** תגית חובה על כל מנה בדף. `null` ⇒ אין סינון נוסף. */
-  requiresTag: DishTag | null;
+  /**
+   * התיוג ב־`content/menus.ts`. `null` ⇒ האירוע אינו נושא תפריטים
+   * שלמים — נכון ל־`/urgent` ול־`/pasta-bar`, שאינם סוגי אירוע.
+   */
+  menuTag: MenuTag | null;
+  /** מדורים, בסדר ההצגה. ריק ⇒ אין חיתוך מנות גולמי. */
+  courses: readonly Course[];
+  /**
+   * סימון תזונה שכל מנה בדף חייבת לשאת. `null` ⇒ אין סינון נוסף.
+   * `dairy` הוא סימון תזונתי בלבד; הוא אינו אומר דבר על ההפרדה במטבח
+   * או על תעודת הכשרות (`content/dishes.ts`).
+   */
+  requiresDietary: DietaryFlag | null;
 }
 
 /* ═══════════════════ שערים ═══════════════════ */
 
 export type GateRequirement =
-  /** נוסח כשרות בכתב, כלשון הבעלים, לכל שלושת הסניפים. */
+  /** נוסח כשרות בכתב, כלשון הבעלים, למערך הקייטרינג. */
   | "kashrut_statement_written"
   /** `SLOTS.liveStations` — האם מוצעת עמדה חיה ומה מגבלותיה. */
   | "live_stations"
   /** `SLOTS.sameDayCutoff` — שעת חיתום להזמנה לאותו יום. */
   | "same_day_cutoff"
-  /** קיבולת אירוע פרטי בסניף אחד לפחות. */
+  /** קיבולת אירוע פרטי במסעדה אחת לפחות. */
   | "private_event_capacity";
 
 /**
@@ -93,7 +115,7 @@ export type OccasionGate =
 export function requirementMet(req: GateRequirement): boolean {
   switch (req) {
     case "kashrut_statement_written":
-      return kashrutStatementComplete();
+      return kashrutStatementWritten();
     case "live_stations":
       return filled(SLOTS.liveStations);
     case "same_day_cutoff":
@@ -123,18 +145,18 @@ export interface Occasion {
   /** שם האירוע בעברית — לניווט, לפירורי לחם ולשורות הקישור. */
   nameHe: string;
   /**
-   * שורת הכוונה: מה הקונה בא לפתור. משפט אחד, תיאורי, בלי הבטחה ובלי
-   * מספר. זו לא כותרת הדף ולא הלֶדֶה — אלה נכתבים בדף.
+   * שורת הכוונה: מה הקונה בא לפתור. משפט אחד, מצד הקונה, בלי הבטחה
+   * ובלי מספר. זו לא כותרת הדף ולא הלֶדֶה — אלה נכתבים בדף.
    */
   intentHe: string;
   /**
    * פורמטי ההגשה **הרלוונטיים** לאירוע. רלוונטיות אינה הצעה: פורמט
    * מרונדר רק כש־`SERVICE_FORMATS[key].offered === true`
    * (`config/service-formats.ts`, spec 02 §3.4), ו־`at_restaurant`
-   * דורש בנוסף קיבולת אירוע פרטי בסניף כלשהו.
+   * דורש בנוסף קיבולת אירוע פרטי במסעדה כלשהי.
    */
   serviceFormats: readonly ServiceFormat[];
-  /** החתך מהתפריט שמתאים לאירוע. */
+  /** החיתוך מהתפריט שמתאים לאירוע. */
   menu: MenuCut;
   gate: OccasionGate;
   /**
@@ -159,19 +181,20 @@ export const OCCASIONS: readonly Occasion[] = [
     id: "business",
     route: "/catering/business",
     nameHe: "קייטרינג לחברות",
-    intentHe: "ארוחת צוות, ישיבה או כנס — הזמנה לתאריך, עם חשבונית והזמנת רכש.",
+    intentHe: "ארוחת צוות, ישיבה או כנס — מי שמזמין צריך תאריך סגור ותהליך רכש מסודר.",
     serviceFormats: ["delivery", "buffet_on_site"],
-    menu: { courses: ["platters", "antipasti", "pasta", "dessert"], requiresTag: null },
+    menu: { menuTag: "business", courses: ["platters", "antipasti", "pasta", "dessert"], requiresDietary: null },
     gate: { kind: "open" },
     eventTypeSeed: "אירוע חברה",
+    note: "חשבונית והזמנת רכש הן צורך של הקונה. ח.פ. עדיין `null` — אין להבטיח בדף.",
   },
   {
     id: "private-events",
     route: "/catering/private-events",
     nameHe: "שמחות פרטיות",
-    intentHe: "אירוע משפחתי בבית או במקום שנבחר, עם תפריט שנסגר מראש.",
+    intentHe: "אירוע משפחתי בבית או במקום שנבחר, שצריך תפריט שנסגר מראש.",
     serviceFormats: ["delivery", "buffet_on_site", "plated_staffed", "at_restaurant"],
-    menu: { courses: ["antipasti", "pasta", "mains", "dessert"], requiresTag: null },
+    menu: { menuTag: "private-events", courses: ["antipasti", "pasta", "mains", "dessert"], requiresDietary: null },
     /* הדף נבנה בכל מקרה; רק שורת «אירוח אצלנו במסעדה» והצ׳יפ המקביל
        בבנאי תלויים בקיבולת. spec 01 P-09. */
     gate: { kind: "soft", requires: ["private_event_capacity"] },
@@ -184,7 +207,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "בר מצווה ובת מצווה",
     intentHe: "אירוע שמתוכנן חודשים מראש ונבדק מול כמה ספקים.",
     serviceFormats: ["delivery", "buffet_on_site", "plated_staffed", "at_restaurant"],
-    menu: { courses: ["antipasti", "pasta", "mains", "dessert"], requiresTag: null },
+    menu: { menuTag: "bar-mitzvah", courses: ["antipasti", "pasta", "mains", "dessert"], requiresDietary: null },
     /* רך ולא קשיח: spec 01 P-10 קובע במפורש שבלי נוסח כשרות הדף מוקם
        במסגור אגנוסטי לכשרות, והווריאנטים `ברית` / `שבת חתן` / `חינה`
        מנוטרלים כמילות שלילה במקום להיות מטרה. */
@@ -196,23 +219,23 @@ export const OCCASIONS: readonly Occasion[] = [
     id: "shiva",
     route: "/catering/shiva",
     nameHe: "אירוח שבעה ואזכרה",
-    intentHe: "אוכל לבית אבלים — אותו יום או למחרת, בלי שהמזמין יצטרך לנהל את זה.",
+    intentHe: "אוכל לבית אבלים, בלי שהמזמין יצטרך לנהל את זה.",
     serviceFormats: ["delivery"],
-    menu: { courses: ["platters", "antipasti"], requiresTag: null },
+    menu: { menuTag: "shiva", courses: ["platters", "antipasti"], requiresDietary: null },
     /* השער הקשיח. spec 01 P-11. */
     gate: { kind: "hard", requires: ["kashrut_statement_written"] },
     /* אין בנאי בדף הזה, ולכן אין מה לזרוע. spec 01 P-11: בלי בנאי, בלי
        הערכה, בלי טעימות, בלי אפסייל ובלי תיבת הסכמה שיווקית. */
     eventTypeSeed: null,
-    note: "בלי מחירים, בלי אוצר מילים של חגיגה, ובלי og:image של אירוע.",
+    note: "בלי מחירים, בלי אוצר מילים של חגיגה, ובלי טענת «אותו יום» — `sameDayCutoff` הוא null.",
   },
   {
     id: "holidays",
     route: "/catering/holidays",
     nameHe: "חגים",
-    intentHe: "ארוחת חג לבית, עם תאריך הזמנה אחרון ומועד איסוף או משלוח.",
+    intentHe: "ארוחת חג לבית, שצריך לסגור לפני שהתאריך נתפס.",
     serviceFormats: ["delivery", "buffet_on_site"],
-    menu: { courses: ["antipasti", "pasta", "mains", "dessert"], requiresTag: null },
+    menu: { menuTag: "holidays", courses: ["antipasti", "pasta", "mains", "dessert"], requiresDietary: null },
     gate: { kind: "open" },
     eventTypeSeed: "אירוח משפחתי או חג",
     /* חלון החג ותאריך ההזמנה האחרון מגיעים מ־`content/seasons.ts`
@@ -226,7 +249,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "ימי גיבוש וימי כיף",
     intentHe: "יום צוות מחוץ למשרד, שבו האוכל הוא חלק מהאירוע ולא רק ארוחה.",
     serviceFormats: ["delivery", "buffet_on_site"],
-    menu: { courses: ["pasta", "antipasti", "dessert"], requiresTag: null },
+    menu: { menuTag: "fun-day", courses: ["pasta", "antipasti", "dessert"], requiresDietary: null },
     /* spec 01 P-13: המסלול מקודם לעצמאי רק כשיש מגבלות תפעוליות אמיתיות
        לעמדה. עד אז הוא עוגן `#gibush` בתוך `/catering/business`, ואסור
        לשחרר אותו כ־P-08 עם מילים מוחלפות — זו תבנית דלת כניסה. */
@@ -239,8 +262,8 @@ export const OCCASIONS: readonly Occasion[] = [
     route: "/catering/dairy",
     nameHe: "קייטרינג חלבי",
     intentHe: "אירוע חלבי — קטגוריה שבה מטבח איטלקי הוא ההתאמה הטבעית.",
-    /* חתך תפריט, לא סוג אירוע: אותו קונה יכול להיות חברה, שמחה או חג. */
-    menu: { courses: ["antipasti", "pasta", "dessert"], requiresTag: "dairy" },
+    /* חיתוך תפריט, לא סוג אירוע: אותו קונה יכול להיות חברה, שמחה או חג. */
+    menu: { menuTag: "dairy", courses: ["antipasti", "pasta", "dessert"], requiresDietary: "dairy" },
     serviceFormats: ["delivery", "buffet_on_site", "plated_staffed"],
     gate: { kind: "open" },
     /* אין זריעה: זריעת סוג אירוע כאן הייתה מתייגת ליד לא נכון, וזה כשל
@@ -254,10 +277,11 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "קייטרינג להיום",
     intentHe: "צריך אוכל היום — הקונה מחפש מי שיענה ויגיד כן או לא מיד.",
     serviceFormats: ["delivery"],
-    menu: { courses: ["platters", "antipasti"], requiresTag: null },
+    /* אינו סוג אירוע ואינו מתויג ב־menus.ts — חיתוך גולמי בלבד. */
+    menu: { menuTag: null, courses: ["platters", "antipasti"], requiresDietary: null },
     /* רך: spec 01 P-15 — בלי שעת חיתום הדף עולה בלי טענת קאט־אוף,
-       וקבוצת המודעות פשוט אינה רצה. שעת חיתום שלא נשמרת היא כשל
-       מוניטין בלי דרך חזרה, עם שמות שלוש מסעדות עליו. */
+       וקבוצת המודעות פשוט אינה רצה. שעת חיתום שלא נשמרת היא כשל מוניטין
+       בלי דרך חזרה, בשוק שמונע מביקורות. */
     gate: { kind: "soft", requires: ["same_day_cutoff"] },
     /* אין בנאי בדף (spec 01 P-15, גובר על 02 §1.5) — קישור טקסט ל־/quote. */
     eventTypeSeed: null,
@@ -269,7 +293,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "עמדת פסטה",
     intentHe: "עמדה שמבשלים בה במקום — מוצר, לא סוג אירוע.",
     serviceFormats: ["buffet_on_site"],
-    menu: { courses: ["pasta"], requiresTag: null },
+    menu: { menuTag: null, courses: ["pasta"], requiresDietary: null },
     /* spec 01 P-16: הדף כולו חסום על מגבלות העמדה — טווח סועדים, חשמל,
        מים, מקום, והאם טבח נוסע. בלעדיהן אין כאן דף כן. */
     gate: { kind: "hard", requires: ["live_stations"] },
@@ -316,7 +340,7 @@ export const blockedOccasions = (): { occasion: Occasion; blockers: GateRequirem
  * פורמטי ההגשה שמותר להציג באירוע הזה **היום**.
  *
  * שני מסננים, ושניהם סגורים כרגע:
- *   · `at_restaurant` — קיבולת אירוע פרטי בסניף כלשהו.
+ *   · `at_restaurant` — קיבולת אירוע פרטי במסעדה כלשהי.
  *   · `offered === true` ב־`config/service-formats.ts` — המודול טרם נוצר,
  *     וכשייווצר הסינון שלו נכנס כאן ולא בכל דף בנפרד.
  */
@@ -327,6 +351,13 @@ export function serviceFormatsFor(o: Occasion): ServiceFormat[] {
 
 /** האם יש בכלל מה להציג בסקשן פורמטי ההגשה. ריק ⇒ הסקשן אינו מרונדר. */
 export const hasServiceFormats = (o: Occasion): boolean => serviceFormatsFor(o).length > 0;
+
+/**
+ * תפריטי הקייטרינג שתויגו לאירוע. ריק ⇒ סקשן התפריטים אינו מרונדר,
+ * והדף נשען על החיתוך הגולמי או על מה שהוא כן יודע (spec 01 §3.3).
+ */
+export const menusFor = (o: Occasion): CateringMenu[] =>
+  o.menu.menuTag ? menusForOccasion(o.menu.menuTag) : [];
 
 /* ═══════════════════ בדיקות שפויות בפיתוח ═══════════════════ */
 

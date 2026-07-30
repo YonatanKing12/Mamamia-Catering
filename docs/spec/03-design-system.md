@@ -536,12 +536,14 @@ Emphasis toolkit for Hebrew: weight (400→600), size, colour (`--fg-muted`→`-
 
 **Numeric ranges joined by en-dash reverse visually in RTL.** Verified with FriBidi 1.0.13 and python-bidi (both faithful UAX#9 implementations, in agreement):
 
+Digits in the table below are arbitrary demonstration values, chosen so nobody can lift them as business facts:
+
 | Written | Renders as | Why |
 |---|---|---|
-| `25–200 סועדים` | **`200–25 סועדים`** ❌ | U+2013 is class ON → N1 applies → EN counts as R → the runs swap |
-| `₪5,000 - ₪15,000` | **`₪15,000 - ₪5,000`** ❌ | same |
-| `8:00–17:00` | **`17:00–8:00`** ❌ | same |
-| `25-200` (ASCII hyphen) | `25-200` ✅ | W4: a single ES/CS between two EN becomes EN, keeping one LTR run |
+| `71–83 סועדים` | **`83–71 סועדים`** ❌ | U+2013 is class ON → N1 applies → EN counts as R → the runs swap |
+| `₪7,100 - ₪8,300` | **`₪8,300 - ₪7,100`** ❌ | same |
+| `7:00–8:00` | **`8:00–7:00`** ❌ | same |
+| `71-83` (ASCII hyphen) | `71-83` ✅ | W4: a single ES/CS between two EN becomes EN, keeping one LTR run |
 
 `<bdi>` / `unicode-bidi:isolate` **does not fix this** — an isolate is substituted by U+FFFC (class ON), so isolating each number leaves `[ON][dash][ON]` and the order still mirrors. Only an LTR **container** around the *entire* range works. `Intl.NumberFormat('he-IL').formatRange()` also renders reversed — do not trust it.
 
@@ -905,6 +907,11 @@ export default {
         border: "var(--border)", input: "var(--input)", ring: "var(--ring)",
         // NOTE: no `golden`, `saddle-brown`, `wine-red`, `cream`, `cornsilk`,
         // `dark-brown`, `chart-*`, `sidebar-*`. All deleted — see §13.
+        // NOTE: `accent` here is the TOMATO accent, not shadcn's neutral hover
+        // surface, and there is deliberately no `accent-foreground`. Any retained
+        // shadcn primitive using `hover:bg-accent hover:text-accent-foreground`
+        // must be rewritten to `hover:bg-paper-2` in the same commit (§13.3) —
+        // otherwise a hover state paints a 200px+ tomato fill and breaks L-7.
       },
 
       borderRadius: { DEFAULT: "var(--r)", sm: "2px", md: "var(--r)", lg: "var(--r)", pill: "var(--r-pill)" },
@@ -1166,6 +1173,29 @@ Order, fixed:
 7. **Optional**, and only in the second grid column: one still `<Photo>`.
 
 **The photo rule for the hero, which is a change from the design reference.** The reference sets `.hero__photo{order:-1}` at 860px, moving the image *above* the text on mobile. **That is inverted here**: on mobile the photo renders **after** the CTA pair, or not at all. L-2 forbids an image above the fold on any breakpoint, and on this direction the first thing a visitor must see is a dish name, not a plate. With no photo the hero is a single column at `--measure-lede`-ish width with the dish rows carrying the right-hand weight; it does not look like a two-column layout missing a column, because the grid collapses rather than leaving a hole.
+
+### 7.8b `<ServiceMenus>` — the service formats as chef's menus
+
+Section 02. Three formats presented as three fixed chef's menus, not as packages: drop-off, on-site buffet, and plated service with staff. Each is a `.menu-leaf` dish list plus an `<InclusionsExclusions>` column.
+
+```
+.menus      display:grid; grid-template-columns:repeat(auto-fit,minmax(275px,1fr));
+            gap:var(--gap-grid)
+.menu       background:var(--bg); border:1px solid var(--rule); border-radius:var(--r);
+            padding:var(--pad-card); display:flex; flex-direction:column
+.menu--flag border-color:var(--fg); box-shadow:var(--rule-double)   /* the doubled RULE */
+.menu__kicker font-size:var(--fs-2xs); font-weight:600; letter-spacing:.09em; color:var(--fg-subtle)
+.menu--flag .menu__kicker{ color:var(--accent) }
+.menu h3    font-size:var(--fs-xl); font-weight:500
+.menu__price class="num"; font-size:var(--fs-2xl); font-weight:500;
+            padding-block-end:1.3rem; border-bottom:1px solid var(--rule)
+.menu__for  font-size:var(--fs-xs); color:var(--fg-subtle);
+            padding-block-start:1.1rem; border-top:1px solid var(--rule)
+```
+
+**Price handling is the whole design of this component.** `.menu__price` is a `<Slot>`. When it is filled it renders `<Money>` per diner with `LEGAL.PRICE_ESTIMATE_NOTE` immediately beneath at the same type size (§7.24 rule 2). **When it is unfilled the price row is replaced by a single line stating that the price is set by guest count and menu and is sent in a written quote** — wording owned by `04-legal-and-content.md` — and the inclusions column ships alone. A chef's menu without prices is a legitimate restaurant convention, so the no-price state reads as deliberate rather than evasive. That is the only honest way to survive the category's published per-portion anchors without inventing a number.
+
+**A format is only offered where it is confirmed.** A "host it at our restaurant" format is a representation that the restaurants host private events, which is an unanswered owner question involving seated capacity, whether the space can be closed off, parking and accessibility. The card renders **only** where `locations.ts[branch].privateEventCapacity` is filled for at least one branch; with none filled the grid renders two cards, not three, and says nothing about hosting. Same rule for any format requiring staff travel.
 
 ### 7.9 `<HairlineTable>` — and the `<dl>` stack under 640px
 

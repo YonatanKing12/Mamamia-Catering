@@ -38,8 +38,8 @@
  */
 
 import { Head } from "@/components/seo/head";
-import { Button, Num, Prose, Rule } from "@/components/primitives";
-import { PHONE, telLink, waLink } from "@/content/business";
+import { Button, Ltr, Num, Prose, Rule } from "@/components/primitives";
+import { PHONE, SLOTS, filled, telLink, waLink } from "@/content/business";
 import { capturePhoneClick } from "@/lib/lead-client";
 import { buildBreadcrumbList, buildWebPage, PAGE_META } from "@/lib/seo";
 
@@ -163,6 +163,45 @@ export default function Accessibility() {
                 </a>
               </div>
             </section>
+
+            {filled(SLOTS.accessibilityCoordinator) ? (
+              <>
+                <Rule />
+
+                {/*
+                  תקנה 35 לתקנות שוויון זכויות מחייבת ציון רכז נגישות ודרך
+                  התקשרות איתו בהצהרה. הגוש נשען על Slot ייעודי ולא על
+                  `legalName`: שם חברה תחת הכותרת «רכז הנגישות» אינו גיזום
+                  של מידע חסר אלא המצאה שלו.
+                */}
+                <section className="pt-8">
+                  <h2 className="text-xl">רכז הנגישות</h2>
+                  <Prose measure="answer" className="mt-4">
+                    <p>{SLOTS.accessibilityCoordinator.name}</p>
+                    <p>
+                      <a
+                        href={telLink()}
+                        data-tel=""
+                        className="text-fg no-underline hover:text-accent"
+                        onClick={() =>
+                          capturePhoneClick({ callLocation: "accessibility_coordinator" })
+                        }
+                      >
+                        <Num>{SLOTS.accessibilityCoordinator.phone}</Num>
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        href={`mailto:${SLOTS.accessibilityCoordinator.email}`}
+                        className="text-fg hover:text-accent"
+                      >
+                        <Ltr>{SLOTS.accessibilityCoordinator.email}</Ltr>
+                      </a>
+                    </p>
+                  </Prose>
+                </section>
+              </>
+            ) : null}
           </div>
         </div>
       </section>

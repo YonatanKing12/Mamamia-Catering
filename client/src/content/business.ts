@@ -122,12 +122,29 @@ export const SLOTS = {
   /** TODO(owner): האם מוצעת עמדה חיה, ומה המגבלות התפעוליות */
   liveStations: null as Slot<string>,
 
-  /** TODO(owner): שם משפטי ומספר ח.פ. — נדרש לתקנון ולרכש מוסדי */
-  legalName: null as Slot<string>,
+  /**
+   * שם משפטי. מקור: הלקוח, 30 ביולי 2026.
+   * ח.פ. עדיין חסר — נדרש לרכש מוסדי ולחשבוניות ללקוחות עסקיים.
+   * TODO(owner): מספר ח.פ. / עוסק מורשה
+   */
+  legalName: "מאמאמיה טעמים של בית בע\"מ" as Slot<string>,
   companyId: null as Slot<string>,
 
-  /** TODO(owner): מייל מנוטר בפועל לפניות פרטיות */
-  privacyEmail: null as Slot<string>,
+  /**
+   * ערוץ פניות יחיד לכל הסוגים — פרטיות, נגישות, וכל השאר.
+   * מקור: הלקוח, 30 ביולי 2026.
+   */
+  privacyEmail: "yonatancohen12123@gmail.com" as Slot<string>,
+
+  /**
+   * רכז נגישות. תקנה 35 מחייבת שם ודרך התקשרות בהצהרת הנגישות.
+   * מקור: הלקוח, 30 ביולי 2026.
+   */
+  accessibilityCoordinator: {
+    name: "יונתן כהן",
+    phone: PHONE.display,
+    email: "yonatancohen12123@gmail.com",
+  } as Slot<{ name: string; phone: string; email: string }>,
 
   /** TODO(owner): תקופת שמירה לליד שלא הבשיל. מזין את משימת המחיקה. */
   leadRetentionMonths: null as Slot<number>,

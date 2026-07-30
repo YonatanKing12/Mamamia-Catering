@@ -24,16 +24,17 @@
     />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- חוב פתוח — מפר INV-10 (01 §0.4, "no Google Fonts"): משדר IP של כל מבקר.
-         נשאר עד שיהיו גופנים מוקטנים ב־client/public/fonts/ — ראו index.css §4.2:
-         @font-face מקומי מול 404 מפיל את העמוד ל־fallback, ולכן מחיקה לבדה מזיקה.
-         להסיר יחד עם הוספת ה־@font-face, ואז למחוק את ההצהרה ב־/privacy. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Assistant:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- גופנים מהשרת שלנו (INV-10). @font-face ב-index.css §4.2.
+         אין להוסיף כאן קישור לגיליון גופנים חיצוני.
+         preload רק לעברית של משקלי הגוף והכותרת — הפנים שנדרשים ל-LCP. -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="/fonts/frank-ruhl-libre-500-hebrew.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="/fonts/frank-ruhl-libre-700-hebrew.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="/fonts/assistant-400-hebrew.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="/fonts/assistant-600-hebrew.woff2" />
 
     <!--
       Font Awesome (cdnjs) הוסר — 01 §0.1, 03 §13.3.

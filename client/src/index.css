@@ -2,242 +2,356 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: hsl(45, 20%, 96%);
-  --foreground: hsl(20, 14.3%, 4.1%);
-  --muted: hsl(45, 15%, 92%);
-  --muted-foreground: hsl(25, 5.3%, 44.7%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(20, 14.3%, 4.1%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(20, 14.3%, 4.1%);
-  --border: hsl(20, 5.9%, 90%);
-  --input: hsl(20, 5.9%, 90%);
-  --primary: hsl(43, 74%, 49%);
-  --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(45, 15%, 92%);
-  --secondary-foreground: hsl(24, 9.8%, 10%);
-  --accent: hsl(45, 15%, 92%);
-  --accent-foreground: hsl(24, 9.8%, 10%);
-  --destructive: hsl(0, 84.2%, 60.2%);
-  --destructive-foreground: hsl(60, 9.1%, 97.8%);
-  --ring: hsl(20, 14.3%, 4.1%);
-  --radius: 0.5rem;
-  
-  /* Custom Mamamia Colors */
-  --golden: hsl(43, 74%, 49%);
-  --dark-golden: hsl(43, 75%, 30%);
-  --saddle-brown: hsl(25, 76%, 31%);
-  --wine-red: hsl(352, 40%, 32%);
-  --cream: hsl(60, 29%, 89%);
-  --warm-white: hsl(45, 20%, 96%);
-  --dark-brown: hsl(20, 25%, 15%);
-  --cornsilk: hsl(48, 100%, 93%);
+/* ═══════════════════════════════════════════════════════════════
+   מאמא מיה קייטרינג · design tokens
+   Direction: TAFRIT — the menu is the site. Editorial, paper, restrained.
+   Normative source: docs/spec/03-design-system.md §2–§6, §8, §11.
+
+   Every contrast ratio below was recomputed from the literal hex values
+   with the WCAG 2.x relative-luminance formula. AA text = 4.5:1,
+   AA large = 3:1, AA non-text = 3:1.
+   There is no dark theme and no contrast filter — see §2.4.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  /* ── surfaces ───────────────────────────────────────────── */
+  --paper:        #fbf8f3;   /* default page surface */
+  --paper-2:      #f4eee4;   /* alternating band, inline info boxes */
+  --paper-3:      #ece3d5;   /* the quote-builder band, one per page */
+  --surface-hover:#ffffff;   /* hover only — never a resting surface */
+
+  /* ── ink ────────────────────────────────────────────────── */
+  --ink:        #1e1a17;     /* 16.31:1 on paper · 14.97 on paper-2 · 13.59 on paper-3 */
+  --ink-2:      #4d453d;     /*  8.87:1 on paper · 8.14 on paper-2 */
+  --ink-3:      #6f6459;     /*  5.44:1 on paper · 4.99 on paper-2 · 4.53 on paper-3
+                                 smallest legal text colour */
+  --ink-4:      #877c70;     /*  3.85:1 on paper — NON-TEXT ONLY (AA non-text) */
+
+  /* ── rules ──────────────────────────────────────────────── */
+  --line:        #ded3c2;    /* 1.40:1 on paper — decorative separation only */
+  --line-strong: #8e7f66;    /* 3.69:1 on paper · 3.38 on paper-2 · 3.07 on paper-3
+                                 mandatory for interactive boundaries (WCAG 1.4.11) */
+
+  /* ── accent, rationed to ~2% of pixels (L-7) ────────────── */
+  --tomato:     #b0392a;     /* 5.72:1 on paper · 5.25 on paper-2 · 4.77 on paper-3
+                                 white on it 6.06:1 · paper on it 5.72:1
+                                 FORBIDDEN on --ink (2.85:1) — the band re-derives it */
+  --tomato-dk:  #8e2c20;     /* 7.83:1 on paper · white on it 8.30:1 */
+  --olive:      #4d5a43;     /* 6.93:1 on paper · white on it 7.35:1 — confirmed/success */
+  --danger:     #a3271b;     /* 6.92:1 on paper · 6.36 on paper-2 · white on it 7.33:1
+                                 deliberately not --tomato: an error must not read as decoration */
+  --wa:         #0f7a3d;     /* white on it 5.42:1 (brand green #25D366 is 2.x:1 — never restore it) */
+  --wa-dk:      #0e6f38;     /* white on it 6.27:1 */
+
+  /* ── semantic roles — write components against these ────── */
+  --bg:            var(--paper);
+  --bg-alt:        var(--paper-2);
+  --bg-form:       var(--paper-3);
+  --fg:            var(--ink);
+  --fg-muted:      var(--ink-2);
+  --fg-subtle:     var(--ink-3);
+  --fg-decor:      var(--ink-4);      /* NON-TEXT ONLY */
+  --accent:        var(--tomato);
+  --accent-strong: var(--tomato-dk);
+  --accent-fg:     #ffffff;           /* 6.06:1 on --accent — the only legal fill-text pair */
+  --rule:          var(--line);       /* decorative */
+  --rule-control:  var(--line-strong);/* interactive boundaries — 1.4.11 */
+  --focus:         var(--tomato);     /* 5.72:1 on paper — AA non-text with margin */
+  --btn-bg:        var(--ink);
+  --btn-fg:        var(--paper);      /* 16.31:1 */
+
+  /* ── families (§4.1) ────────────────────────────────────── */
+  --serif:'Frank Ruhl Libre','FRL Fallback',Georgia,serif;
+  --sans: 'Assistant','Assistant Fallback',system-ui,Arial,sans-serif;
+
+  /* ── type scale (§4.3) · fluid 360px → 1440px, rem-based so zoom is safe */
+  --fs-3xs: clamp(0.75rem,   0.7396rem + 0.0463vw, 0.7813rem);  /* 12 → 12.5  legal fine print */
+  --fs-2xs: clamp(0.8125rem, 0.8021rem + 0.0463vw, 0.8438rem);  /* 13 → 13.5  eyebrow, sec__num, tag */
+  --fs-xs:  clamp(0.875rem,  0.8542rem + 0.0926vw, 0.9375rem);  /* 14 → 15    caption, dish description */
+  --fs-sm:  clamp(0.9688rem, 0.9479rem + 0.0926vw, 1.0313rem);  /* 15.5 → 16.5 UI, labels, table cells */
+  --fs-base:clamp(1.0625rem, 1.0417rem + 0.0926vw, 1.125rem);   /* 17 → 18    BODY (Hebrew floor is 17) */
+  --fs-md:  clamp(1.1563rem, 1.1042rem + 0.2315vw, 1.3125rem);  /* 18.5 → 21  lede, standfirst */
+  --fs-lg:  clamp(1.25rem,   1.1667rem + 0.3704vw, 1.5rem);     /* 20 → 24    h3, DISH NAME (FRL floor) */
+  --fs-xl:  clamp(1.4375rem, 1.2917rem + 0.6481vw, 1.875rem);   /* 23 → 30    card title, course heading */
+  --fs-2xl: clamp(1.625rem,  1.375rem  + 1.1111vw, 2.375rem);   /* 26 → 38    h2 */
+  --fs-3xl: clamp(1.9375rem, 1.5417rem + 1.7593vw, 3.125rem);   /* 31 → 50    h1 on inner routes */
+  --fs-4xl: clamp(2.25rem,   1.6667rem + 2.5926vw, 4rem);       /* 36 → 64    hero h1 */
+
+  /* ── leading, from measured Hebrew ink extent (§4.4) ────── */
+  --lh-display:1.08; --lh-head:1.14; --lh-sub:1.24; --lh-dish:1.3;
+  --lh-tight:1.35;   --lh-body:1.75; --lh-loose:1.8;
+
+  /* ── measure, in em not ch (§4.5) ───────────────────────── */
+  --measure-body:26em;   --measure-lede:23em;    --measure-answer:26em;
+  --measure-dish:17em;   --measure-caption:18em; --measure-confirm:22em;
+  --measure-max:29em;
+
+  /* ── space (§3.1) ───────────────────────────────────────── */
+  --w:1140px;
+  --pad-sec:      clamp(4.5rem, 9vw, 8.5rem);
+  --pad-sec-tight:clamp(2.75rem, 5.5vw, 4.5rem);
+  --pad-gutter:   clamp(1.15rem, 4vw, 2.5rem);
+  --gap-head:     clamp(2.5rem, 5vw, 4rem);
+  --gap-grid:     clamp(1rem, 2vw, 1.5rem);
+  --gap-col:      clamp(2rem, 5vw, 4.5rem);
+  --gap-course:   clamp(2.2rem, 4vw, 3.2rem);
+  --pad-card:     clamp(1.6rem, 3vw, 2.3rem);
+  --pad-form:     clamp(1.4rem, 3.5vw, 2.5rem);
+
+  /* fixed steps, component internals only */
+  --s-1:.25rem; --s-2:.5rem;  --s-3:.75rem; --s-4:1rem;
+  --s-5:1.25rem;--s-6:1.5rem; --s-8:2rem;   --s-10:2.5rem; --s-12:3rem;
+
+  /* ── radii, borders, the three permitted shadows (§3.2–3.5) */
+  --r:3px; --r-pill:99px; --radius:3px;   /* --radius kept for shadcn derivation */
+  --bw:1px; --bw-rule:2px; --bw-chev:1.6px; --bw-leader:1px;
+  --shadow-sticky:0 -6px 24px rgba(30,26,23,.09);  /* sticky mobile CTA bar ONLY */
+  --ring-inset:inset 0 0 0 1px var(--line);        /* layout-free border substitute */
+  --rule-double:0 1px 0 var(--ink);                /* a doubled RULE, not a glow */
+
+  /* ── motion (§8) ────────────────────────────────────────── */
+  --dur-state:180ms; --dur-state-slow:220ms; --dur-reveal:550ms; --dur-shake:300ms;
+  --ease:cubic-bezier(.2,0,.2,1);
+  --dir:1;                                /* direction sign for physical-only props (§9.4) */
+
+  /* ── editing affordance — dev only (§7.30) ──────────────── */
+  --slot-bg:#fff5cc; --slot-ring:#e8d489;
+
+  /* ── shadcn aliases, re-pointed at the real tokens ──────── */
+  --background:var(--paper);
+  --foreground:var(--ink);                 /* 16.31:1 */
+  --card:var(--paper);
+  --card-foreground:var(--ink);            /* 16.31:1 */
+  --popover:var(--paper);
+  --popover-foreground:var(--ink);         /* 16.31:1 */
+  --muted:var(--paper-2);
+  --muted-foreground:var(--ink-2);         /*  8.14:1 on --muted */
+  --primary:var(--ink);
+  --primary-foreground:var(--paper);       /* 16.31:1 */
+  --secondary:var(--paper-2);
+  --secondary-foreground:var(--ink);       /* 14.97:1 */
+  --accent-foreground:var(--accent-fg);    /*  6.06:1 on --accent */
+  --border:var(--line);
+  --input:var(--line-strong);              /* 1.4.11: inputs need the strong rule */
+  --ring:var(--tomato);
+  --destructive:var(--danger);
+  --destructive-foreground:#ffffff;        /*  7.33:1 */
 }
 
-.dark {
-  --background: hsl(240, 10%, 3.9%);
-  --foreground: hsl(0, 0%, 98%);
-  --muted: hsl(240, 3.7%, 15.9%);
-  --muted-foreground: hsl(240, 5%, 64.9%);
-  --popover: hsl(240, 10%, 3.9%);
-  --popover-foreground: hsl(0, 0%, 98%);
-  --card: hsl(240, 10%, 3.9%);
-  --card-foreground: hsl(0, 0%, 98%);
-  --border: hsl(240, 3.7%, 15.9%);
-  --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(43, 74%, 49%);
-  --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(240, 3.7%, 15.9%);
-  --secondary-foreground: hsl(0, 0%, 98%);
-  --accent: hsl(240, 3.7%, 15.9%);
-  --accent-foreground: hsl(0, 0%, 98%);
-  --destructive: hsl(0, 62.8%, 30.6%);
-  --destructive-foreground: hsl(0, 0%, 98%);
-  --ring: hsl(240, 4.9%, 83.9%);
-  --radius: 0.5rem;
+[dir="rtl"]{ --dir:-1 }
+
+/* ── the ink band: at most one per route, always the kitchens band (L-9) ──
+   tomato is 2.85:1 here, so the accent is re-derived and every role is
+   overridden wholesale. Components need zero band-awareness. */
+[data-band="ink"]{
+  --bg:var(--ink);
+  --bg-alt:#2c2622; --bg-form:#2c2622;
+  --fg:var(--paper);         /* 16.31:1 on ink · 14.08 on #2c2622 */
+  --fg-muted:#cfc6ba;        /* 10.24:1 on ink ·  8.84 on #2c2622 */
+  --fg-subtle:#a89d90;       /*  6.49:1 on ink ·  5.61 on #2c2622 */
+  --fg-decor:#7a6f65;        /*  3.53:1 on ink — NON-TEXT ONLY */
+  --accent:#e0a79c;          /*  8.37:1 on ink ·  7.23 on #2c2622 */
+  --accent-strong:#f0b3a8;   /*  9.64:1 on ink */
+  --accent-fg:var(--ink);    /* 8.37:1 — inverted fill text on the band accent */
+  --rule:#3a332c;            /*  1.39:1 — decorative rules only */
+  --rule-control:#7d7269;    /*  3.69:1 on ink · 3.19 on #2c2622 — see note below */
+  --focus:#e0a79c;           /*  8.37:1 */
+  --btn-bg:var(--paper); --btn-fg:var(--ink);
+  --danger:#f0b3a8;          /*  9.64:1 */
+  --destructive:#f0b3a8;
+  --destructive-foreground:var(--ink);
+  --slot-bg:#4a3c1f; --slot-ring:#6d5a2e;
+  --surface-hover:#2c2622;
+  background:var(--ink); color:var(--fg-muted);
+}
+/* NOTE (correction to §2.1): the spec's --ink-band-line-strong #736860 measures
+   3.19:1 on --ink but only 2.76:1 on the band's own --bg-alt/--bg-form #2c2622,
+   where builder controls actually sit — a 1.4.11 failure. Raised to #7d7269,
+   which clears 3:1 on both surfaces (3.69 / 3.19). */
+
+/* ── high contrast: a token override, NEVER a filter (§2.4) ─────
+   A contrast filter on a paper palette erases every hairline and the
+   dish-row dotted leader, and re-anchors position:fixed. */
+html[data-contrast="high"]{
+  --paper:#ffffff; --paper-2:#f2f2f2; --paper-3:#e9e9e9;
+  --line:#8a8079; --line-strong:#5f574f;   /* 7.09:1 on white · 5.84 on paper-3 */
+  --ink:#000000;                            /* 21.00:1 on white · 17.30 on paper-3 */
+  --ink-2:#1f1b18;                          /* 17.28:1 on white · 14.08 on paper-3 */
+  --ink-3:#3d372f;                          /* 11.90:1 on white ·  9.69 on paper-3 */
+  --ink-4:#5f574f;                          /*  7.09:1 on white — still non-text only */
+  --tomato:#8e2c20;                         /*  8.30:1 on white ·  6.83 on paper-3 */
+  --tomato-dk:#71221a;
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer base{
+  *,*::before,*::after{box-sizing:border-box}
+  *{ border-color:var(--rule) }
+
+  html{
+    scroll-behavior:smooth;
+    /* NOTE: no font-size is ever set here. Setting it overrides the user's
+       browser text-size preference — see §10.4. */
+  }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+
+  body{
+    margin:0;
+    background:var(--bg); color:var(--fg);
+    font-family:var(--sans); font-weight:400;
+    font-size:var(--fs-base); line-height:var(--lh-body);
+    direction:rtl;
   }
 
-  html {
-    scroll-behavior: smooth;
+  /* paper grain — one fixed composited layer, ~400 bytes, zero requests (§3.6).
+     Never raise the opacity. z-index:900 must stay the topmost layer.
+     CSP implication: any policy for this site must allow img-src data:. */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:900;pointer-events:none;opacity:.028;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+  html[data-contrast="high"] body::after{display:none}
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Assistant', 'Rubik', system-ui, sans-serif;
-    direction: rtl;
-  }
+  img,svg,video{max-width:100%;height:auto;display:block}
 
-  /* Accessibility exemptions */
-  .accessibility-exempt,
-  [data-accessibility-exempt="true"],
-  .accessibility-toolbar,
-  [aria-label*="נגישות"],
-  [title*="נגישות"] {
-    filter: none !important;
-    z-index: 99999 !important;
-  }
-  
-  /* Accessibility button specific */
-  .accessibility-exempt[aria-label*="נגישות"],
-  button[aria-label*="נגישות"],
-  button[title*="נגישות"] {
-    position: fixed !important;
-    bottom: 1.5rem !important;
-    right: 1.5rem !important;
-    z-index: 999999 !important;
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-  
-  /* High contrast and invert protection */
-  html.high-contrast .accessibility-exempt,
-  html.high-contrast [data-accessibility-exempt="true"],
-  body[style*="filter"] .accessibility-exempt,
-  body[style*="filter"] [data-accessibility-exempt="true"] {
-    filter: none !important;
-    background: #2563eb !important;
-    color: white !important;
-    border: 2px solid white !important;
+  h1,h2,h3,h4{font-family:var(--serif);margin:0;letter-spacing:-.01em}
+  h1{font-size:var(--fs-3xl);font-weight:500;line-height:var(--lh-display)}
+  h2{font-size:var(--fs-2xl);font-weight:500;line-height:var(--lh-head)}
+  h3{font-size:var(--fs-lg); font-weight:700;line-height:var(--lh-sub)}
+  h4{font-size:var(--fs-sm); font-weight:600;line-height:var(--lh-sub);font-family:var(--sans)}
+  p{margin:0 0 1.1em;max-width:var(--measure-body)}
+  p:last-child{margin-bottom:0}
+
+  /* Hebrew has no sloped tradition and neither shipped family carries one;
+     the browser would synthesise an oblique and degrade the letterforms (§4.8).
+     The Hebrew emphasis devices are weight and tracking. */
+  em,i,cite,dfn,address,blockquote,q,var{font-style:normal}
+  em,strong,b{font-weight:600}
+
+  a{color:inherit;text-decoration-color:var(--rule);text-underline-offset:.22em}
+  a:hover{text-decoration-color:var(--accent)}
+
+  /* the single focus treatment (§10.1) — never removed, never a ring */
+  :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
+  :focus:not(:focus-visible){outline:none}
+
+  ::selection{background:var(--paper-3);color:var(--ink)}
+
+  /* RTL-correct inputs: dir=ltr fixes the caret while typing digits,
+     the Hebrew placeholder stays on the reading edge */
+  input[dir="ltr"]::placeholder,
+  textarea[dir="ltr"]::placeholder{direction:rtl;text-align:right}
+
+  /* every in-page anchor target clears the sticky header */
+  [id]{scroll-margin-top:88px}
+}
+
+/* ═══ metric-matched fallbacks (§4.2) ═══════════════════════════
+   Values computed from the font binaries at upm 1000. These remove the
+   line-box shift under font-display:swap, which is what keeps the type-led
+   hero at 0 CLS. size-adjust is deliberately omitted — the commonly quoted
+   93% is derived from Noto Sans Hebrew and creates CLS on macOS/Windows.
+
+   The self-hosted Hebrew-subset @font-face blocks specified in §4.2 are NOT
+   here: client/public/fonts/ does not exist yet and client/index.html still
+   loads both families from a third-party host. Declaring a local @font-face
+   for 'Frank Ruhl Libre' against a 404 would shadow the loaded face and drop
+   the page to a fallback. Land the subsetting and the index.html change
+   together, then add the two @font-face blocks above these two. */
+@font-face{                          /* FRL: hhea asc 957, desc -334, lineGap 0 */
+  font-family:'FRL Fallback';
+  src:local('Times New Roman'),local('Georgia');
+  ascent-override:95.7%;descent-override:33.4%;line-gap-override:0%;
+}
+@font-face{                          /* Assistant: hhea asc 1021, desc -287, lineGap 0 */
+  font-family:'Assistant Fallback';
+  src:local('Arial Hebrew'),local('Arial');
+  ascent-override:102.1%;descent-override:28.7%;line-gap-override:0%;
+}
+
+@layer utilities{
+  .wrap{width:100%;max-width:var(--w);margin-inline:auto;padding-inline:var(--pad-gutter)}
+  .sec{padding-block:var(--pad-sec)}
+  .sec--alt{background:var(--bg-alt);border-block:var(--bw) solid var(--rule)}
+  .sec--tight{padding-block:var(--pad-sec-tight)}
+
+  /* tabular figures (§4.6). Frank Ruhl Libre is the numeral carrier: Assistant
+     has no tnum feature at all and its default '1' is 0.038em narrower than
+     every other digit, so a column containing a 1 cannot be aligned in CSS.
+     Mandatory on prices, the phone number, guest counts, dates and hours. */
+  .num{font-family:var(--serif);font-feature-settings:"tnum" 1;font-variant-numeric:tabular-nums}
+  .num-inline{font-size:.94em;font-feature-settings:"tnum" 1;font-variant-numeric:tabular-nums}
+  .shekel{font-size:1.15em;line-height:1}
+  .nowrap{white-space:nowrap}
+
+  .eyebrow{font-size:var(--fs-2xs);font-weight:600;letter-spacing:.09em;color:var(--fg-subtle)}
+  .sec__num{font-size:var(--fs-2xs);font-weight:600;letter-spacing:.09em;color:var(--accent)}
+  .lede{font-size:var(--fs-md);color:var(--fg-muted);max-width:var(--measure-lede);line-height:1.6}
+
+  .em{font-weight:600}
+  .em-track{letter-spacing:.06em}
+  .rule-top{border-top:var(--bw-rule) solid var(--fg)}
+  .hairline{border-top:var(--bw) solid var(--rule)}
+
+  .skip{position:absolute;inset-inline-start:-9999px}
+  .skip:focus{inset-inline-start:1rem;top:1rem;z-index:999;
+    background:var(--ink);color:var(--paper);padding:.6rem 1rem}
+
+  /* icon mirroring is a policy, not a blanket flip (§9.2) */
+  [dir="rtl"] .icon-flip{transform:scaleX(-1)}
+
+  /* the one motion primitive (§8) — fires once, never loops */
+  .reveal{opacity:0;transform:translateY(10px);
+    transition:opacity var(--dur-reveal) var(--ease),transform var(--dur-reveal) var(--ease)}
+  .reveal.is-in{opacity:1;transform:none}
+
+  .shake{animation:shake var(--dur-shake) var(--ease)}
+}
+
+@keyframes shake{25%{transform:translateX(5px)}50%{transform:translateX(-4px)}75%{transform:translateX(2px)}}
+@keyframes accordion-down{from{height:0}to{height:var(--radix-accordion-content-height)}}
+@keyframes accordion-up{from{height:var(--radix-accordion-content-height)}to{height:0}}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .shake{animation:none}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
   }
 }
 
-@layer utilities {
-  .golden { color: var(--golden); }
-  .bg-golden { background-color: var(--golden); }
-  .dark-golden { color: var(--dark-golden); }
-  .bg-dark-golden { background-color: var(--dark-golden); }
-  .saddle-brown { color: var(--saddle-brown); }
-  .bg-saddle-brown { background-color: var(--saddle-brown); }
-  .wine-red { color: var(--wine-red); }
-  .bg-wine-red { background-color: var(--wine-red); }
-  .cream { color: var(--cream); }
-  .bg-cream { background-color: var(--cream); }
-  .warm-white { color: var(--warm-white); }
-  .bg-warm-white { background-color: var(--warm-white); }
-  .dark-brown { color: var(--dark-brown); }
-  .bg-dark-brown { background-color: var(--dark-brown); }
-  .cornsilk { color: var(--cornsilk); }
-  .bg-cornsilk { background-color: var(--cornsilk); }
+/* ═══ the print sheet — the menu is a document (§11, L-16) ══════
+   A. home and /menus print as a single-colour A4 menu.
+   B. the brief card prints as a one-page order sheet. */
+@media print{
+  @page{ margin:14mm }
 
-  .organic-shape {
-    clip-path: polygon(0 0, 100% 0%, 85% 100%, 0% 85%);
-  }
-  
-  .diagonal-section {
-    clip-path: polygon(0 15%, 100% 0%, 100% 85%, 0% 100%);
-  }
-  
-  .wave-shape {
-    clip-path: ellipse(150% 100% at 50% 0%);
-  }
-  
-  .hero-gradient {
-    background: linear-gradient(135deg, rgba(139, 69, 19, 0.9) 0%, rgba(184, 134, 11, 0.8) 50%, rgba(114, 47, 55, 0.9) 100%);
-  }
-  
-  .glass-effect {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .text-shadow-warm {
-    text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.3);
-  }
-  
-  .hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .hover-lift:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(139, 69, 19, 0.2);
+  body{ background:#fff; color:#000; padding-bottom:0; font-size:11pt }
+  body::after{ display:none }                    /* grain prints as a grey wash */
+
+  /* chrome, conversion and navigation are not part of a menu */
+  .head,.sticky,.skip,.checklist,.calc__nav,.cta-pair,.reveal-only,
+  [data-print="hide"]{ display:none!important }
+  .reveal{ opacity:1!important; transform:none!important }
+
+  /* dark bands invert to paper — an A4 sheet of ink is unprintable */
+  [data-band="ink"]{
+    background:#fff!important; color:#000!important;
+    --bg:#fff; --fg:#000; --fg-muted:#222; --fg-subtle:#444;
+    --rule:#bbb; --rule-control:#666; --accent:#000;
   }
 
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
+  .menu-leaf{ break-inside:auto }
+  .course{ break-inside:avoid-page }
+  .dish{ break-inside:avoid; border-bottom:1px dotted #999 }
+  .dish__mark{ display:none }        /* a web affordance, not menu copy */
+  h1,h2,h3{ break-after:avoid }
+  table,tr,td,th,.step,.qa,.brief dl{ break-inside:avoid }
 
-  .animate-slide-up {
-    animation: slideUp 0.8s ease-out;
-  }
+  a[href^="http"]::after{ content:" (" attr(href) ")"; font-size:9pt; color:#555 }
+  a[href^="#"]::after,a[href^="tel"]::after,a[href^="mailto"]::after{ content:"" }
 
-  .animate-slide-right {
-    animation: slideRight 0.8s ease-out;
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 1s ease-out;
-  }
-
-  .animate-bounce-gentle {
-    animation: bounceGentle 2s ease-in-out infinite;
-  }
-
-  .animate-pulse-slow {
-    animation: pulse 3s ease-in-out infinite;
-  }
-
-  @media (max-width: 768px) {
-    .organic-shape, .diagonal-section {
-      clip-path: none;
-    }
-  }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes slideUp {
-  0% { transform: translateY(100px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes slideRight {
-  0% { transform: translateX(-100px); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes bounceGentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.high-contrast {
-  filter: contrast(150%) brightness(120%);
-}
-
-.menu-item-expanded {
-  max-height: 500px;
-  transition: max-height 0.3s ease-in-out;
-}
-
-.menu-item-collapsed {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
-}
-
-.accessibility-toolbar {
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-}
-
-.accessibility-toolbar.open {
-  transform: translateX(0);
+  /* without this the browser drops light borders and the menu prints as an
+     unstructured list of words — the hairlines and dotted leaders ARE the menu */
+  *{ print-color-adjust:exact; -webkit-print-color-adjust:exact }
 }

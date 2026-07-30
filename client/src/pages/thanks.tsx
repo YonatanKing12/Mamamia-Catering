@@ -58,7 +58,7 @@ import { BriefCard } from "@/components/quote/brief-card";
 import { BRANCH_NAME } from "@/components/quote/quote-config";
 import type { QuoteAnswers } from "@/components/quote/use-quote-builder";
 import { PHONE, SLOTS, filled, telLink, waLink } from "@/content/business";
-import { REF_PATTERN } from "@shared/lead-schema";
+import { REF_PATTERN } from "@shared/lead-constants";
 import { buildWaHref, capturePhoneClick, captureWaIntent } from "@/lib/lead-client";
 import { track } from "@/lib/analytics";
 import { PAGE_META } from "@/lib/seo";

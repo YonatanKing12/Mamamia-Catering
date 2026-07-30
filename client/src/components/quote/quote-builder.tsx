@@ -40,7 +40,7 @@ import {
   GUEST_BANDS_VERSION,
   toE164,
   type GuestBand,
-} from "@shared/lead-schema";
+} from "@shared/lead-constants";
 import {
   LeadSubmitError,
   SUBMIT_FAILED_MESSAGE,

@@ -8,16 +8,33 @@
  * data-band-id="colophon" קיים כדי שבדיקת ה־CI תוכל להחריג אותו.
  *
  * כל פרט תפעולי כאן הוא חריץ. אם `addresses` ו־`openingHours` ריקים, שלוש
- * עמודות הסניפים אינן נבנות כשלד ריק — הן מתקפלות לשורה אחת של שלושת המטבחים
- * (L-6: מתדרדרים לתפריט, לא לפער), שנבנית ב־Intl.ListFormat בעברית תקנית.
- * במצב הזה, שהוא המצב היום, הפוטר נראה גמור ולא חסר.
+ * עמודות המסעדות אינן נבנות כשלד ריק — הן מתקפלות לשורה אחת של שלוש
+ * המסעדות (L-6: מתדרדרים לתפריט, לא לפער), שנבנית ב־Intl.ListFormat בעברית
+ * תקנית. במצב הזה, שהוא המצב היום, הפוטר נראה גמור ולא חסר.
  *
- * העובדות המאומתות היחידות שנוגעות בקובץ הזה: הטלפון ושמות שלושת הסניפים.
- * אין כאן כשרות, אין שנת הקמה, אין אזור חלוקה, אין מספר לקוחות.
+ * העובדות המאומתות היחידות שנוגעות בקובץ הזה: הטלפון, שמות שלוש המסעדות,
+ * השם המשפטי וכתובת הדוא״ל. אין כאן כשרות, אין שנת הקמה, אין אזור חלוקה,
+ * אין מספר לקוחות.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  המיצוב — מה תוקן כאן, ולמה זה לא ניסוח
+ * ─────────────────────────────────────────────────────────────────────
+ * שורת התיאור תחת הלוגו אמרה «קייטרינג איטלקי משלושת המטבחים שלנו». זו
+ * בדיוק הטענה שהמיצוב (`content/business.ts`, 30 ביולי 2026) מוחק:
+ * הקייטרינג מבושל במטבח של **אחת** מהמסעדות, ואיזו — לא נמסר. הקולופון
+ * מופיע בכל מסלול באתר, ולכן זו הייתה הטענה השגויה בעותקים הרבים ביותר.
+ *
+ * מאותה סיבה כותרת העמודה היא «המסעדות» ולא «המטבחים», והקישור לעמוד
+ * סניף עובר דרך `branchHrefIfServed` — P-04…P-06 נמחקו, וקישור אליהם הוא
+ * ‏404 בכל עמוד. השם מוצג בלי קישור כשאין יעד מוגש, ומקבל אותו מעצמו אם
+ * ייפתח שער בעתיד.
  */
 
 import { Link } from "wouter";
 import { Num, Rule } from "@/components/primitives";
+/* מהמודול עצמו ולא מ־`@/components/bands`: הקולופון יושב בצ׳אנק הכניסה,
+   וייבוא דרך החבית היה גורר אליו את כל ספריית הבאנדים בשביל פונקציה אחת. */
+import { branchHrefIfServed } from "@/components/bands/branch-strip";
 import {
   BRANCHES,
   PHONE,
@@ -29,8 +46,6 @@ import {
   type Slot,
 } from "@/content/business";
 import { cn } from "@/lib/utils";
-
-const branchHref = (id: string) => `/kitchens/${id.replace(/_/g, "-")}`;
 
 const pick = (record: Slot<Record<BranchId, string>>, id: BranchId): string | null =>
   filled(record) && filled(record[id]) ? record[id] : null;
@@ -57,7 +72,7 @@ const BranchSentence = () => {
   const names = BRANCHES.map((b) => b.name);
   const hrefOf = (name: string) => {
     const match = BRANCHES.find((b) => b.name === name);
-    return match ? branchHref(match.id) : null;
+    return match ? branchHrefIfServed(match.id) : null;
   };
 
   const parts =
@@ -125,27 +140,35 @@ export const Footer = () => {
         >
           <div>
             <span className="block font-serif text-[1.35rem] font-bold text-fg">מאמא מיה</span>
-            <p className="m-0 pt-2 text-xs">קייטרינג איטלקי משלושת המטבחים שלנו</p>
+            {/* מטבח אחד, לא שלושה. איזה — לא נמסר, ולכן אין כאן עיר. */}
+            <p className="m-0 pt-2 text-xs">קייטרינג איטלקי ממטבח של מסעדה פעילה</p>
           </div>
 
           {hasBranchDetail ? (
-            branches.map((branch) => (
-              <div key={branch.id}>
-                <h2 className={COL_LABEL}>
-                  <Link
-                    href={branchHref(branch.id)}
-                    className="text-fg no-underline transition-colors duration-state ease-house hover:text-accent"
-                  >
-                    {branch.name}
-                  </Link>
-                </h2>
-                {branch.address ? <p className="m-0 pb-1">{branch.address}</p> : null}
-                {branch.hours ? <p className="m-0 pb-1">{branch.hours}</p> : null}
-              </div>
-            ))
+            branches.map((branch) => {
+              const href = branchHrefIfServed(branch.id);
+              return (
+                <div key={branch.id}>
+                  <h2 className={COL_LABEL}>
+                    {href ? (
+                      <Link
+                        href={href}
+                        className="text-fg no-underline transition-colors duration-state ease-house hover:text-accent"
+                      >
+                        {branch.name}
+                      </Link>
+                    ) : (
+                      branch.name
+                    )}
+                  </h2>
+                  {branch.address ? <p className="m-0 pb-1">{branch.address}</p> : null}
+                  {branch.hours ? <p className="m-0 pb-1">{branch.hours}</p> : null}
+                </div>
+              );
+            })
           ) : (
             <div className="sm:col-span-2 lg:col-span-2">
-              <h2 className={COL_LABEL}>המטבחים</h2>
+              <h2 className={COL_LABEL}>המסעדות</h2>
               <BranchSentence />
             </div>
           )}

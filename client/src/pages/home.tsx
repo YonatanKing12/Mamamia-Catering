@@ -43,6 +43,7 @@
  */
 
 import * as React from "react";
+import { kashrutClauseHe } from "@/lib/page-meta-extra";
 import { useLocation } from "wouter";
 import { Head } from "@/components/seo/head";
 import { CtaPair, Num, Prose, Rule, SectionHeader } from "@/components/primitives";
@@ -104,6 +105,10 @@ const MenuHero = () => {
      הפסוקית שלו בלבד, ולעולם לא את השורה. במצב ההשקה נשארת פסוקית אחת:
      `מטבח של מסעדה פעילה` — היחידה שהיא עובדה שבידינו.
      לא «שלושה מטבחים»: הקייטרינג יוצא מאחת המסעדות, לא משלושתן. */
+  /* הכשרות מגיעה מהמשבצת דרך kashrutClauseHe ולעולם לא כליטרל —
+     היא ההצהרה בעלת הסיכון הגבוה ביותר באתר. */
+  const kashrut = kashrutClauseHe("general");
+
   const clauses: React.ReactNode[] = [];
 
   if (filled(SLOTS.responseTime)) {
@@ -116,13 +121,12 @@ const MenuHero = () => {
       </>,
     );
   }
-  if (names.length > 0) {
-    clauses.push(
-      <>
-        <Num inline>{names.length}</Num> מטבחים
-      </>,
-    );
-  }
+  /* אין כאן פסוקית על מטבחים.
+     הגרסה הקודמת דחפה `<Num>{names.length}</Num> מטבחים`, כלומר «3 מטבחים» —
+     בדיוק הטענה שהמיצוב מוחק, והקייטרינג יוצא מאחת המסעדות ולא משלושתן.
+     גרוע מכך: במצב ההשקה שתי הפסוקיות שמעל נגזמות (שתי המשבצות ריקות),
+     אז שורת העובדות כולה הצטמצמה למחרוזת «3 מטבחים» ותו לא.
+     עובדת המטבח נאמרת ב־lede בלשון יחיד, ושם מקומה. */
 
   return (
     <section className="pb-sec pt-[clamp(2.5rem,7vw,5rem)]">
@@ -139,8 +143,8 @@ const MenuHero = () => {
         <Prose size="lede" measure="lede" className="mt-7">
           <p>
             קייטרינג מאמאמיה מבושל במטבח של מסעדה איטלקית פעילה — מטבח
-            שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח לצורך אירועים.
-            כשר בד״ץ.
+            שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח לצורך אירועים.
+            {kashrut ? ` ${kashrut}.` : null}
           </p>
         </Prose>
 
@@ -217,7 +221,11 @@ const KitchensSection = ({ num }: { num?: string }) => {
       <div className="wrap">
         <SectionHeader
           num={num}
-          eyebrow="המטבחים"
+          /* «המסעדות» ולא «המטבחים»: הרשימה שמתחת היא שלוש המסעדות של
+             הקבוצה — הקשר מותג. מטבח הקייטרינג הוא אחד מהם, ואיזה לא
+             נמסר. כותרת בלשון רבים מעל שלושה שמות היא בדיוק הגזירה
+             «שלושה מטבחים» שהמיצוב מוחק, גם כשה־lede מתחתיה נכון. */
+          eyebrow="המסעדות"
           title="מטבח של מסעדה, לא מטבח ייצור"
           /* בלי `כל יום` ובלי `הערב`: שעות הפעילות הן Slot ריק, וכל אחת
              מהמילים האלה היא טענה עליהן. */
@@ -231,9 +239,12 @@ const KitchensSection = ({ num }: { num?: string }) => {
               <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2 py-[1.6rem]">
                 <h3 className="m-0 font-serif text-2xl font-medium">{branch.name}</h3>
 
+                {/* «מסעדת הדגל» ולא «מטבח הדגל» — אותו שיקול כמו ב־
+                    `BranchStrip`: הדגל הוא עובדה מותגית, ו«מטבח הדגל»
+                    נקרא כתשובה לשאלה איזה מטבח מבשל את הקייטרינג. */}
                 {branch.isFlagship ? (
                   <span className="rounded-pill border border-solid border-rule-control px-3 py-[.3rem] text-2xs font-semibold text-fg-subtle">
-                    מטבח הדגל
+                    מסעדת הדגל
                   </span>
                 ) : null}
 

@@ -55,9 +55,9 @@ import { SLOTS, filled } from "@/content/business";
 import { anyPrivateEventCapacity, kashrutStatementWritten } from "@/content/locations";
 import { menusForOccasion, type CateringMenu, type OccasionId as MenuTag } from "@/content/menus";
 import type { Course, DietaryFlag } from "@/content/dishes";
-import type { ServiceFormat } from "@shared/lead-schema";
+import type { ServiceFormat } from "@shared/lead-constants";
 
-export type { ServiceFormat } from "@shared/lead-schema";
+export type { ServiceFormat } from "@shared/lead-constants";
 export type { Course, DietaryFlag } from "@/content/dishes";
 
 /* ═══════════════════ החיתוך מהתפריט ═══════════════════ */

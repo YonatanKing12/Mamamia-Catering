@@ -16,7 +16,7 @@
  */
 
 import { BRANCHES, SLOTS, filled, type BranchId } from "@/content/business";
-import { GUEST_BANDS, type GuestBand } from "@shared/lead-schema";
+import { GUEST_BANDS, type GuestBand } from "@shared/lead-constants";
 
 /* ═══════════════════ שלבים ═══════════════════ */
 
@@ -204,10 +204,13 @@ export function guestBandNote(band: GuestBand | null): string | null {
     );
   }
 
+  /* «בשלושת המטבחים יחד» נמחק: הקייטרינג מבושל במטבח של **אחת**
+     מהמסעדות (`content/business.ts`, המיצוב, 30 ביולי 2026), ומספר
+     המטבחים אינו הנימוק לרף — הרף עצמו הוא המידע. */
   const max = SLOTS.maxGuests;
   if (filled(max) && GUEST_BAND_FLOOR[band] > max) {
     return (
-      `${max} סועדים זה הרף שאנחנו מרימים בשלושת המטבחים יחד. ` +
+      `${max} סועדים זה הרף שאנחנו מרימים ליום אחד. ` +
       `מעל זה — דברו איתנו, נגיד לכם ישר אם זה אפשרי.`
     );
   }

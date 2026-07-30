@@ -68,7 +68,7 @@
  */
 
 import type { Slot, BranchId } from "@/content/business";
-import type { ServiceFormat } from "@shared/lead-schema";
+import type { ServiceFormat } from "@shared/lead-constants";
 import type { OccasionId } from "@/content/occasions";
 import {
   CATERING_DISHES,

@@ -31,14 +31,18 @@
 
 import {
   generateRef,
-  type Attribution,
   type Branch,
-  type DraftInput,
   type GuestBand,
-  type QuoteLeadInput,
   type ServiceFormat,
-  type WaIntentInput,
   type WaLocation,
+} from "@shared/lead-constants";
+/* טיפוסים נגזרי־zod בלבד. import type נמחק בקומפילציה ולכן אינו גורר את
+   zod לבאנדל — רק ייבוא ערכי היה עושה זאת. */
+import type {
+  Attribution,
+  DraftInput,
+  QuoteLeadInput,
+  WaIntentInput,
 } from "@shared/lead-schema";
 import { BRANCHES, PHONE, waLink } from "@/content/business";
 import { getAttribution, getSessionId, getSourcePage } from "@/lib/attribution";

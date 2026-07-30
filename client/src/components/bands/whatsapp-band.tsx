@@ -48,7 +48,7 @@ import {
   type WaMessageAnswers,
 } from "@/lib/lead-client";
 import { track } from "@/lib/analytics";
-import type { ServiceFormat, WaLocation } from "@shared/lead-schema";
+import type { ServiceFormat, WaLocation } from "@shared/lead-constants";
 import { BandSection, type BandTone } from "./section";
 
 export interface WhatsAppBandProps {

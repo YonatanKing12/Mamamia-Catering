@@ -17,6 +17,7 @@ import { z } from "zod";
 import { storage } from "./storage";
 import { pingDatabase, hasDatabase } from "./db";
 import { log } from "./vite";
+import { registerSeoRoutes } from "./sitemap";
 import {
   quoteLeadSchema, waIntentSchema, draftSchema,
   toE164, GUEST_BANDS_VERSION, LEAD_STATUSES,
@@ -170,6 +171,12 @@ const zodFail = (res: Response, error: z.ZodError) =>
 /* ═════════════════ רישום הנתיבים ═════════════════ */
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  /* ───── /sitemap.xml ו־/robots.txt ─────
+     נרשמים לפני setupVite/serveStatic (שנקראים אחרי הפונקציה הזאת),
+     ולכן הגרסה הדינמית — זו שנושאת כתובת מוחלטת בשורת Sitemap — גוברת
+     על client/public/robots.txt הסטטי. */
+  registerSeoRoutes(app);
+
   /* ───── בדיקת חיים ───── */
   app.get("/api/health", async (_req, res) => {
     res.json({

@@ -32,7 +32,19 @@ export interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLElemen
 
 export const SectionHeader = React.forwardRef<HTMLElement, SectionHeaderProps>(
   function SectionHeader(
-    { num, eyebrow, title, lede, as: Heading = "h2", reveal = true, className, ...rest },
+    /*
+     * `reveal` כבוי כברירת מחדל, ובכוונה.
+     *
+     * `.reveal` ב־index.css קובע `opacity:0`, ורק `.is-in` מחזיר אותו.
+     * אף אחד בעץ לא מוסיף `.is-in` — אין IntersectionObserver שעושה זאת —
+     * ולכן ברירת מחדל `true` הפכה שתים־עשרה כותרות סקציה ואת הלידים שלהן
+     * לבלתי נראות לחלוטין בכל האתר. לא מונפשות: פשוט לא שם.
+     *
+     * ברירת המחדל הבטוחה היא הכיוון הזה. תוכן שנראה בלי אנימציה עדיף על
+     * תוכן שנעלם כשהאנימציה לא מחווטת, וזה גם מה ש־BandSection כבר עושה.
+     * מי שיחווט observer בעתיד — יכול להדליק `reveal` במקום אחד.
+     */
+    { num, eyebrow, title, lede, as: Heading = "h2", reveal = false, className, ...rest },
     ref,
   ) {
     if (!title) return null;

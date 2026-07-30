@@ -15,21 +15,45 @@
  * ה־CTA יושב בראש המגירה, לא מתחת לשישה פריטים מחוץ להישג האגודל.
  *
  * אין כאן שום עובדה עסקית מלבד הטלפון ושמות הסניפים — שתי העובדות המאומתות.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  הניווט עובר דרך `shared/routes.ts`, ואינו רשימה שנייה
+ * ─────────────────────────────────────────────────────────────────────
+ * הגרסה הקודמת החזיקה כאן רשימת קישורים קשיחה, וכל אחד משלושת הפריטים
+ * שלה הצביע על מסלול שאינו מוגש: `/menus` חסום על `catering_dishes`,
+ * ו־`/kitchens` היה הנתיב הישן שנמחק. כלומר הכותרת — הקומפוננטה שמופיעה
+ * בכל מסלול באתר — הגישה 404 בכל מסלול באתר.
+ *
+ * לכן `NAV_CANDIDATES` הוא **מועמדים**, ו־`isServedPath` מסנן. פריט שהשער
+ * שלו סגור אינו מרונדר, והוא חוזר מעצמו ברגע ש־`enabled` מתהפך —
+ * בלי שורה להוסיף כאן, ולכן בלי שורה לשכוח.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  מה נמחק מהמגירה, ולמה
+ * ─────────────────────────────────────────────────────────────────────
+ * בלוק «המטבחים» עם שלושה קישורים לדפי סניף. שלוש סיבות, כל אחת מספיקה:
+ * שלושת היעדים הם 404 (P-04…P-06 נמחקו), הכותרת בלשון רבים היא בדיוק
+ * הטענה «שלושה מטבחים» שהמיצוב אוסר, ושם מסעדה בתפריט ניווט של אתר
+ * קייטרינג נקרא כאזור שירות. שמות המסעדות מופיעים כהקשר מותג ב־
+ * ‎`BranchStrip` ובקולופון, ששניהם מנוסחים לכך; כאן הם לא היו.
  */
 
 import * as React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Link, useLocation } from "wouter";
+import { isServedPath } from "@shared/routes";
 import { Button, Num, Rule } from "@/components/primitives";
-import { BRANCHES, PHONE, telLink } from "@/content/business";
+import { PHONE, telLink } from "@/content/business";
 import { cn } from "@/lib/utils";
 
-/** ‎/kitchens/herzliya-pituach — טבלת התעתיק קבועה ב־01 §1. */
-const branchHref = (id: string) => `/kitchens/${id.replace(/_/g, "-")}`;
-
-const ROUTE_NAV = [
+/**
+ * מועמדים לניווט ברמת המסלול, בסדר ההצגה. מה שמוגש היום מתוכם נקבע
+ * ב־`shared/routes.ts` ולא כאן. «המטבח» — יחיד: הקייטרינג מבושל במטבח של
+ * מסעדה אחת, ולשון רבים כאן היא טענה על היקף.
+ */
+const NAV_CANDIDATES = [
   { href: "/menus", label: "התפריטים" },
-  { href: "/kitchens", label: "המטבחים" },
+  { href: "/kitchen", label: "המטבח" },
   { href: "/catering", label: "לאיזה אירועים" },
 ] as const;
 
@@ -73,10 +97,14 @@ export const Header = ({ faqHref }: HeaderProps) => {
   /* מעבר מסלול סוגר את המגירה — אחרת היא נשארת פתוחה מעל העמוד החדש. */
   React.useEffect(() => setOpen(false), [location]);
 
-  const nav = [
-    ...ROUTE_NAV,
-    { href: faqHref ?? (location === "/" ? "#faq" : "/catering#faq"), label: "שאלות" },
-  ];
+  /* `ROUTES` קפוא ו־`isServedPath` טהורה — הרשימה נחתכת פעם אחת למודול. */
+  const nav = React.useMemo(
+    () => [
+      ...NAV_CANDIDATES.filter((item) => isServedPath(item.href)),
+      { href: faqHref ?? (location === "/" ? "#faq" : "/catering#faq"), label: "שאלות" },
+    ],
+    [faqHref, location],
+  );
 
   const current = (href: string) =>
     !href.startsWith("#") && (location === href || location.startsWith(`${href}/`))
@@ -226,25 +254,6 @@ export const Header = ({ faqHref }: HeaderProps) => {
                   </Link>
                 ))}
               </nav>
-
-              <Rule />
-
-              <div className="flex flex-col">
-                <h2 className="eyebrow m-0 pb-2">המטבחים</h2>
-                {BRANCHES.map((branch) => (
-                  <Link
-                    key={branch.id}
-                    href={branchHref(branch.id)}
-                    onClick={close}
-                    className={
-                      "flex min-h-[48px] items-center text-base text-fg-muted no-underline " +
-                      "transition-colors duration-state ease-house hover:text-fg"
-                    }
-                  >
-                    {branch.name}
-                  </Link>
-                ))}
-              </div>
 
               {location === "/menus" ? (
                 <>

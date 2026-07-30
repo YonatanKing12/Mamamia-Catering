@@ -39,7 +39,7 @@ import { cn } from "@/lib/utils";
 import { Button, Money } from "@/components/primitives";
 import { SERVICE_FORMAT_LABEL } from "@/components/quote/quote-config";
 import { track } from "@/lib/analytics";
-import type { ServiceFormat } from "@shared/lead-schema";
+import type { ServiceFormat } from "@shared/lead-constants";
 import { BandSection, type BandTone } from "./section";
 import { DishList, type DishLine } from "./dish-list";
 

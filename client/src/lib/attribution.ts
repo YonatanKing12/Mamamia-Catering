@@ -32,6 +32,7 @@
  * השרת, לא כאן.
  */
 
+/* טיפוס נגזר־zod. import type נמחק בקומפילציה ואינו גורר את zod. */
 import type { Attribution } from "@shared/lead-schema";
 
 /* ═══════════════════ מפתחות אחסון ═══════════════════ */

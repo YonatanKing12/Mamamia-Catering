@@ -23,7 +23,7 @@ import {
   bandFromCount,
   type GuestBand,
   type ServiceFormat,
-} from "@shared/lead-schema";
+} from "@shared/lead-constants";
 import { saveDraft } from "@/lib/lead-client";
 import { track } from "@/lib/analytics";
 import { type BranchId } from "@/content/business";

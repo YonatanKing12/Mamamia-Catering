@@ -270,6 +270,13 @@ const ref = (id: string): JsonLdNode => ({ "@id": id });
  * Organization — ישות המותג. spec 01 §7.1.
  * `legalName` ו־`taxID` הם Slots (שם משפטי ומספר ח.פ. טרם נמסרו) ולכן
  * מושמטים; `sameAs` נפלט רק כשיש כתובות רשתות חברתיות אמיתיות.
+ *
+ * ‏`subOrganization` נפלט **רק** כשהקורא מעביר `branches` במפורש. הגרסה
+ * הקודמת נפלה חזרה ל־`defaultBranchSeo()` תמיד, ולכן כל עמוד באתר פלט
+ * שלוש הפניות `@id` אל `…/kitchens/{slug}#kitchen` — צמתים שאינם מוגדרים
+ * באף גרף, בכתובות שמחזירות 404 (P-04…P-06 נמחקו). הפניה תלויה בכתובת
+ * מתה אינה מוסיפה ידע לגרף, והיא גם הדרך שבה «שלושה מטבחים» חוזר פנימה
+ * דרך הדלת האחורית של הנתונים המובנים.
  */
 export function buildOrganization(opts: {
   telephone?: Maybe<string>;
@@ -282,7 +289,7 @@ export function buildOrganization(opts: {
   origin?: string;
 }): JsonLdNode {
   const origin = opts.origin ?? siteOrigin();
-  const branches = opts.branches ?? defaultBranchSeo();
+  const branches = opts.branches ?? null;
   return {
     "@type": "Organization",
     "@id": orgId(origin),
@@ -294,7 +301,7 @@ export function buildOrganization(opts: {
     telephone: opts.telephone ?? null,
     email: opts.email ?? null,
     sameAs: opts.sameAs ?? null,
-    subOrganization: branches.map((b) => ref(kitchenId(b.slug, origin))),
+    subOrganization: branches ? branches.map((b) => ref(kitchenId(b.slug, origin))) : null,
   };
 }
 
@@ -528,19 +535,21 @@ export function currentYearInJerusalem(now: Date = new Date()): number {
  */
 
 const HOME: Crumb = { labelHe: "ראשי", path: "/" };
-const CATERING: Crumb = { labelHe: "קייטרינג לאירועים", path: "/catering" };
-const KITCHENS: Crumb = { labelHe: "המטבחים שלנו", path: "/kitchens" };
 
-const branchMeta = (): PageMeta[] =>
-  BRANCHES.map((b, i) => ({
-    id: `P-0${4 + i}`,
-    path: `/kitchens/${branchSlug(b.id)}`,
-    titleHe: `קייטרינג איטלקי ב${b.name} | מהמטבח של המסעדה שלנו ב${b.name} — ${SITE_NAME_HE}`,
-    descriptionHe: `המטבח שלנו ב${b.name} מבשל לסועדים במסעדה. אותו מטבח מבשל גם לאירוע שלכם.`,
-    robots: "index,follow" as const,
-    ogImage: "auto" as const,
-    breadcrumb: [HOME, KITCHENS, { labelHe: b.name, path: `/kitchens/${branchSlug(b.id)}` }],
-  }));
+/*
+ * ‏`branchMeta()` — שלוש רשומות מטא לשלושת דפי הסניף — **נמחקה.**
+ *
+ * הכותרת שלה הייתה «קייטרינג איטלקי ב{עיר} | מהמטבח של המסעדה שלנו
+ * ב{עיר}», והתיאור «המטבח שלנו ב{עיר} מבשל לסועדים במסעדה. אותו מטבח
+ * מבשל גם לאירוע שלכם». כלומר שלוש הצהרות נפרדות שהקייטרינג יוצא מכל אחת
+ * משלוש הערים — הטענה שהמיצוב (`content/business.ts`, 30 ביולי 2026)
+ * מוחק במפורש, וגם שלושה דפי שער שכל אחד מהם מציג מסעדה שאינה עושה
+ * קייטרינג כאילו היא עושה.
+ *
+ * ‏P-04…P-06 אין להם קובץ עמוד, `shared/routes.ts` משאיר אותם `enabled:
+ * false`, ו־`page-meta-extra.ts#SUPERSEDED_PATHS` מוחק את ארבעת הנתיבים.
+ * הדף היחיד שבא במקומם הוא `/kitchen`, והמטא שלו יושבת שם.
+ */
 
 const STATIC_META: PageMeta[] = [
   {
@@ -554,125 +563,22 @@ const STATIC_META: PageMeta[] = [
     ogImage: "auto",
     breadcrumb: [HOME],
   },
-  {
-    id: "P-02",
-    path: "/menus",
-    titleHe: "התפריטים | קייטרינג מאמא מיה — מהמטבח של המסעדה",
-    descriptionHe: "מה שהמטבחים שלנו מבשלים, ומה מתוכו אפשר להזמין לאירוע.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, { labelHe: "התפריטים", path: "/menus" }],
-  },
-  {
-    id: "P-03",
-    path: "/kitchens",
-    titleHe: "המטבחים שלנו | שלוש מסעדות איטלקיות פעילות — מאמא מיה",
-    descriptionHe:
-      "מי מבשל את הקייטרינג, ואיפה.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, KITCHENS],
-  },
-  {
-    id: "P-07",
-    path: "/catering",
-    titleHe: "קייטרינג לאירועים | מאמא מיה — שלושה מטבחי מסעדה",
-    descriptionHe: "לאיזה אירועים אנחנו נכנסים, ומה אנחנו לא עושים.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, CATERING],
-  },
-  {
-    id: "P-08",
-    path: "/catering/business",
-    titleHe: "מגשי אירוח וקייטרינג לחברות בהרצליה פיתוח | מאמא מיה — מטבח מסעדה",
-    descriptionHe:
-      "ארוחת צוות, כיבוד לישיבות והשקות — מהמטבח של המסעדה בהרצליה פיתוח.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, CATERING, { labelHe: "קייטרינג לחברות", path: "/catering/business" }],
-  },
-  {
-    id: "P-09",
-    path: "/catering/private-events",
-    titleHe:
-      "אירוע פרטי במסעדה או קייטרינג בבית | מאמא מיה — הרצליה פיתוח, רעננה, פתח תקווה",
-    descriptionHe: "אירוסין, יום הולדת ואירוח בבית — מהמטבח של המסעדה, אצלכם.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [
-      HOME,
-      CATERING,
-      { labelHe: "שמחות פרטיות", path: "/catering/private-events" },
-    ],
-  },
-  {
-    id: "P-10",
-    path: "/catering/bar-mitzvah",
-    titleHe: "קייטרינג לבר מצווה ולבת מצווה | מאמא מיה — מטבח מסעדה איטלקית",
-    descriptionHe: "בר מצווה ובת מצווה מהמטבח של המסעדה. אתם מארחים, אנחנו מבשלים.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [
-      HOME,
-      CATERING,
-      { labelHe: "בר מצווה ובת מצווה", path: "/catering/bar-mitzvah" },
-    ],
-  },
-  {
-    id: "P-11",
-    path: "/catering/shiva",
-    titleHe: "אוכל לשבעה — משלוח מהמטבח שלנו | מאמא מיה",
-    descriptionHe: "אוכל לשבעה ולאזכרה, מהמטבח של המסעדה. מתקשרים, ואנחנו מסתדרים.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, CATERING, { labelHe: "אירוח שבעה", path: "/catering/shiva" }],
-  },
-  {
-    id: "P-12",
-    path: "/catering/holidays",
-    titleHe: "קייטרינג לחגים | מאמא מיה — מטבח מסעדה איטלקית",
-    descriptionHe: "ארוחת חג מהמטבח של המסעדה, בהרצליה פיתוח, ברעננה ובפתח תקווה.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, CATERING, { labelHe: "חגים", path: "/catering/holidays" }],
-  },
-  {
-    id: "P-13",
-    path: "/catering/fun-day",
-    titleHe: "קייטרינג ליום גיבוש ולימי כיף | מאמא מיה — מטבח מסעדה איטלקית",
-    descriptionHe: "יום גיבוש לצוות, מהמטבח של המסעדה האיטלקית שלנו.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, CATERING, { labelHe: "ימי גיבוש", path: "/catering/fun-day" }],
-  },
-  {
-    id: "P-14",
-    path: "/catering/dairy",
-    titleHe: "קייטרינג חלבי איטלקי | מאמא מיה — מהמטבח של המסעדה",
-    descriptionHe: "תפריט חלבי איטלקי מהמטבח של המסעדה — פסטות, גבינות ואנטיפסטי.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, CATERING, { labelHe: "קייטרינג חלבי", path: "/catering/dairy" }],
-  },
-  {
-    id: "P-15",
-    path: "/urgent",
-    titleHe: "קייטרינג להיום | קייטרינג מאמאמיה",
-    descriptionHe: "צריכים אוכל להיום? שיחת טלפון אחת.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, { labelHe: "קייטרינג להיום", path: "/urgent" }],
-  },
-  {
-    id: "P-16",
-    path: "/pasta-bar",
-    titleHe: "עמדת פסטה לאירועים | קו העבודה של המטבח שלנו — מאמא מיה",
-    descriptionHe: "עמדת פסטה לאירועים, מהמטבח של המסעדה האיטלקית שלנו.",
-    robots: "index,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME, { labelHe: "עמדת פסטה", path: "/pasta-bar" }],
-  },
+  /*
+   * ‏P-02, P-03, P-07…P-16, P-19 ו־P-20 **אינם כאן**, והיעדרם מכוון.
+   *
+   * הרשומות שלהם חיו כאן עד לתיקון המיצוב, וכל אחת מהן נשאה בדיוק את
+   * הטענות שהמיצוב מוחק: «שלושה מטבחי מסעדה» (P-07), «שלוש מסעדות
+   * איטלקיות פעילות» (P-03), עיר כמוצא האוכל (P-08 — «מהמטבח של המסעדה
+   * בהרצליה פיתוח»), ואזור שירות שנגזר משלושת הסניפים (P-09, P-12).
+   * ‏`lib/page-meta-extra.ts` נכתב כדי להחליף אותן, וכל עמוד שיווקי באתר
+   * קורא משם דרך `resolveExtraMeta()` — כלומר הרשומות כאן כבר לא הגיעו
+   * לאף `<head>`, אבל הן נשארו ניתנות לפתרון דרך `resolveMeta()`, וזה
+   * מספיק כדי שמישהו יחזיר אותן למסך בלי לדעת.
+   *
+   * שתי טבלאות מטא לאותם נתיבים הן שתי טבלאות שייפרדו. נשארה אחת:
+   * הנתיבים השיווקיים ב־`page-meta-extra.ts`, והנתיבים שאין לו —
+   * ‏`/`, `/quote`, ושבעת דפי השירות — כאן.
+   */
   {
     id: "P-17",
     path: "/quote",
@@ -688,24 +594,6 @@ const STATIC_META: PageMeta[] = [
     titleHe: "אישור פנייה | מאמא מיה",
     descriptionHe: "הפנייה נקלטה. כאן הסיכום ומספר הפנייה שלכם.",
     robots: "noindex,follow",
-    ogImage: "auto",
-    breadcrumb: [HOME],
-  },
-  {
-    id: "P-19",
-    path: "/summary",
-    titleHe: "סיכום אירוע | מאמא מיה",
-    descriptionHe: "הפרטים ששלחתם, כתפריט אחד שאפשר להעביר הלאה.",
-    robots: "noindex,nofollow",
-    ogImage: "auto",
-    breadcrumb: [HOME],
-  },
-  {
-    id: "P-20",
-    path: "/unsubscribe",
-    titleHe: "הסרה מרשימת הדיוור | מאמא מיה",
-    descriptionHe: "הסרה מרשימת הדיוור השיווקי, בלחיצה אחת.",
-    robots: "noindex,nofollow",
     ogImage: "auto",
     breadcrumb: [HOME],
   },
@@ -758,7 +646,7 @@ const STATIC_META: PageMeta[] = [
 
 /** הטבלה, לפי נתיב. פרמטריים (`/areas/:city`, `/lp/:campaign`) אינם כאן — §5.1. */
 export const PAGE_META: Readonly<Record<string, PageMeta>> = Object.freeze(
-  [...STATIC_META, ...branchMeta()].reduce<Record<string, PageMeta>>((acc, m) => {
+  STATIC_META.reduce<Record<string, PageMeta>>((acc, m) => {
     acc[m.path] = m;
     return acc;
   }, {}),
@@ -780,17 +668,29 @@ export function resolveMeta(pathname: string): PageMeta | null {
   return PAGE_META[normalizePath(pathname)] ?? null;
 }
 
-/** דף החגים בתוך חלון עונה: הכותרת נושאת את שם החג ואת השנה (§4 P-12). */
-export function holidayMeta(seasonNameHe: string, now: Date = new Date()): PageMeta {
-  const base = PAGE_META["/catering/holidays"];
+/**
+ * דף החגים בתוך חלון עונה: הכותרת נושאת את שם החג ואת השנה (§4 P-12).
+ *
+ * הבסיס מגיע כפרמטר ולא מ־`PAGE_META`: הרשומה של `/catering/holidays`
+ * עברה ל־`lib/page-meta-extra.ts` (ראו ההערה ב־`STATIC_META`), והקריאה
+ * מכאן אליה הייתה מחזירה `undefined` בשקט ומייצרת `<title>` ריק.
+ *
+ * התיאור **אינו** נוקב בערים. הגרסה שנמחקה כתבה «בהרצליה פיתוח, ברעננה
+ * ובפתח תקווה» — אזור שירות שנגזר ממיקומי שלוש המסעדות, וזו בדיוק הגזירה
+ * שהמיצוב אוסר: הקייטרינג מבושל במטבח של אחת מהן, ואיזו לא נמסר.
+ */
+export function holidayMeta(
+  seasonNameHe: string,
+  base: PageMeta,
+  now: Date = new Date(),
+): PageMeta {
   const year = currentYearInJerusalem(now);
   return {
     ...base,
     titleHe: `קייטרינג ל${seasonNameHe} ${year} | ${SITE_NAME_HE} — מטבח מסעדה איטלקית`,
-    descriptionHe: `ארוחת ${seasonNameHe} מהמטבח של המסעדה, בהרצליה פיתוח, ברעננה ובפתח תקווה.`,
+    descriptionHe: `ארוחת ${seasonNameHe} מהמטבח של מסעדה איטלקית פעילה.`,
     breadcrumb: [
-      HOME,
-      CATERING,
+      ...base.breadcrumb.slice(0, -1),
       { labelHe: seasonNameHe, path: "/catering/holidays" },
     ],
   };

@@ -38,7 +38,7 @@ import type {
   GuestBand,
   ServiceFormat,
   WaLocation,
-} from "@shared/lead-schema";
+} from "@shared/lead-constants";
 
 /* ═══════════════════ ערכים סגורים ═══════════════════ */
 

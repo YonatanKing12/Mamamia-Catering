@@ -38,7 +38,7 @@ import { Ltr, Money } from "@/components/primitives";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { GUEST_BAND_CEILING, GUEST_BAND_FLOOR } from "./quote-config";
-import type { GuestBand, ServiceFormat } from "@shared/lead-schema";
+import type { GuestBand, ServiceFormat } from "@shared/lead-constants";
 
 export interface EstimateInputs {
   format: ServiceFormat | null;

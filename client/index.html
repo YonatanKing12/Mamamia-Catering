@@ -30,14 +30,11 @@
     />
 
     <!--
-      TODO (שלב העיצוב): להסיר. Font Awesome נטען מ־CDN חיצוני וחוסם רינדור
-      עבור 69 אייקונים בלבד. lucide-react כבר מותקן בפרויקט ומגיע בבאנדל —
-      מעבר אליו חוסך בקשה חוסמת ומאות קילובייטים.
+      Font Awesome (cdnjs) הוסר — 01 §0.1, 03 §13.3.
+      גיליון סגנון חיצוני חוסם־רינדור, ממקור שלישי, עבור אייקונים בלבד.
+      במקומו: lucide-react (מגיע בבאנדל, מתנער מעצים לא־בשימוש) ו־SVG
+      מוטבע היכן שהאייקון הוא חלק מהפקד. אין להחזיר את ה־<link>.
     -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
   </head>
   <body dir="rtl">
     <div id="root"></div>

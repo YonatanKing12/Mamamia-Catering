@@ -139,7 +139,9 @@ export const PhotoFrame = React.forwardRef<HTMLElement, PhotoFrameProps>(functio
           sizes={sizes}
           loading={priority ? "eager" : "lazy"}
           decoding={priority ? "sync" : "async"}
-          fetchPriority={priority ? "high" : "auto"}
+          /* React 18.3 עדיין לא מכיר את ה־prop בכתיב camelCase ומשמיט אותו
+             עם אזהרה; הכתיב הקטן עובר כמו שהוא ל־DOM. */
+          {...({ fetchpriority: priority ? "high" : "auto" } as Record<string, string>)}
           className="h-full w-full object-cover"
         />
       </div>

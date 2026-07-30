@@ -1,0 +1,38 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroBg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#A0522D;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#heroBg2)"/>
+  
+  <!-- Table setting -->
+  <ellipse cx="960" cy="540" rx="600" ry="200" fill="white" opacity="0.9" stroke="#D4AF37" stroke-width="4"/>
+  
+  <!-- Plates around table -->
+  <circle cx="400" cy="440" r="30" fill="#f8f8f8" stroke="#ddd" stroke-width="2"/>
+  <circle cx="1520" cy="440" r="30" fill="#f8f8f8" stroke="#ddd" stroke-width="2"/>
+  <circle cx="400" cy="640" r="30" fill="#f8f8f8" stroke="#ddd" stroke-width="2"/>
+  <circle cx="1520" cy="640" r="30" fill="#f8f8f8" stroke="#ddd" stroke-width="2"/>
+  <circle cx="960" cy="340" r="30" fill="#f8f8f8" stroke="#ddd" stroke-width="2"/>
+  <circle cx="960" cy="740" r="30" fill="#f8f8f8" stroke="#ddd" stroke-width="2"/>
+  
+  <!-- Center decoration -->
+  <circle cx="960" cy="540" r="50" fill="#D4AF37" opacity="0.8"/>
+  <circle cx="960" cy="540" r="25" fill="#FFE55C"/>
+  
+  <!-- Candles -->
+  <rect x="850" y="500" width="8" height="40" fill="#654321"/>
+  <rect x="1062" y="500" width="8" height="40" fill="#654321"/>
+  <ellipse cx="854" cy="495" rx="6" ry="12" fill="#FF6347"/>
+  <ellipse cx="1066" cy="495" rx="6" ry="12" fill="#FF6347"/>
+  
+  <text x="960" y="150" font-family="Arial, sans-serif" font-size="42" font-weight="bold" text-anchor="middle" fill="white">
+    שולחן חגיגי מעוצב
+  </text>
+  <text x="960" y="200" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" fill="white" opacity="0.9">
+    עיצוב מושלם לכל אירוע מיוחד
+  </text>
+</svg>

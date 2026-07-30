@@ -1,0 +1,243 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(45, 20%, 96%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(45, 15%, 92%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(43, 74%, 49%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(45, 15%, 92%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(45, 15%, 92%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Custom Mamamia Colors */
+  --golden: hsl(43, 74%, 49%);
+  --dark-golden: hsl(43, 75%, 30%);
+  --saddle-brown: hsl(25, 76%, 31%);
+  --wine-red: hsl(352, 40%, 32%);
+  --cream: hsl(60, 29%, 89%);
+  --warm-white: hsl(45, 20%, 96%);
+  --dark-brown: hsl(20, 25%, 15%);
+  --cornsilk: hsl(48, 100%, 93%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(43, 74%, 49%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Assistant', 'Rubik', system-ui, sans-serif;
+    direction: rtl;
+  }
+
+  /* Accessibility exemptions */
+  .accessibility-exempt,
+  [data-accessibility-exempt="true"],
+  .accessibility-toolbar,
+  [aria-label*="נגישות"],
+  [title*="נגישות"] {
+    filter: none !important;
+    z-index: 99999 !important;
+  }
+  
+  /* Accessibility button specific */
+  .accessibility-exempt[aria-label*="נגישות"],
+  button[aria-label*="נגישות"],
+  button[title*="נגישות"] {
+    position: fixed !important;
+    bottom: 1.5rem !important;
+    right: 1.5rem !important;
+    z-index: 999999 !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  
+  /* High contrast and invert protection */
+  html.high-contrast .accessibility-exempt,
+  html.high-contrast [data-accessibility-exempt="true"],
+  body[style*="filter"] .accessibility-exempt,
+  body[style*="filter"] [data-accessibility-exempt="true"] {
+    filter: none !important;
+    background: #2563eb !important;
+    color: white !important;
+    border: 2px solid white !important;
+  }
+}
+
+@layer utilities {
+  .golden { color: var(--golden); }
+  .bg-golden { background-color: var(--golden); }
+  .dark-golden { color: var(--dark-golden); }
+  .bg-dark-golden { background-color: var(--dark-golden); }
+  .saddle-brown { color: var(--saddle-brown); }
+  .bg-saddle-brown { background-color: var(--saddle-brown); }
+  .wine-red { color: var(--wine-red); }
+  .bg-wine-red { background-color: var(--wine-red); }
+  .cream { color: var(--cream); }
+  .bg-cream { background-color: var(--cream); }
+  .warm-white { color: var(--warm-white); }
+  .bg-warm-white { background-color: var(--warm-white); }
+  .dark-brown { color: var(--dark-brown); }
+  .bg-dark-brown { background-color: var(--dark-brown); }
+  .cornsilk { color: var(--cornsilk); }
+  .bg-cornsilk { background-color: var(--cornsilk); }
+
+  .organic-shape {
+    clip-path: polygon(0 0, 100% 0%, 85% 100%, 0% 85%);
+  }
+  
+  .diagonal-section {
+    clip-path: polygon(0 15%, 100% 0%, 100% 85%, 0% 100%);
+  }
+  
+  .wave-shape {
+    clip-path: ellipse(150% 100% at 50% 0%);
+  }
+  
+  .hero-gradient {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.9) 0%, rgba(184, 134, 11, 0.8) 50%, rgba(114, 47, 55, 0.9) 100%);
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .text-shadow-warm {
+    text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.3);
+  }
+  
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(139, 69, 19, 0.2);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+
+  .animate-slide-right {
+    animation: slideRight 0.8s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+
+  .animate-bounce-gentle {
+    animation: bounceGentle 2s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @media (max-width: 768px) {
+    .organic-shape, .diagonal-section {
+      clip-path: none;
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(100px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+  0% { transform: translateX(-100px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes bounceGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.high-contrast {
+  filter: contrast(150%) brightness(120%);
+}
+
+.menu-item-expanded {
+  max-height: 500px;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.menu-item-collapsed {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.accessibility-toolbar {
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.accessibility-toolbar.open {
+  transform: translateX(0);
+}

@@ -1,0 +1,35 @@
+<svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="tipsBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff8dc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:0.3" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="300" fill="url(#tipsBg)"/>
+  
+  <!-- Checklist representation -->
+  <rect x="100" y="80" width="400" height="140" fill="white" stroke="#D4AF37" stroke-width="2" rx="10"/>
+  
+  <!-- Check items -->
+  <circle cx="130" cy="110" r="8" fill="#228B22"/>
+  <path d="M 126 110 L 129 113 L 134 107" stroke="white" stroke-width="2" fill="none"/>
+  <text x="150" y="115" font-family="Arial, sans-serif" font-size="14" fill="#333">בחירת האורחים המתאימים</text>
+  
+  <circle cx="130" cy="140" r="8" fill="#228B22"/>
+  <path d="M 126 140 L 129 143 L 134 137" stroke="white" stroke-width="2" fill="none"/>
+  <text x="150" y="145" font-family="Arial, sans-serif" font-size="14" fill="#333">תכנון התפריט לפי העונה</text>
+  
+  <circle cx="130" cy="170" r="8" fill="#228B22"/>
+  <path d="M 126 170 L 129 173 L 134 167" stroke="white" stroke-width="2" fill="none"/>
+  <text x="150" y="175" font-family="Arial, sans-serif" font-size="14" fill="#333">התאמת המנות לתקציב</text>
+  
+  <circle cx="130" cy="200" r="8" fill="#D4AF37"/>
+  <text x="150" y="205" font-family="Arial, sans-serif" font-size="14" fill="#333">בחירת שירות איכותי</text>
+  
+  <text x="300" y="40" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#8B4513">
+    5 טיפים לתפריט מושלם
+  </text>
+  <text x="300" y="270" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">
+    מדריך מקצועי לבחירת תפריט מנצח
+  </text>
+</svg>

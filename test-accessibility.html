@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Accessibility Button</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(45deg, #8B4513, #D4AF37);
+            font-family: Arial, sans-serif;
+        }
+        
+        .accessibility-button {
+            position: fixed !important;
+            bottom: 24px !important;
+            right: 24px !important;
+            width: 64px !important;
+            height: 64px !important;
+            background: #2563eb !important;
+            color: white !important;
+            border-radius: 50% !important;
+            border: 2px solid white !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+            z-index: 99999 !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 24px !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .accessibility-button:hover {
+            transform: scale(1.1) !important;
+            background: #1d4ed8 !important;
+        }
+        
+        .content {
+            padding: 50px;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>בדיקת כפתור נגישות</h1>
+        <p>הכפתור צריך להופיע בפינה הימנית התחתונה</p>
+    </div>
+    
+    <button class="accessibility-button" onclick="alert('כפתור הנגישות עובד!')" title="נגישות" aria-label="פתח תפריט נגישות">
+        ♿
+    </button>
+</body>
+</html>

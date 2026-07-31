@@ -19,7 +19,7 @@
  *  2. **`StationsBlock` אינו מרונדר, ואינו קיים.** ‎§4 P-13 מתנה אותו
  *     ב«לפחות תחנה אחת עם שם ועם טווח סועדים». אין ולו אחת, ואין מודול
  *     ‎`content/stations.ts` שממנו לקרוא. בלוק שאין לו נתון אינו בלוק
- *     ריק — הוא לא קיים (INV-2). כשהמשבצות יימסרו, הבלוק נכנס בין ההירו
+ *     ריק — הוא לא קיים (INV-2). כשהמשבצות יימסרו, הבלוק נכנס בין המגדיר
  *     ל־`MenuSheet`, וכל המספור מתקדם מאליו (‎§3.1 — מספור לפי מיקום).
  *
  * ─────────────────────────────────────────────────────────────────────
@@ -37,16 +37,32 @@
  * הוא מה שמעביר את מבחן T-1, והוא אינו קיים בשום דף אחר.
  *
  * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית הפעולה — ראו `pages/catering.tsx`, מוחזקת כאן זהה
+ * ─────────────────────────────────────────────────────────────────────
+ *   1. המגדיר (`#quote`) — הענבר, מיד אחרי ההירו. `MenuConfigurator`
+ *      בולע בעצמו את בנאי ארבע השאלות, ולכן אין בדף שני משטחי המרה.
+ *   2. וואטסאפ — ירוק, בהירו ובבאנד הסוגר בלבד.
+ *   3. טלפון — שורת טקסט, לא פקד שלישי (L-10).
+ *
+ * ‎**אזהרת רגרסיה:** המעבר מ־`QuoteCta` ל־`MenuConfigurator` איבד את
+ * ‎`seed={{ eventType: OCCASION.eventTypeSeed }}` — ל־`MenuConfiguratorProps`
+ * אין `seed`. מנהלת משאבי אנוש עדיין מקלידה את סוג האירוע בשלב הפרטים,
+ * ולכן זה תיוג **חסר** ולא תיוג **שגוי** (02 §1.7 מעדיף בדיוק את הכיוון
+ * הזה) — אבל זה פער אמיתי בייחוס, והוא מדווח בדוח החזרה.
+ *
+ * ─────────────────────────────────────────────────────────────────────
  *  מה נשמט היום
  * ─────────────────────────────────────────────────────────────────────
  *   StationsBlock  ראו למעלה. אין מודול ואין משבצת.
  *   OpsFacts       מינימום, זמן התראה, דדליין משתתפים ואזור — כולם `null`.
  *   MenuSheet      ‎`content/dishes.ts` ריק ⇒ 0 מנות בחתך ⇒ אין סקשן.
  *   ServiceFormats אף פורמט אינו מסומן `offered`.
- *   Faq            חמש השאלות קשורות למשבצות, וכולן ריקות.
+ *   ReviewsBlock · ‎`content/proof.ts` ריק ⇒ אין דירוג בהירו ואין סקשן
+ *   Gallery        הוכחה.
  */
 
 import * as React from "react";
+import { useLocation } from "wouter";
 import { Head } from "@/components/seo/head";
 import { Num, Prose, SectionHeader } from "@/components/primitives";
 import {
@@ -56,7 +72,6 @@ import {
   NextSteps,
   OccasionIntro,
   OpsFacts,
-  QuoteCta,
   ServiceFormats,
   type DishLine,
   type FaqItem,
@@ -64,10 +79,13 @@ import {
   type OpsFactRow,
   type ServiceFormatSpec,
 } from "@/components/bands";
+import { MenuConfigurator } from "@/components/configurator";
+import { ContactBar, Gallery, ReviewsBlock } from "@/components/trust";
 import { SLOTS, filled } from "@/content/business";
 import { dishesForCut, provenanceMark } from "@/content/dishes";
 import { cateringServiceArea } from "@/content/locations";
 import { buildableOccasions, occasionById, serviceFormatsFor } from "@/content/occasions";
+import { hasAnyProof } from "@/content/proof";
 import { kashrutClauseHe, resolveExtraMeta, stripEmptyJsonLd } from "@/lib/page-meta-extra";
 import type { PageMetaExtra } from "@/lib/page-meta-extra";
 import { buildBreadcrumbList, buildFaqPage, buildService, buildWebPage } from "@/lib/seo";
@@ -81,11 +99,15 @@ const SOURCE_PAGE = "/catering/fun-day";
 
 const OCCASION = occasionById("fun-day");
 
+/** הטענה היחידה המותרת על מוצא האוכל, בלשון יחיד. נכתבת פעם אחת. */
+const KITCHEN_FACT_HE =
+  "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.";
+
 /* ═══════════════════ מסלול הוואטסאפ בהירו ═══════════════════ */
 
 /**
  * חוזה §6.1–§6.3: קליטה מקדימה ואז ניווט **באותו tick**, בלי `await`.
- * ‎TODO(01 §5.7): עותק חמישי. מקומו ב־`lib/whatsapp.ts openWhatsApp()`.
+ * ‎TODO(01 §5.7): עותק נוסף. מקומו ב־`lib/whatsapp.ts openWhatsApp()`.
  */
 function useHeroWhatsApp() {
   const [ref] = React.useState(() => newRef());
@@ -152,6 +174,37 @@ function opsRows(): OpsFactRow[] {
   ];
 }
 
+/* ═══════════════════ המגדיר ═══════════════════ */
+
+function ConfiguratorSection({ num }: { num?: string }) {
+  const [, navigate] = useLocation();
+
+  return (
+    <div
+      id="quote"
+      className="border-y border-solid border-y-[color:var(--rule)] bg-bg-form py-sec [&_.sec]:py-0 [&_.wrap]:max-w-none [&_.wrap]:px-0"
+    >
+      <div className="wrap">
+        <SectionHeader
+          num={num}
+          eyebrow="בונים את היום"
+          title="התפריט שלכם ליום גיבוש"
+          lede="מספרים לנו כמה משתתפים, לאן ובאיזו שעה. אנחנו חוזרים אליכם עם תפריט והצעה בכתב, כזאת שאפשר להעביר לרכש."
+        />
+
+        <MenuConfigurator
+          id="quote-builder"
+          sourcePage={SOURCE_PAGE}
+          showHeader={false}
+          onSubmitted={(ref, answers) =>
+            navigate(`/thanks?ref=${encodeURIComponent(ref)}`, { state: { ref, answers } })
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════ שאלות ותשובות ═══════════════════ */
 
 type PageFaq = FaqItem & { answerHe: string | null };
@@ -159,10 +212,43 @@ type PageFaq = FaqItem & { answerHe: string | null };
 /**
  * סט של קונה משאבי אנוש (T-1): מספר משתתפים שזז, לוח זמנים של יום שלם,
  * ורכש. שונה במפורש מסט הרכש של `/catering/business` ומסט החג של
- * ‎`/catering/holidays`. כל תשובה קשורה למשבצת ולכן נדלקת מאליה.
+ * ‎`/catering/holidays`.
+ *
+ * שלושת הראשונים עונים היום. זה שינוי מכוון: קודם כל חמש השאלות היו
+ * קשורות למשבצות ריקות, ולכן `FAQPage` לא נפלט כלל — הדף לא מסר למנוע
+ * תשובות ולו עובדה אחת שניתן לצטט. השלושה שנוספו נכונים כשכל משבצת
+ * ריקה, וכל אחד מהם משפט שלם שעומד בפני עצמו מחוץ להקשר.
  */
 function faqItems(): PageFaq[] {
   return [
+    {
+      id: "faq-how",
+      questionHe: "איך מזמינים קייטרינג ליום גיבוש?",
+      answerHe:
+        "בונים את התפריט כאן בדף ומשאירים פרטים, או שולחים את פרטי היום בוואטסאפ. אנחנו חוזרים אליכם, עוברים על מספר המשתתפים, על השעה ועל המקום, ושולחים הצעה בכתב.",
+    },
+    {
+      id: "faq-who-cooks",
+      questionHe: "מי מבשל את האוכל?",
+      answerHe: KITCHEN_FACT_HE,
+    },
+    {
+      id: "faq-kashrut",
+      questionHe: "האם האוכל כשר?",
+      /* דרך הבורר, כלשון הבעלים. לעולם לא כמחרוזת קשיחה (LAW 1). */
+      answerHe: (() => {
+        const k = kashrutClauseHe("general");
+        return k ? `הקייטרינג ${k}.` : null;
+      })(),
+    },
+    {
+      id: "faq-no-kitchen",
+      questionHe: "המקום שבחרנו בלי מטבח ובלי חשמל. זה בעיה?",
+      /* תיאור של השיחה, לא הבטחת יכולת. אין כאן «אנחנו מסתדרים בכל מקום»
+         ואין טענה על ציוד — שתיהן משבצות ריקות. */
+      answerHe:
+        "זה בדיוק מה שצריך להגיד לנו מראש. מקום בלי מטבח משנה את התפריט עצמו, ולא רק את הלוגיסטיקה, ולכן אנחנו שואלים על זה בשיחה הראשונה.",
+    },
     {
       id: "faq-min",
       questionHe: "כמה משתתפים צריך בשביל להזמין?",
@@ -231,24 +317,22 @@ function WhatWeNeed({ num }: { num?: string }) {
       <div className="wrap">
         <SectionHeader
           num={num}
+          eyebrow="השיחה הראשונה"
           title="מה אנחנו צריכים לדעת על היום שלכם"
           lede="ארבע שאלות, והן כל השיחה הראשונה. אפשר להביא את התשובות מוכנות, ואפשר גם לא."
-          reveal={false}
         />
 
-        <ol className="m-0 grid list-none grid-cols-1 gap-px border-t border-solid border-[color:var(--rule)] p-0 sm:grid-cols-2">
+        {/* כרטיסים ברדיוס 12px, ספרה בענבר, גבול שנדלק ב־hover — אותה שפה
+            של כרטיסי האירועים ושל בלוקי הטיעון בשאר דפי הסבב. */}
+        <ol className="m-0 grid list-none gap-grid p-0 [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
           {WHAT_WE_NEED.map((item, i) => (
             <li
               key={item.qHe}
-              className="m-0 border-b border-solid border-[color:var(--rule)] py-7"
+              className="m-0 rounded-card border border-solid border-[color:var(--rule)] bg-bg-alt p-card transition-colors duration-state ease-house hover:border-accent"
             >
-              <div className="max-w-body pe-6">
-                <span className="block font-serif text-xl font-medium text-fg-subtle num">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-3 font-serif text-lg font-bold">{item.qHe}</h3>
-                <p className="mt-2 text-xs leading-[1.6] text-fg-muted">{item.bodyHe}</p>
-              </div>
+              <span className="sec__num num">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="mt-3 text-lg font-semibold">{item.qHe}</h3>
+              <p className="mt-2 max-w-none text-xs leading-[1.6] text-fg-muted">{item.bodyHe}</p>
             </li>
           ))}
         </ol>
@@ -282,8 +366,12 @@ export default function CateringFunDay() {
   );
 
   const faqs = faqItems();
+  const answered = faqs.filter(
+    (f): f is FaqItem & { answerHe: string } => f.answerHe !== null,
+  );
   const rows = opsRows();
   const showMenuSheet = dishes.length > 0;
+  const proof = hasAnyProof();
 
   const nextLinks = React.useMemo<NextStepLink[]>(
     () =>
@@ -298,14 +386,15 @@ export default function CateringFunDay() {
   );
 
   /* ‎§3.1 — מספור לפי מיקום. כש־`StationsBlock` ייכנס, הוא ייכנס לרשימה
-     הזאת לפני `menu` וכל השאר יתקדם מאליו. */
+     הזאת אחרי `quote` וכל השאר יתקדם מאליו. */
   const order = [
+    "quote",
     showMenuSheet ? "menu" : null,
     formats.some((f) => f.offered) ? "formats" : null,
     "what-we-need",
+    proof ? "proof" : null,
     "kitchen",
-    "quote",
-    faqs.some((f) => f.answerHe) ? "faq" : null,
+    answered.length > 0 ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
   const num = (key: string) => {
@@ -313,8 +402,7 @@ export default function CateringFunDay() {
     return i < 0 ? undefined : String(i + 1).padStart(2, "0");
   };
 
-  const kashrut = kashrutClauseHe("general");
-  const facts = ["מטבח של מסעדה איטלקית פעילה", kashrut].filter(
+  const facts = ["מטבח של מסעדה איטלקית פעילה", kashrutClauseHe("general")].filter(
     (c): c is string => Boolean(c),
   );
 
@@ -336,7 +424,7 @@ export default function CateringFunDay() {
             }),
           ),
           buildBreadcrumbList(META.breadcrumb),
-          buildFaqPage(faqs),
+          buildFaqPage(answered),
         ]}
       />
 
@@ -346,17 +434,15 @@ export default function CateringFunDay() {
           <>
             יום גיבוש,
             <br />
-            והאוכל הוא
-            <br />
-            חלק מהיום.
+            והאוכל הוא חלק מהיום.
           </>
         }
-        lede="יום צוות מחוץ למשרד הוא קודם כול לוח זמנים, ורק אחר כך ארוחה. מספרים לנו לאן, לכמה אנשים ובאיזו שעה, והתפריט נבנה סביב זה."
+        lede="יום צוות מחוץ למשרד הוא קודם כול לוח זמנים, ורק אחר כך ארוחה. אומרים לנו לאן, לכמה אנשים ובאיזו שעה, והתפריט נבנה סביב זה."
         facts={facts}
-        primary={{ label: "בנו תפריט ליום גיבוש", href: "#quote" }}
+        primary={{ label: "לבנות את התפריט ליום גיבוש", href: "#quote" }}
         secondary={{
-          label: "דברו איתנו בוואטסאפ",
-          variant: "ghost",
+          label: "לכתוב לנו בוואטסאפ",
+          variant: "wa",
           href: wa.href,
           target: "_blank",
           rel: "noopener noreferrer",
@@ -369,7 +455,7 @@ export default function CateringFunDay() {
         <Prose
           size="fine"
           measure="body"
-          className="mt-5 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
+          className="mt-3 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
         >
           <p>
             בלחיצה על וואטסאפ נשמרת אצלנו פנייה עם הפרטים שמופיעים בהודעה.{" "}
@@ -378,20 +464,28 @@ export default function CateringFunDay() {
             </a>
           </p>
         </Prose>
+
+        <ReviewsBlock ratingOnly className="mt-6" />
       </OccasionIntro>
 
       <OpsFacts rows={rows} variant="strip" />
 
-      {/* כאן ייכנס `StationsBlock` ביום שבו `SLOTS.liveStations` יימסר.
+      {/* 01 · המגדיר, מיד אחרי ההירו.
+          כאן ייכנס `StationsBlock` ביום שבו `SLOTS.liveStations` יימסר.
           עד אז אין בלוק, ואין שם תחנה בשום מקום בעמוד. */}
+      <ConfiguratorSection num={num("quote")} />
 
-      <MenuSheet
-        id="menu"
-        num={num("menu")}
-        dishes={dishes}
-        title="מהתפריט ליום גיבוש"
-        lede="המנות הן המנות של המסעדה. התפריט ליום שלכם נבנה מהן, לפי מספר המשתתפים ולפי איפה הארוחה נופלת בלוח."
-      />
+      {showMenuSheet ? (
+        <div data-band="cream">
+          <MenuSheet
+            id="menu"
+            num={num("menu")}
+            dishes={dishes}
+            title="מהתפריט ליום גיבוש"
+            lede="המנות הן המנות של המסעדה. התפריט ליום שלכם נבנה מהן, לפי מספר המשתתפים ולפי איפה הארוחה נופלת בלוח."
+          />
+        </div>
+      ) : null}
 
       <ServiceFormats
         id="formats"
@@ -403,17 +497,49 @@ export default function CateringFunDay() {
 
       <WhatWeNeed num={num("what-we-need")} />
 
+      {proof ? (
+        <section id="proof" className="sec sec--alt">
+          <div className="wrap">
+            <SectionHeader num={num("proof")} eyebrow="מה אומרים" title="ארגונים שכבר הזמינו" />
+            <ReviewsBlock className="mt-2" />
+            <Gallery className="mt-10" columns={3} />
+          </div>
+        </section>
+      ) : null}
+
       <KitchenNote num={num("kitchen")} />
 
-      <QuoteCta
-        num={num("quote")}
-        sourcePage={SOURCE_PAGE}
-        seed={{ eventType: OCCASION.eventTypeSeed }}
-        title="התפריט שלכם ליום גיבוש"
-        lede="ארבע שאלות על היום, ואז פרטים ליצירת קשר. אפשר גם פשוט לכתוב בוואטסאפ."
-      />
+      {answered.length > 0 ? (
+        <div data-band="cream">
+          <FaqBand
+            id="faq"
+            num={num("faq")}
+            items={faqs}
+            eyebrow="לפני שמזמינים"
+            title="שאלות שנשאלות בטלפון"
+          />
+        </div>
+      ) : null}
 
-      <FaqBand id="faq" num={num("faq")} items={faqs} title="שאלות שנשאלות בטלפון" />
+      {/* ═══ הבאנד הסוגר ═══ */}
+      <section id="contact" className="sec sec--alt">
+        <div className="wrap">
+          <SectionHeader
+            eyebrow="לסגור את היום"
+            title="נבנה לכם תפריט"
+            lede="ספרו לנו לאן, לכמה אנשים ובאיזו שעה, ונחזור אליכם עם הצעה בכתב."
+          />
+
+          <ContactBar
+            waLocation="footer"
+            primary="whatsapp"
+            quoteHref="#quote"
+            labels={{ quote: "לבנות את התפריט" }}
+            callLocation="footer"
+            framed={false}
+          />
+        </div>
+      </section>
 
       <NextSteps sourcePage={SOURCE_PAGE} links={nextLinks} />
     </>

@@ -1,42 +1,37 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════
- *  page-meta-extra — רשומות המטא למסלולים שנפתחים בסבב הזה.
+ *  page-meta-extra — רשומות המטא למסלולים השיווקיים, ואיחוד הטבלאות.
  * ═══════════════════════════════════════════════════════════════════════
  *
  * spec 01 §2 (מלאי הדפים), §4 (חוזי הדפים), §5.1 (שכבת ה־head), T-3, T-4.
  * ‏`00-spec-review.md` §A גובר על המפרט בכל מקום שבו הם חלוקים.
  *
  * ─────────────────────────────────────────────────────────────────────
- *  למה מודול נפרד ולא הרחבה של `lib/seo.ts`
+ *  למה מודול נפרד — הנימוק המעודכן
  * ─────────────────────────────────────────────────────────────────────
- * ‏`lib/seo.ts` אינו בבעלות אף אחד בסבב הזה ואסור לגעת בו. המסלולים
- * שנפתחים עכשיו צריכים בכל זאת רשומת מטא, ולכן הן יושבות כאן ובאותו
- * טיפוס בדיוק (`PageMeta`), כך שהמיזוג הוא קריאה אחת:
+ * המודול נולד כשל־`lib/seo.ts` היה בעלים אחר ואסור היה לגעת בו. הבעלות
+ * התאחדה, ובכל זאת הפיצול נשאר — משתי סיבות שהן עכשיו החלטה ולא כורח:
  *
- * ```ts
- * // בתוך lib/seo.ts, כשהבעלות תתאחד:
- * import { mergePageMeta } from "@/lib/page-meta-extra";
- * const ALL = mergePageMeta(PAGE_META);
- * ```
+ *   1. ‏`lib/seo.ts` הוא **המנגנון**: זהות המותג, מערכת הכותרות, בוני
+ *      ה־JSON-LD והביקורת. הקובץ הזה הוא **הקופי**: שמונה־עשרה רשומות
+ *      טקסט. ערבוב השניים מייצר קובץ שאיש לא יקרא לפני שהוא עורך אותו.
+ *   2. הכיוון חד־סטרי ונשאר כזה: **הקובץ הזה מייבא מ־`lib/seo.ts`,
+ *      ולעולם לא להפך.** `lib/seo.ts` אינו מייבא כלום מכאן, ולכן אין
+ *      מעגל ואין צורך בבנייה עצלה מטעמי מעגל (ה־memo נשאר, כי הטבלה
+ *      נבנית מפונקציות שקוראות למשבצות ואין טעם לחזור עליהן).
  *
- * **המיזוג עובר דרך פונקציה ולא דרך קבוע.** `lib/seo.ts` הוא המקור
- * לטיפוסים כאן; אילו ייבא בחזרה קבוע שנבנה בזמן טעינת המודול היה נוצר
- * מעגל ייבוא. בנייה עצלה + memo מסירה את הסיכון לחלוטין.
+ * הפער שהפיצול הותיר — **שתי טבלאות מטא לאותו אתר** — נסגר כאן:
+ * ‏`allPageMeta()` הוא האיחוד, ו־`resolveSiteMeta()` הוא הפותר היחיד
+ * שיודע לענות על כל כתובת באתר. מי שצריך מטא לנתיב שאינו יודע מראש
+ * מאיזו טבלה הוא בא — משתמש בהם, לא ב־`resolveMeta()`.
  *
  * ─────────────────────────────────────────────────────────────────────
- *  מה `mergePageMeta` מוחק, ולמה זה חלק מהמיזוג ולא ניקיון נפרד
+ *  מה `mergePageMeta` מוחק
  * ─────────────────────────────────────────────────────────────────────
- * ‏`PAGE_META` שב־seo.ts עדיין מחזיק את המודל הישן: `/kitchens` ושלושה
- * דפי סניף, וכותרות שמצהירות «שלוש מסעדות איטלקיות פעילות» ו«שלושה
- * מטבחי מסעדה». המיצוב תוקן — הקייטרינג יוצא ממטבח **אחד** שזהותו טרם
- * נמסרה (`content/business.ts`, מקטע המיצוב; `content/locations.ts`
- * מחק בהתאם את דפי הסניף). לכן:
- *
- *   · הרשומות כאן **גוברות** על רשומות באותו נתיב ב־`PAGE_META`;
- *   · `SUPERSEDED_PATHS` (‏`/kitchens` ושלושת דפי הסניף) נמחקים במיזוג.
- *
- * מחיקה שאינה חלק מהמיזוג היא מחיקה שמישהו ישכח, וכל עוד הנתיבים האלה
- * חיים בטבלה הם נפלטים ל־sitemap ומקבלים קנוני לדף שאינו קיים.
+ * ‏`SUPERSEDED_PATHS` — `/kitchens` ושלושת דפי הסניף — נמחקים במיזוג.
+ * הם המודל הישן: קייטרינג שיוצא משלושה מטבחים. אין להם קובץ עמוד,
+ * ‏`shared/routes.ts` משאיר אותם `enabled: false`, וכל עוד נתיב כזה חי
+ * בטבלה הוא מקבל קנוני לדף שאינו קיים.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  החוק שמחזיק את התיאורים — לקרוא לפני שמוסיפים רשומה
@@ -58,14 +53,22 @@
  * אחרת. שמות שלוש המסעדות אינם מופיעים כאן כלל: בתוך תיאור של דף
  * קייטרינג הם נקראים כאזור שירות, וזו בדיוק הגזירה האסורה.
  *
+ * ‏**`auditPageMeta()` (`lib/seo.ts`) אוכף את הרשימה הזאת** על שתי
+ * הטבלאות יחד. `auditSiteMeta()` שבתחתית הקובץ הוא הקריאה המוכנה.
+ *
  * ─────────────────────────────────────────────────────────────────────
  *  כותרות
  * ─────────────────────────────────────────────────────────────────────
- * אותו חוק, בתוספת אחת: **כותרת רשאית לנקוב בנושא הדף; אסור לה להוסיף
- * עליו טענה.** דף שכל קיומו תלוי בעובדה חסרה (`/pasta-bar`, `/urgent`,
- * `/catering/shiva`) אינו נרשם עד שהעובדה תימסר — `content/occasions.ts`
- * הוא שקובע זאת, לא הטבלה הזאת — ולכן נקיבת הנושא בכותרת אינה הצהרה
- * עודפת. מכאן שלוש חריגות מנוסח המפרט, כולן הסרות:
+ * **אף כותרת כאן אינה נכתבת כמחרוזת שלמה.** כל רשומה מוסרת `topicHe` —
+ * שאילתת המטרה בעברית — ו־`composeTitle()` מרכיב ממנה
+ * `נושא · מודיפייר | מותג`. שתי המשבצות של המודיפיירים (עוגן מחיר, גוף
+ * מכשיר נקוב) `null` היום ונכנסות מעצמן. ראו `lib/seo.ts`.
+ *
+ * הכלל התוכני: **כותרת רשאית לנקוב בנושא הדף; אסור לה להוסיף עליו
+ * טענה.** דף שכל קיומו תלוי בעובדה חסרה (`/pasta-bar`, `/catering/shiva`)
+ * אינו נרשם עד שהעובדה תימסר — `content/occasions.ts` הוא שקובע זאת, לא
+ * הטבלה הזאת — ולכן נקיבת הנושא בכותרת אינה הצהרה עודפת. מכאן שלוש
+ * חריגות מנוסח המפרט, כולן הסרות:
  *
  *   · P-15 `/urgent` — הוסר `משלוח מהיר`. אין לו שדה ב־`business.ts`.
  *   · P-09 — הוסר `אירוע פרטי במסעדה`. אירוח בתוך המסעדה הוא יכולת
@@ -77,14 +80,38 @@
  *  קנוני
  * ─────────────────────────────────────────────────────────────────────
  * ‏T-4: **`path` הוא הקנוני.** אין שדה קנוני נפרד ולא ייתכן כזה — כל
- * רשומה מצביעה על עצמה, `absoluteUrl(meta.path)` הוא הכתובת המלאה,
+ * רשומה מצביעה על עצמה, `canonicalUrl(meta)` הוא הכתובת המלאה,
  * ופרמטרים של קמפיין לעולם לא נכנסים אליה.
  */
 
-import { BRANCHES, CATERING_NAME, SLOTS, filled } from "@/content/business";
-import { kashrutStatement } from "@/content/locations";
+import { BRANCHES, CATERING_NAME } from "@/content/business";
 import type { OccasionId } from "@/content/occasions";
-import type { Crumb, PageMeta } from "@/lib/seo";
+import {
+  FROM_ORIGIN_HE,
+  ORIGIN_HE,
+  PAGE_META,
+  auditPageMeta,
+  compact,
+  composeTitle,
+  kashrutClauseHe,
+  withKashrut,
+} from "@/lib/seo";
+import type {
+  Crumb,
+  JsonLdNode,
+  KashrutTier,
+  MetaFinding,
+  PageMeta,
+} from "@/lib/seo";
+
+/**
+ * ‏`kashrutClauseHe` עברה ל־`lib/seo.ts` — שם יושבת גם `kashrutBadgeHe`
+ * שבונה ממנה את באדג׳ הכותרת, ושתיהן חייבות לקרוא את אותה משבצת. היא
+ * מיוצאת מחדש מכאן מפני ש־12 קבצי עמוד מייבאים אותה בנתיב הזה, ושינוי
+ * נתיב ייבוא ב־12 קבצים שאינם בבעלות הסבב הזה הוא שינוי מיותר.
+ */
+export { kashrutClauseHe } from "@/lib/seo";
+export type { KashrutTier } from "@/lib/seo";
 
 /* ═══════════════════ הטיפוס ═══════════════════ */
 
@@ -115,146 +142,107 @@ const CATERING: Crumb = { labelHe: "קייטרינג לאירועים", path: "/
  */
 const SITE_DEFAULT_OG = "/og/P-01.jpg";
 
-/* ═══════════════════ שתי אבני הבניין של כל תיאור ═══════════════════ */
-
 /**
- * הטענה היחידה על מוצא האוכל שמותר לכתוב, בלשון יחיד.
- * מקור: הלקוח, 30 ביולי 2026 (`business.ts`,
- * `COOKED_IN_ACTIVE_RESTAURANT_KITCHEN`). לא «שלושה מטבחים», לא עיר.
+ * בונה רשומה. `topicHe` נשמר, הכותרת נגזרת ממנו, והתיאור מקבל את סיומת
+ * הכשרות של אותו מפלס בדיוק — כך אי אפשר שכותרת תדבר על כשרות ותיאור לא,
+ * או להפך.
  */
-const ORIGIN_HE = "מבושל במטבח של מסעדה איטלקית פעילה";
-
-/** אותה טענה בנטייה שמשתלבת אחרי שם עצם. */
-const FROM_ORIGIN_HE = "מהמטבח של מסעדה איטלקית פעילה";
-
-/**
- * ‏«כשר X» כפי שנמסר בעל־פה, מ־`SLOTS.kashrutByBranch`. מוחזר **רק** אם
- * כל הערכים זהים: ערכים חלוקים אינם משפט אחד, והאתר לא ינחש איזה מהם.
- * לעולם לא נכתב כמחרוזת קשיחה כאן — LAW 1.
- */
-function generalKashrutHe(): string | null {
-  const byBranch = SLOTS.kashrutByBranch;
-  if (!filled(byBranch)) return null;
-  const values = BRANCHES.map((b) => byBranch[b.id]).filter((v): v is string => filled(v));
-  if (values.length !== BRANCHES.length) return null;
-  return values.every((v) => v === values[0]) ? values[0] : null;
+function entry(args: {
+  id: string;
+  path: string;
+  topicHe: string;
+  kashrut: KashrutTier;
+  /** משפט התיאור **בלי** סיומת הכשרות. היא מתווספת לפי המפלס. */
+  descriptionHe: string;
+  breadcrumb: Crumb[];
+  occasion: OccasionId | null;
+  robots?: PageMeta["robots"];
+  ogImage?: PageMeta["ogImage"];
+  note?: string;
+}): PageMetaExtra {
+  return {
+    id: args.id,
+    path: args.path,
+    topicHe: args.topicHe,
+    kashrutTier: args.kashrut,
+    titleHe: composeTitle({ topicHe: args.topicHe, kashrut: args.kashrut }),
+    descriptionHe: withKashrut(args.descriptionHe, args.kashrut),
+    robots: args.robots ?? "index,follow",
+    ogImage: args.ogImage ?? "auto",
+    breadcrumb: args.breadcrumb,
+    occasion: args.occasion,
+    note: args.note,
+  };
 }
-
-/**
- * שני מפלסים של טענת כשרות, וההפרדה ביניהם היא ההחלטה הכבדה בקובץ.
- *
- *   · `"written"` — רק `CATERING_KASHRUT_STATEMENT` (`content/locations.ts`),
- *     הנוסח בכתב עם שם הגוף המכשיר המלא. הוא `null` היום, ולכן דפים
- *     במפלס הזה **אינם נושאים טענת כשרות בכלל**.
- *   · `"general"` — מתקבל גם «כשר בד״ץ» הכללי שנמסר בעל־פה.
- *
- * למה בכלל שני מפלסים: `business.ts` מתעד פער פתוח — «בד״ץ» אינו גוף
- * אחד, ולקוח שומר כשרות לא יזמין על סמך «בד״ץ» סתמי. ב־`/catering/shiva`,
- * `/catering/bar-mitzvah` ו־`/catering/holidays` הכשרות **היא** ההחלטה,
- * ותוצאת החיפוש היא הטקסט הראשון שהקונה רואה; שם רק נוסח בכתב מדבר.
- * בדפים האחרים «כשר בד״ץ» הוא הקשר מותג ולא עילת ההזמנה.
- *
- * כשהנוסח בכתב יימסר — כל התיאורים מקבלים אותו אוטומטית, בלי לגעת כאן.
- */
-type KashrutTier = "written" | "general";
-
-export function kashrutClauseHe(tier: KashrutTier): string | null {
-  const written = kashrutStatement();
-  if (filled(written)) return written;
-  return tier === "general" ? generalKashrutHe() : null;
-}
-
-/** מחבר משפט תיאור לסיומת הכשרות, אם יש כזאת. */
-const withKashrut = (sentence: string, tier: KashrutTier): string => {
-  const clause = kashrutClauseHe(tier);
-  return clause ? `${sentence} ${clause}.` : sentence;
-};
-
-/** כותרת: נושא הדף, ואחריו שם העסק כפי שהוא נסחר. */
-const title = (topicHe: string): string => `${topicHe} | ${CATERING_NAME}`;
 
 /* ═══════════════════ הרשומות ═══════════════════ */
 
 function records(): PageMetaExtra[] {
   return [
     /* ─────────── P-02 · /menus ─────────── */
-    {
+    entry({
       id: "P-02",
       path: "/menus",
-      titleHe: title("התפריטים"),
-      descriptionHe: withKashrut(
-        `התפריטים של קייטרינג מאמאמיה, ומה מתוכם אפשר להזמין לאירוע. הכול ${ORIGIN_HE}.`,
-        "general",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
+      /* «תפריטי קייטרינג» ולא «התפריטים»: הראשון הוא מה שמחפשים, השני
+         הוא מה שאנחנו קוראים לזה בפנים. */
+      topicHe: "תפריטי קייטרינג",
+      kashrut: "general",
+      descriptionHe: `התפריטים של ${CATERING_NAME}, ומה מתוכם אפשר להזמין לאירוע. הכול ${ORIGIN_HE}.`,
       breadcrumb: [HOME, { labelHe: "התפריטים", path: "/menus" }],
       occasion: null,
       note: "התפריטים עצמם ב־content/menus.ts. ריק היום ⇒ הדף עובר לרג׳יסטר התפעולי (01 §3.3).",
-    },
+    }),
 
     /* ─────────── P-03 · /kitchen ───────────
      * דף אחד, לא שלושה. הגרסה הקודמת החזיקה `/kitchens` + שלושה דפי
      * סניף, וזו הייתה בדיוק הטענה «רשת של שלושה מטבחי קייטרינג» שנדחתה.
      * המזהה P-03 נשמר מהמפרט כדי שכרטיס ה־og לא יתייתם. */
-    {
+    entry({
       id: "P-03",
       path: "/kitchen",
-      titleHe: title("המטבח שמבשל"),
-      descriptionHe: withKashrut(
+      topicHe: "המטבח שמבשל את הקייטרינג",
+      kashrut: "general",
+      descriptionHe:
         "מי מבשל את הקייטרינג של מאמאמיה: מטבח של מסעדה איטלקית פעילה, ולא מטבח ייצור שנפתח לאירועים.",
-        "general",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
       breadcrumb: [HOME, { labelHe: "המטבח", path: "/kitchen" }],
       occasion: null,
       note: "בלוק פרטי המסעדות נשען על anyRestaurantDetail() — false היום. הדף עומד על הטענה בלבד.",
-    },
+    }),
 
-    /* ─────────── P-07 · /catering ─────────── */
-    {
+    /* ─────────── P-07 · /catering ───────────
+     * הנושא נבדל מדף הבית בכוונה: הבית לוקח «קייטרינג איטלקי לאירועים»,
+     * והמפרק לוקח את הניסוח שמתאר מפרק — «לפי סוג האירוע». שתי כותרות
+     * שמתחילות באותן שתי מילים הן שתי תוצאות שמתחרות זו בזו. */
+    entry({
       id: "P-07",
       path: "/catering",
-      titleHe: title("קייטרינג לאירועים"),
-      descriptionHe: withKashrut(
-        `סוגי האירועים שקייטרינג מאמאמיה עושה, במקום אחד. ${ORIGIN_HE}.`,
-        "general",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג לאירועים לפי סוג האירוע",
+      kashrut: "general",
+      descriptionHe: `סוגי האירועים שקייטרינג מאמאמיה עושה, במקום אחד. ${ORIGIN_HE}.`,
       breadcrumb: [HOME, CATERING],
       occasion: null,
       note: "מפרק בלבד. אינו נושא עובדה משלו, ולכן אין לו שער.",
-    },
+    }),
 
     /* ─────────── P-08 · /catering/business ─────────── */
-    {
+    entry({
       id: "P-08",
       path: "/catering/business",
-      titleHe: title("קייטרינג לחברות ולישיבות"),
-      descriptionHe: withKashrut(
-        `ארוחת צוות, כיבוד לישיבה ואירוע חברה — ${FROM_ORIGIN_HE}.`,
-        "general",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג לחברות ולישיבות",
+      kashrut: "general",
+      descriptionHe: `ארוחת צוות, כיבוד לישיבה ואירוע חברה — ${FROM_ORIGIN_HE}. אתם קובעים תאריך, אנחנו מבשלים.`,
       breadcrumb: [HOME, CATERING, { labelHe: "קייטרינג לחברות", path: "/catering/business" }],
       occasion: "business",
       note: "בלי חשבונית ובלי תנאי רכש בטקסט: companyId הוא null.",
-    },
+    }),
 
     /* ─────────── P-09 · /catering/private-events ─────────── */
-    {
+    entry({
       id: "P-09",
       path: "/catering/private-events",
-      titleHe: title("קייטרינג לשמחה פרטית ולאירוח בבית"),
-      descriptionHe: withKashrut(
-        `שמחה פרטית, יום הולדת או אירוח בבית — ${FROM_ORIGIN_HE}.`,
-        "general",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג לאירוע פרטי",
+      kashrut: "general",
+      descriptionHe: `שמחה פרטית, יום הולדת או אירוח בבית — ${FROM_ORIGIN_HE}.`,
       breadcrumb: [
         HOME,
         CATERING,
@@ -262,160 +250,146 @@ function records(): PageMetaExtra[] {
       ],
       occasion: "private-events",
       note: "«אירוח אצלנו במסעדה» אינו נאמר: at_restaurant חסום על קיבולת שלא נמסרה.",
-    },
+    }),
 
     /* ─────────── P-10 · /catering/bar-mitzvah ───────────
      * מפלס `written`: `content/occasions.ts` מציב כאן שער רך על נוסח
      * הכשרות בכתב, ובלעדיו המילה «כשר» אינה נכתבת בדף — וכותרת ותיאור
      * הם הטקסט הראשון שהקונה רואה, לפני הדף. */
-    {
+    entry({
       id: "P-10",
       path: "/catering/bar-mitzvah",
-      titleHe: title("קייטרינג לבר מצווה ולבת מצווה"),
-      descriptionHe: withKashrut(
-        `בר מצווה ובת מצווה — ${FROM_ORIGIN_HE}. אתם מארחים, אנחנו מבשלים.`,
-        "written",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג לבר מצווה ולבת מצווה",
+      kashrut: "written",
+      descriptionHe: `בר מצווה ובת מצווה — ${FROM_ORIGIN_HE}. אתם מארחים, אנחנו מבשלים.`,
       breadcrumb: [
         HOME,
         CATERING,
         { labelHe: "בר מצווה ובת מצווה", path: "/catering/bar-mitzvah" },
       ],
       occasion: "bar-mitzvah",
-      note: "טענת כשרות תיכנס לתיאור מאליה ברגע ש־CATERING_KASHRUT_STATEMENT יימסר.",
-    },
+      note: "טענת כשרות תיכנס לכותרת ולתיאור מאליה ברגע ש־CATERING_KASHRUT_STATEMENT יימסר.",
+    }),
 
     /* ─────────── P-11 · /catering/shiva ───────────
      * ‏01 P-11: רג׳יסטר תפעולי ואוצר מילים מוגבל — אין «אירוע», אין
      * «חוויה», אין «לחגוג». הכלל חל על הכותרת ועל התיאור בדיוק כמו על
      * הדף, כי הם מה שהאבל רואה ראשון בתוצאת החיפוש. השער כאן **קשיח**
      * (`occasions.ts`): בלי נוסח כשרות בכתב הדף אינו נבנה כלל. */
-    {
+    entry({
       id: "P-11",
       path: "/catering/shiva",
-      titleHe: title("אוכל לשבעה ולאזכרה"),
-      descriptionHe: withKashrut(
-        `אוכל לבית אבלים בימי השבעה ולאזכרה, ${FROM_ORIGIN_HE}.`,
-        "written",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "אוכל לשבעה ולאזכרה",
+      kashrut: "written",
+      descriptionHe: `אוכל לבית אבלים בימי השבעה ולאזכרה, ${FROM_ORIGIN_HE}. מגיעים עם הכול מוכן.`,
       breadcrumb: [HOME, CATERING, { labelHe: "אירוח שבעה", path: "/catering/shiva" }],
       occasion: "shiva",
       note: "שער קשיח סגור היום. הרשומה קיימת כדי שהדף לא ייכתב מחדש כשהנוסח יימסר.",
-    },
+    }),
 
     /* ─────────── P-12 · /catering/holidays ───────────
-     * הרשומה הבסיסית בלבד. החלופה העונתית (שם החג + שנה) יושבת ב־
-     * `holidayMeta()` שב־`lib/seo.ts`, והיא **עדיין נוקבת בשלוש ערים**
-     * בתיאור — פגם שיש לתקן שם, לא כאן. ראו דוח החזרה. */
-    {
+     * הרשומה הבסיסית בלבד. החלופה העונתית (שם החג + שנה) נבנית ב־
+     * `holidayMeta()` שב־`lib/seo.ts` — היא יורשת מכאן את מפלס הכשרות,
+     * ואינה נוקבת בערים. */
+    entry({
       id: "P-12",
       path: "/catering/holidays",
-      titleHe: title("קייטרינג לחגים"),
-      descriptionHe: withKashrut(`ארוחת חג לבית שמארח, ${FROM_ORIGIN_HE}.`, "written"),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג לחגים",
+      kashrut: "written",
+      descriptionHe: `ארוחת חג לבית שמארח, ${FROM_ORIGIN_HE}. סוגרים תפריט מראש ולא מבשלים בערב החג.`,
       breadcrumb: [HOME, CATERING, { labelHe: "חגים", path: "/catering/holidays" }],
       occasion: "holidays",
       note: "מפלס written: ארוחת חג היא קלאסטר בכוונת כשרות, כמו שבעה ובר מצווה.",
-    },
+    }),
 
     /* ─────────── P-13 · /catering/fun-day ─────────── */
-    {
+    entry({
       id: "P-13",
       path: "/catering/fun-day",
-      titleHe: title("קייטרינג ליום גיבוש וליום כיף"),
-      descriptionHe: withKashrut(
-        `יום גיבוש או יום כיף לצוות, עם אוכל ${FROM_ORIGIN_HE}.`,
-        "general",
-      ),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג ליום גיבוש וליום כיף",
+      kashrut: "general",
+      descriptionHe: `יום גיבוש או יום כיף לצוות, עם אוכל ${FROM_ORIGIN_HE}.`,
       breadcrumb: [HOME, CATERING, { labelHe: "ימי גיבוש", path: "/catering/fun-day" }],
       occasion: "fun-day",
       note: "שער קשיח על liveStations. בינתיים עוגן #gibush בתוך /catering/business (01 P-13).",
-    },
+    }),
 
     /* ─────────── P-14 · /catering/dairy ───────────
      * «חלבי» כאן הוא סימון תזונתי מ־`content/dishes.ts` ותו לא: הוא אינו
      * אומר דבר על הפרדה במטבח ואינו טענת כשרות. */
-    {
+    entry({
       id: "P-14",
       path: "/catering/dairy",
-      titleHe: title("קייטרינג חלבי איטלקי"),
-      descriptionHe: withKashrut(`תפריט חלבי איטלקי לאירוע, ${FROM_ORIGIN_HE}.`, "general"),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג חלבי איטלקי",
+      kashrut: "general",
+      descriptionHe: `תפריט חלבי איטלקי לאירוע, ${FROM_ORIGIN_HE}. פסטות, אנטיפסטי וקינוחים.`,
       breadcrumb: [HOME, CATERING, { labelHe: "קייטרינג חלבי", path: "/catering/dairy" }],
       occasion: "dairy",
       note: "אין טענת מחיר משווה. «אותו תקציב, שולחן עשיר יותר» נדחתה בביקורת (§A2).",
-    },
+    }),
 
     /* ─────────── P-15 · /urgent ───────────
      * הכותרת נוקבת בנושא הדף בלבד. הבטחת מהירות אינה נאמרת כאן ולא בשום
      * מקום אחר בשכבת ה־head: `sameDayCutoff` הוא Slot, ובלעדיו הדף עולה
      * בלי טענת קאט־אוף וקבוצת המודעות אינה רצה (01 P-15). */
-    {
+    entry({
       id: "P-15",
       path: "/urgent",
-      titleHe: title("קייטרינג להיום"),
-      descriptionHe: withKashrut(`פנייה דחופה לקייטרינג, ${FROM_ORIGIN_HE}.`, "general"),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "קייטרינג להיום",
+      kashrut: "general",
+      descriptionHe: `פנייה דחופה לקייטרינג, ${FROM_ORIGIN_HE}. מתקשרים, ואנחנו אומרים כן או לא.`,
       breadcrumb: [HOME, { labelHe: "קייטרינג להיום", path: "/urgent" }],
       occasion: "urgent",
       note: "ההמרה בטלפון. שעת חיתום, אם תימסר, מוצגת ב־Asia/Jerusalem בלבד (INV-9).",
-    },
+    }),
 
     /* ─────────── P-16 · /pasta-bar ───────────
      * התיאור **אינו** מצהיר שעמדה חיה מוצעת כשירות: `SLOTS.liveStations`
      * הוא `null`, וזו אחת מהטענות שהוסרו. הוא מדבר על פסטה ועל המטבח,
      * שהם עובדות שיש לנו. הכותרת נוקבת בנושא, והמסלול ממילא אינו נרשם
      * עד שמגבלות העמדה יימסרו. */
-    {
+    entry({
       id: "P-16",
       path: "/pasta-bar",
-      titleHe: title("עמדת פסטה לאירועים"),
-      descriptionHe: withKashrut(`פסטה לאירועים, ${FROM_ORIGIN_HE}.`, "general"),
-      robots: "index,follow",
-      ogImage: "auto",
+      topicHe: "עמדת פסטה לאירועים",
+      kashrut: "general",
+      descriptionHe: `פסטה לאירועים, ${FROM_ORIGIN_HE}. אותו מטבח שמבשל פסטה לסועדים במסעדה, מבשל גם לאירוע שלכם.`,
       breadcrumb: [HOME, { labelHe: "עמדת פסטה", path: "/pasta-bar" }],
       occasion: "pasta-bar",
       note: "שער קשיח על liveStations. מגבלות העמדה ייכנסו ל־content/stations.ts, שטרם נוצר.",
-    },
+    }),
 
     /* ─────────── P-19 · /summary ───────────
      * ‏00-spec-review §E4: כרטיס ה־og גנרי ומשותף, לעולם לא פרטי האירוע
      * של הקונה — הדף נשלח הלאה בוואטסאפ, והתצוגה המקדימה נפתחת בקבוצה.
      * ‏§D6: `noindex` ולא `Disallow`, אחרת סורק לא יקרא את ה־noindex
      * ומייצר התצוגה המקדימה לא יביא כרטיס בכלל. */
-    {
+    entry({
       id: "P-19",
       path: "/summary",
-      titleHe: title("סיכום הפנייה"),
+      topicHe: "סיכום הפנייה",
+      kashrut: "none",
       descriptionHe: "סיכום הפרטים שנשלחו לקייטרינג מאמאמיה.",
       robots: "noindex,nofollow",
       ogImage: SITE_DEFAULT_OG,
       breadcrumb: [HOME],
       occasion: null,
       note: "אין כאן טענה עסקית בכוונה: זה הטקסט שנפתח בתצוגה מקדימה בקבוצת צ׳אט.",
-    },
+    }),
 
     /* ─────────── P-20 · /unsubscribe ─────────── */
-    {
+    entry({
       id: "P-20",
       path: "/unsubscribe",
-      titleHe: title("הסרה מרשימת הדיוור"),
+      topicHe: "הסרה מרשימת הדיוור",
+      kashrut: "none",
       descriptionHe: "הסרה מרשימת הדיוור השיווקי של קייטרינג מאמאמיה.",
       robots: "noindex,nofollow",
       ogImage: SITE_DEFAULT_OG,
       breadcrumb: [HOME],
       occasion: null,
       note: "מגיעים לכאן מקישור עם טוקן ייעודי (00-spec-review §B8), לא עם ref.",
-    },
+    }),
   ];
 }
 
@@ -423,10 +397,7 @@ function records(): PageMetaExtra[] {
 
 let memo: Readonly<Record<string, PageMetaExtra>> | null = null;
 
-/**
- * הטבלה, לפי נתיב. **נבנית עצלה** — ראו הערת המעגל בראש הקובץ.
- * המפתח הוא ה־`path` עצמו, כדי שהמיזוג יהיה פעולה אחת.
- */
+/** הטבלה של המודול הזה, לפי נתיב. נבנית פעם אחת. */
 export function pageMetaExtra(): Readonly<Record<string, PageMetaExtra>> {
   if (memo) return memo;
   const table: Record<string, PageMetaExtra> = {};
@@ -451,8 +422,8 @@ export const SUPERSEDED_PATHS: readonly string[] = Object.freeze([
 ]);
 
 /**
- * ממזג את הרשומות כאן לתוך טבלה קיימת (`PAGE_META` שב־seo.ts).
- * הרשומות כאן **גוברות**, ו־`SUPERSEDED_PATHS` נמחקים. הקלט אינו משתנה.
+ * ממזג את הרשומות כאן לתוך טבלה קיימת. הרשומות כאן **גוברות**,
+ * ו־`SUPERSEDED_PATHS` נמחקים. הקלט אינו משתנה.
  */
 export function mergePageMeta(
   base: Readonly<Record<string, PageMeta>>,
@@ -466,7 +437,21 @@ export function mergePageMeta(
   return Object.freeze(out);
 }
 
-/** נרמול זהה ל־`normalizePath()` שב־seo.ts, בלי לייבא ערך ולסגור מעגל. */
+let allMemo: Readonly<Record<string, PageMeta>> | null = null;
+
+/**
+ * **טבלת המטא של כל האתר** — `PAGE_META` שב־`lib/seo.ts` (בית, הצעה,
+ * דפי שירות) + הרשומות כאן, פחות הנתיבים שהוחלפו.
+ *
+ * זו הטבלה שמזינה בדיקת ייחודיות, מחולל sitemap, וכל הזרקת head בשרת.
+ * שתי הטבלאות הנפרדות אינן אמורות להיקרא ישירות לשם כך.
+ */
+export function allPageMeta(): Readonly<Record<string, PageMeta>> {
+  if (!allMemo) allMemo = mergePageMeta(PAGE_META);
+  return allMemo;
+}
+
+/** נרמול זהה ל־`normalizePath()` שב־seo.ts. */
 function normalize(pathname: string): string {
   const clean = pathname.split("?")[0].split("#")[0];
   if (clean === "" || clean === "/") return "/";
@@ -483,6 +468,14 @@ export function resolveExtraMeta(pathname: string): PageMetaExtra | null {
 }
 
 /**
+ * פותר מטא לנתיב **מכל האתר**. זה הפותר שיש להשתמש בו כשלא ידוע מראש
+ * מאיזו טבלה הנתיב בא — למשל בהזרקת head בשרת, שרואה כתובת ולא עמוד.
+ */
+export function resolveSiteMeta(pathname: string): PageMeta | null {
+  return allPageMeta()[normalize(pathname)] ?? null;
+}
+
+/**
  * המסלולים כאן שרשאים להיכנס ל־sitemap **מבחינת ה־head בלבד**:
  * `index,follow`. זה תנאי הכרחי ולא מספיק — מסלול אירוע נכנס רק אם
  * `isBuildable()` ב־`content/occasions.ts` מאשר אותו, ומחולל ה־sitemap
@@ -494,24 +487,15 @@ export function indexableExtraPaths(): string[] {
     .map((m) => m.path);
 }
 
-/* ═══════════════════ ניקוי לפני סריאליזציה ═══════════════════ */
-
 /**
- * מפתחות שנמחקים בכוח מכל צומת (spec 01 §7.3). זהה לרשימה שב־`lib/seo.ts`;
- * מוחזק כאן כדי שהמודול לא יִיבא **ערך** מ־seo.ts ויסגור מעגל ייבוא.
- * אלה השדות שהגרסה הקודמת שידרה בהם שקר, ורשת ביטחון עדיפה על משמעת.
+ * ביקורת הכנות על **כל** טבלאות המטא של האתר. פונקציית בדיקה.
+ * מערך ריק ⇒ אין ולו כותרת או תיאור אחד שמצהיר על עובדה שאין לה משבצת.
  */
-const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
-  "priceRange",
-  "aggregateRating",
-  "review",
-  "reviews",
-  "ratingValue",
-  "hasCertification",
-]);
+export function auditSiteMeta(): MetaFinding[] {
+  return auditPageMeta(allPageMeta());
+}
 
-/** טיפוסים שכל תוכנם הוא הטיפוס עצמו, ולכן שורדים גם בלי שדות מצהירים. */
-const TYPE_ONLY_NODES: ReadonlySet<string> = new Set(["BusinessAudience"]);
+/* ═══════════════════ ניקוי לפני סריאליזציה ═══════════════════ */
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" &&
@@ -519,99 +503,64 @@ const isPlainObject = (v: unknown): v is Record<string, unknown> =>
   !Array.isArray(v) &&
   (Object.getPrototypeOf(v) === Object.prototype || Object.getPrototypeOf(v) === null);
 
-interface PruneRules {
-  /** מוחק `priceRange` וחבריו. */
-  readonly forbid: boolean;
-  /** מוחק צומת שנותרו בו `@type` / `@context` בלבד. */
-  readonly dropTypeOnly: boolean;
-}
-
-function prune(value: unknown, rules: PruneRules): unknown {
-  if (value === null || value === undefined) return undefined;
-
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    return trimmed === "" ? undefined : trimmed;
-  }
-
-  /* `false` ו־`0` הם ערכים אמיתיים ונשמרים: מחיקתם הייתה הופכת
-     `"isAccessibleForFree": false` מהצהרה להיעדר הצהרה. */
-  if (typeof value === "boolean") return value;
-  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
-  if (typeof value === "bigint") return value;
-
-  if (Array.isArray(value)) {
-    const items = value.map((v) => prune(v, rules)).filter((v) => v !== undefined);
-    return items.length > 0 ? items : undefined;
-  }
-
-  if (isPlainObject(value)) {
-    const out: Record<string, unknown> = {};
-    for (const [key, raw] of Object.entries(value)) {
-      if (rules.forbid && FORBIDDEN_KEYS.has(key)) continue;
-      const cleaned = prune(raw, rules);
-      if (cleaned !== undefined) out[key] = cleaned;
-    }
-    const keys = Object.keys(out);
-    if (keys.length === 0) return undefined;
-
-    if (rules.dropTypeOnly) {
-      /* הפניה ב־`@id` היא קשת בגרף — זה כל תוכנה, והיא שורדת. */
-      const hasRef = Object.prototype.hasOwnProperty.call(out, "@id");
-      const declarative = keys.filter((k) => k !== "@type" && k !== "@context");
-      const typeOnlyAllowed =
-        typeof out["@type"] === "string" && TYPE_ONLY_NODES.has(out["@type"] as string);
-      if (!hasRef && declarative.length === 0 && !typeOnlyAllowed) return undefined;
-    }
-    return out;
-  }
-
-  /* פונקציה, Symbol, Date, Map, מופע של מחלקה — אינם ניתנים לסריאליזציה
-     בטוחה ל־JSON-LD, ולכן מושמטים במקום להיפלט כ־`{}` או כמחרוזת מפתיעה. */
-  return undefined;
-}
-
 /**
  * ─────────────────────────────────────────────────────────────────────
- *  ‏`stripEmpty` — הכלל שמחזיק את הנתונים המובנים
+ *  ‏`stripEmpty` — הגרסה הכללית, שאינה יודעת דבר על schema.org
  * ─────────────────────────────────────────────────────────────────────
  * מוחק **רקורסיבית** כל מפתח שערכו `null` / `undefined` / מחרוזת ריקה
  * (או רווחים בלבד) / מערך ריק / אובייקט שהתרוקן.
  *
- * הסיבה, ולא לשם קפדנות: `content/business.ts` מלא ב־Slots שערכם `null`
- * — כתובות, שעות, מחירים, מינימום סועדים, אזורי חלוקה. צומת JSON-LD
- * שנבנה מהם ופולט `"streetAddress": null` או `"minValue": ""` **מצהיר על
- * השדה** בעיני צרכני הגרף. גוגל מציג את זה כעובדה על העסק, מנועי תשובות
- * שואבים את זה, וזו התחייבות מסחרית לכל דבר. **היעדר נתון עדיף על נתון
- * ריק שמוצג כנתון.**
+ * `false` ו־`0` נשמרים — שניהם ערכים אמיתיים, ומחיקתם הייתה הופכת
+ * `"isAccessibleForFree": false` מהצהרה להיעדר הצהרה.
  *
- * `false` ו־`0` נשמרים — שניהם ערכים אמיתיים.
- *
- * מוחזר `undefined` כשכל האובייקט התרוקן, כדי שהקורא ישמיט את הצומת
- * כולו במקום לפלוט `{}`.
- *
- * זו הגרסה הכללית: היא אינה יודעת דבר על schema.org ומתאימה לכל אובייקט.
  * לצמתי JSON-LD יש להשתמש ב־`stripEmptyJsonLd()`.
  */
 export function stripEmpty<T>(value: T): T | undefined {
-  return prune(value, { forbid: false, dropTypeOnly: false }) as T | undefined;
+  const walk = (v: unknown): unknown => {
+    if (v === null || v === undefined) return undefined;
+    if (typeof v === "string") {
+      const trimmed = v.trim();
+      return trimmed === "" ? undefined : trimmed;
+    }
+    if (typeof v === "boolean" || typeof v === "bigint") return v;
+    if (typeof v === "number") return Number.isFinite(v) ? v : undefined;
+    if (Array.isArray(v)) {
+      const items = v.map(walk).filter((x) => x !== undefined);
+      return items.length > 0 ? items : undefined;
+    }
+    if (isPlainObject(v)) {
+      const out: Record<string, unknown> = {};
+      for (const [key, raw] of Object.entries(v)) {
+        const cleaned = walk(raw);
+        if (cleaned !== undefined) out[key] = cleaned;
+      }
+      return Object.keys(out).length > 0 ? out : undefined;
+    }
+    /* פונקציה, Symbol, Date, Map, מופע של מחלקה — אינם ניתנים
+       לסריאליזציה בטוחה, ולכן מושמטים במקום להיפלט כ־`{}`. */
+    return undefined;
+  };
+  return walk(value) as T | undefined;
 }
 
 /**
- * ‏`stripEmpty` + שני הכללים של הגרף (spec 01 §7.3):
+ * ─────────────────────────────────────────────────────────────────────
+ *  ‏`stripEmptyJsonLd` — ניקוי צומת JSON-LD
+ * ─────────────────────────────────────────────────────────────────────
+ * **מאציל ל־`compact()` שב־`lib/seo.ts`, ואינו מממש כלל משלו.**
  *
- *  · `priceRange`, `aggregateRating`, `review`, `ratingValue`,
- *    `hasCertification` נמחקים בכוח בכל עומק. אלה השדות שהגרסה הקודמת
- *    שידרה בהם שקר — טווח מחיר מומצא, דירוג שלא נאסף, ביקורות שלא
- *    נכתבו, והתעדה שלא הוצגה.
- *  · צומת שנותרו בו `@type` ו־`@context` בלבד מושמט:
- *    `{"@type":"PostalAddress"}` מצהיר שיש כתובת ואינו אומר אותה. חריג
- *    יחיד — הפניה ב־`@id`, שהיא קשת בגרף וזה כל תוכנה.
+ * עד עכשיו היו כאן עותק שני של אלגוריתם הניקוי, עותק שני של
+ * `FORBIDDEN_KEYS` ועותק שני של `TYPE_ONLY_NODES` — שלושתם כדי להימנע
+ * ממעגל ייבוא שכבר אינו קיים. שני מימושים לכלל שמונע פליטת טענה שקרית
+ * הם שני מימושים שייפרדו, וברגע שייפרדו — אחד מהם יפלוט `priceRange`.
  *
- * מחזיר `null` (ולא `undefined`) כשלא נותר דבר, כדי שיתאים לחתימה של
- * `serializeJsonLd()` ושיהיה בר־החלפה ב־`compact()` שב־seo.ts.
+ * הסיבה שהכלל קיים בכלל: `content/business.ts` מלא ב־Slots שערכם `null`.
+ * צומת שנבנה מהם ופולט `"streetAddress": null` **מצהיר על השדה** בעיני
+ * צרכני הגרף. גוגל מציג את זה כעובדה, מנועי תשובות שואבים את זה, וזו
+ * התחייבות מסחרית. **היעדר נתון עדיף על נתון ריק שמוצג כנתון.**
+ *
+ * מחזיר `null` כשלא נותר דבר, כדי שיתאים לחתימה של `serializeJsonLd()`.
  */
 export function stripEmptyJsonLd<T extends object>(node: T): T | null {
-  const result = prune(node, { forbid: true, dropTypeOnly: true });
-  return result === undefined ? null : (result as T);
+  return compact(node as unknown as JsonLdNode) as T | null;
 }

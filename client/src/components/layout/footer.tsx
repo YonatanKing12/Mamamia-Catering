@@ -30,6 +30,7 @@
  * ייפתח שער בעתיד.
  */
 
+import { capturePhoneClick } from "@/lib/lead-client";
 import { Link } from "wouter";
 import { Num, Rule } from "@/components/primitives";
 /* מהמודול עצמו ולא מ־`@/components/bands`: הקולופון יושב בצ׳אנק הכניסה,
@@ -175,7 +176,13 @@ export const Footer = () => {
 
           <div>
             <h2 className={COL_LABEL}>יצירת קשר</h2>
-            <a href={telLink()} data-tel="" className={COL_LINK}>
+            <a
+              href={telLink()}
+              data-tel=""
+              /* ראו הערה ב־header: `data-tel` הוא מסמן ולא מאזין. */
+              onClick={() => capturePhoneClick({ callLocation: "footer" })}
+              className={COL_LINK}
+            >
               <Num>{PHONE.display}</Num>
             </a>
             <a

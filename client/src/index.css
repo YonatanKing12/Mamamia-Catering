@@ -4,183 +4,369 @@
 
 /* ═══════════════════════════════════════════════════════════════
    מאמא מיה קייטרינג · design tokens
-   Direction: TAFRIT — the menu is the site. Editorial, paper, restrained.
-   Normative source: docs/spec/03-design-system.md §2–§6, §8, §11.
+   Normative source: docs/spec/04-visual-reference.md.
+   04 OVERRIDES the visual language of 03-design-system.md §2–§6.
+   The paper/ink palette, the serif pairing, the 3px radius and the
+   64px hero are gone. What survives from 03 is its method, not its
+   values: semantic roles, band re-derivation, measured contrast.
 
-   Every contrast ratio below was recomputed from the literal hex values
-   with the WCAG 2.x relative-luminance formula. AA text = 4.5:1,
-   AA large = 3:1, AA non-text = 3:1.
-   There is no dark theme and no contrast filter — see §2.4.
+   ── THE SYSTEM IN ONE PARAGRAPH ─────────────────────────────────
+   The page ground is near-black. Amber #F39402 is the only colour
+   that ever means "act": buttons, links, focus, section numerals,
+   the progress bar. Type is Assistant at one weight family, on a
+   restrained 12–44px scale. Long-read bands invert to a warm cream
+   so the site is not a single exhausting slab of dark.
+
+   ── CONTRAST ────────────────────────────────────────────────────
+   Every ratio in this file was computed from the literal hex values
+   with the WCAG 2.x relative-luminance formula, not estimated.
+   AA text = 4.5:1 · AA large text = 3:1 · AA non-text (1.4.11) = 3:1.
+   Two pairs are easy to get wrong and are called out wherever they
+   appear:
+     · #F39402 on cream is 2.22:1 — ILLEGAL as text on a light band.
+       The light band re-derives the accent to #8A4E00 (6.33:1).
+     · #FFFFFF on #F39402 is 2.32:1 — ILLEGAL. Text on amber fill is
+       always --btn-fg / --accent-fg, never a hardcoded white.
    ═══════════════════════════════════════════════════════════════ */
 
+/* ═══ THE DARK BAND — the default ground ═════════════════════════
+   Roles are declared once here. Every component writes against the
+   semantic role (--fg, --accent, --rule-control), never a raw hex,
+   so a section flipped to [data-band="cream"] re-derives itself with
+   no band prop and no dark: variant. */
 :root{
-  /* ── surfaces ───────────────────────────────────────────── */
-  --paper:        #fbf8f3;   /* default page surface */
-  --paper-2:      #f4eee4;   /* alternating band, inline info boxes */
-  --paper-3:      #ece3d5;   /* the quote-builder band, one per page */
-  --surface-hover:#ffffff;   /* hover only — never a resting surface */
+  /* ── grounds (04 §2) ────────────────────────────────────────── */
+  --night:      #1A1A1C;   /* THE page ground — 805 occurrences in the reference */
+  --night-deep: #121214;   /* recessed band: the alternating strip, the footer  */
+  --night-card: #242427;   /* raised: cards, inputs, the quote-builder surface  */
+  --night-hi:   #2C2C30;   /* hover only — never a resting surface             */
 
-  /* ── ink ────────────────────────────────────────────────── */
-  --ink:        #1e1a17;     /* 16.31:1 on paper · 14.97 on paper-2 · 13.59 on paper-3 */
-  --ink-2:      #4d453d;     /*  8.87:1 on paper · 8.14 on paper-2 */
-  --ink-3:      #6f6459;     /*  5.44:1 on paper · 4.99 on paper-2 · 4.53 on paper-3
-                                 smallest legal text colour */
-  --ink-4:      #877c70;     /*  3.85:1 on paper — NON-TEXT ONLY (AA non-text) */
+  /* ── warm light ground, for the long-read bands ─────────────── */
+  --cream:      #FFF9F0;   /* 04 §2 lists #FFF9F0 as the reference's warm cream */
+  --cream-2:    #FAF0E1;
+  --cream-3:    #F3E6D2;
+  --cream-hi:   #FFFFFF;
 
-  /* ── rules ──────────────────────────────────────────────── */
-  --line:        #ded3c2;    /* 1.40:1 on paper — decorative separation only */
-  --line-strong: #8e7f66;    /* 3.69:1 on paper · 3.38 on paper-2 · 3.07 on paper-3
-                                 mandatory for interactive boundaries (WCAG 1.4.11) */
+  /* ── amber · THE action colour (04 §2, §4: flat, never gradient) */
+  --amber:      #F39402;   /* 7.49:1 on --night · 8.06 on deep · 6.67 on card
+                              2.22:1 on --cream — NEVER text on a light band */
+  --amber-lift: #FFA51F;   /* 8.82:1 on --night · 7.85 on card — hover/focus on dark */
+  --amber-hold: #E08902;   /* 6.41:1 on --night — active/pressed on dark */
+  --amber-ink:  #8A4E00;   /* the amber that is legal as TEXT on cream:
+                              6.33:1 on --cream · 5.87 on cream-2 · 5.38 on cream-3
+                              white on it 6.62:1 · only 2.62:1 on --night */
+  --amber-ink-2:#6E3D00;   /* 8.61:1 on --cream · white on it 9.01:1 — hover on light */
+  --amber-ink-3:#5C3300;   /* white on it 10.89:1 — active on light */
 
-  /* ── accent, rationed to ~2% of pixels (L-7) ────────────── */
-  --tomato:     #b0392a;     /* 5.72:1 on paper · 5.25 on paper-2 · 4.77 on paper-3
-                                 white on it 6.06:1 · paper on it 5.72:1
-                                 FORBIDDEN on --ink (2.85:1) — the band re-derives it */
-  --tomato-dk:  #8e2c20;     /* 7.83:1 on paper · white on it 8.30:1 */
-  --olive:      #4d5a43;     /* 6.93:1 on paper · white on it 7.35:1 — confirmed/success */
-  --danger:     #a3271b;     /* 6.92:1 on paper · 6.36 on paper-2 · white on it 7.33:1
-                                 deliberately not --tomato: an error must not read as decoration */
-  --wa:         #0f7a3d;     /* white on it 5.42:1 (brand green #25D366 is 2.x:1 — never restore it) */
-  --wa-dk:      #0e6f38;     /* white on it 6.27:1 */
+  /* ── text on the dark ground ────────────────────────────────── */
+  --w-1: #FFFFFF;          /* 17.38:1 on night · 18.71 deep · 15.48 card · 13.91 hi */
+  --w-2: #D6D1C9;          /* 11.44:1 on night · 12.32 deep · 10.19 card ·  9.15 hi */
+  --w-3: #ABA49B;          /*  7.05:1 on night ·  7.59 deep ·  6.28 card ·  5.64 hi
+                               the smallest legal text colour on dark */
+  --w-4: #807A70;          /*  4.08:1 on night ·  4.40 deep ·  3.64 card ·  3.27 hi
+                               NON-TEXT ONLY by policy — clears 1.4.11 everywhere */
 
-  /* ── semantic roles — write components against these ────── */
-  --bg:            var(--paper);
-  --bg-alt:        var(--paper-2);
-  --bg-form:       var(--paper-3);
-  --fg:            var(--ink);
-  --fg-muted:      var(--ink-2);
-  --fg-subtle:     var(--ink-3);
-  --fg-decor:      var(--ink-4);      /* NON-TEXT ONLY */
-  --accent:        var(--tomato);
-  --accent-strong: var(--tomato-dk);
-  --accent-fg:     #ffffff;           /* 6.06:1 on --accent — the only legal fill-text pair */
-  --rule:          var(--line);       /* decorative */
-  --rule-control:  var(--line-strong);/* interactive boundaries — 1.4.11 */
-  --focus:         var(--tomato);     /* 5.72:1 on paper — AA non-text with margin */
-  --btn-bg:        var(--ink);
-  --btn-fg:        var(--paper);      /* 16.31:1 */
+  /* ── text on the cream ground ───────────────────────────────── */
+  --k-1: #1A1A1C;          /* 16.60:1 on cream · 15.40 cream-2 · 14.12 cream-3 */
+  --k-2: #3D3833;          /* 11.07:1 on cream · 10.27 cream-2 ·  9.42 cream-3 */
+  --k-3: #6B6259;          /*  5.70:1 on cream ·  5.29 cream-2 ·  4.85 cream-3
+                               the smallest legal text colour on cream */
+  --k-4: #8A8078;          /*  3.69:1 on cream ·  3.42 cream-2 ·  3.14 cream-3
+                               NON-TEXT ONLY — clears 1.4.11 on all three */
 
-  /* ── families (§4.1) ────────────────────────────────────── */
-  --serif:'Frank Ruhl Libre','FRL Fallback',Georgia,serif;
-  --sans: 'Assistant','Assistant Fallback',system-ui,Arial,sans-serif;
+  /* ── rules ──────────────────────────────────────────────────── */
+  --line-dark:        #333338;  /* 1.38:1 on night — decorative separation only */
+  --line-dark-strong: #8A8078;  /* 4.50:1 night · 4.85 deep · 4.01 card · 3.60 hi
+                                   mandatory on interactive boundaries (1.4.11) */
+  --line-cream:       #E7DCCA;  /* 1.31:1 on cream — decorative only */
+  --line-cream-strong:#7E7468;  /* 4.38:1 cream · 4.06 cream-2 · 3.72 cream-3 */
 
-  /* ── type scale (§4.3) · fluid 360px → 1440px, rem-based so zoom is safe */
-  --fs-3xs: clamp(0.75rem,   0.7396rem + 0.0463vw, 0.7813rem);  /* 12 → 12.5  legal fine print */
-  --fs-2xs: clamp(0.8125rem, 0.8021rem + 0.0463vw, 0.8438rem);  /* 13 → 13.5  eyebrow, sec__num, tag */
-  --fs-xs:  clamp(0.875rem,  0.8542rem + 0.0926vw, 0.9375rem);  /* 14 → 15    caption, dish description */
-  --fs-sm:  clamp(0.9688rem, 0.9479rem + 0.0926vw, 1.0313rem);  /* 15.5 → 16.5 UI, labels, table cells */
-  --fs-base:clamp(1.0625rem, 1.0417rem + 0.0926vw, 1.125rem);   /* 17 → 18    BODY (Hebrew floor is 17) */
-  --fs-md:  clamp(1.1563rem, 1.1042rem + 0.2315vw, 1.3125rem);  /* 18.5 → 21  lede, standfirst */
-  --fs-lg:  clamp(1.25rem,   1.1667rem + 0.3704vw, 1.5rem);     /* 20 → 24    h3, DISH NAME (FRL floor) */
-  --fs-xl:  clamp(1.4375rem, 1.2917rem + 0.6481vw, 1.875rem);   /* 23 → 30    card title, course heading */
-  --fs-2xl: clamp(1.625rem,  1.375rem  + 1.1111vw, 2.375rem);   /* 26 → 38    h2 */
-  --fs-3xl: clamp(1.9375rem, 1.5417rem + 1.7593vw, 3.125rem);   /* 31 → 50    h1 on inner routes */
-  --fs-4xl: clamp(2.25rem,   1.6667rem + 2.5926vw, 4rem);       /* 36 → 64    hero h1 */
+  /* ── status ─────────────────────────────────────────────────── */
+  --wa:      #14803A;   /* white on it 5.03:1 · 3.46 on night · 3.08 on card ·
+                           4.80 on cream. The reference ships #25D366, on which
+                           white measures 1.98:1 — a plain AA failure. Never
+                           restore #25D366 behind white text. */
+  --wa-hover:#0F6E31;   /* white on it 6.37:1. Hover only: its 2.73:1 edge against
+                           night is below 1.4.11, which governs the RESTING state;
+                           the control is identified at rest by --wa at 3.46:1. */
+  --err-dark:#FF8A7A;   /* 7.59:1 on night · 6.76 on card · dark text on it 7.59:1 */
+  --err-cream:#B3261E;  /* 6.24:1 on cream · 5.31 on cream-3 · white on it 6.54:1 */
+  --ok-dark: #7FBF6A;   /* 7.91:1 on night · 7.05 on card */
+  --ok-cream:#3E5C34;   /* 7.20:1 on cream · 6.13 on cream-3 */
 
-  /* ── leading, from measured Hebrew ink extent (§4.4) ────── */
-  --lh-display:1.08; --lh-head:1.14; --lh-sub:1.24; --lh-dish:1.3;
-  --lh-tight:1.35;   --lh-body:1.75; --lh-loose:1.8;
+  /* ═══ SEMANTIC ROLES — components write against these ═══════════ */
+  --bg:           var(--night);
+  --bg-alt:       var(--night-deep);
+  --bg-form:      var(--night-card);
+  --surface-hover:var(--night-hi);
 
-  /* ── measure, in em not ch (§4.5) ───────────────────────── */
+  --fg:        var(--w-1);      /* 17.38:1 */
+  --fg-muted:  var(--w-2);      /* 11.44:1 */
+  --fg-subtle: var(--w-3);      /*  7.05:1 */
+  --fg-decor:  var(--w-4);      /*  4.08:1 — NON-TEXT ONLY */
+
+  /* --accent is ALWAYS legal as text on the current band. That is the
+     whole point of the split: 33 `text-accent`, 11 `decoration-accent`
+     and 7 `border-accent` call sites must not have to know which band
+     they landed in. */
+  --accent:        var(--amber);       /* 7.49:1 on bg · 6.67 on bg-form */
+  --accent-hover:  var(--amber-lift);  /* 8.82:1 on bg */
+  --accent-active: var(--amber-hold);  /* 6.41:1 on bg */
+  --accent-strong: var(--amber-lift);  /* 8.82:1 — the emphatic accent on dark */
+  --accent-fg:     var(--night);       /* 7.49:1 on --accent — the ONLY legal
+                                          text colour on an amber fill */
+  --accent-edge:   transparent;        /* amber vs night is 7.49:1; an amber
+                                          control needs no extra edge on dark */
+
+  --rule:         var(--line-dark);
+  --rule-control: var(--line-dark-strong);   /* 1.4.11 */
+
+  /* The primary CTA. Flat brand amber with near-black text, identical on
+     both bands wherever the band allows it — see the CTA note in §cream. */
+  --btn-bg: var(--amber);
+  --btn-fg: var(--night);       /* 7.49:1 */
+
+  --focus: var(--amber-lift);   /* 8.82:1 on bg · 7.85 on bg-form */
+
+  --danger:    var(--err-dark); /* 7.59:1 */
+  --on-danger: var(--night);    /* 7.59:1 on --err-dark — text on a danger fill */
+  --ok:        var(--ok-dark);  /* 7.91:1 */
+
+  /* ── families (04 §3) · Assistant only. No serif pairing. ────── */
+  --sans:  'Assistant','Assistant Fallback',system-ui,'Segoe UI',Arial,sans-serif;
+  /* --serif is retained as a pure ALIAS so any stray `font-family:var(--serif)`
+     keeps resolving. It is the same stack. Frank Ruhl Libre is out of the
+     system: 04 §3 is "one Hebrew family for the whole site, no serif pair". */
+  --serif: var(--sans);
+
+  /* ── type scale (04 §3: "restrained, 14–22px, no giant headings") ──
+     Fluid 360px → 1440px, rem-based so browser zoom stays honest.
+     Body floor is 17px: Hebrew has no ascender/descender rhythm to
+     carry a 16px line at this measure. The old scale topped out at
+     64px; this one tops out at 44px, and only the hero reaches it. */
+  --fs-3xs: 0.75rem;                                             /* 12    fine print   */
+  --fs-2xs: 0.8125rem;                                           /* 13    eyebrow, tag */
+  --fs-xs:  clamp(0.875rem,  0.8646rem + 0.0463vw, 0.9063rem);   /* 14   → 14.5 caption */
+  --fs-sm:  clamp(0.9375rem, 0.9271rem + 0.0463vw, 0.9688rem);   /* 15   → 15.5 UI      */
+  --fs-base:clamp(1.0313rem, 1.0208rem + 0.0463vw, 1.0625rem);   /* 16.5 → 17   BODY    */
+  --fs-md:  clamp(1.125rem,  1.1042rem + 0.0926vw, 1.1875rem);   /* 18   → 19   lede    */
+  --fs-lg:  clamp(1.1875rem, 1.1458rem + 0.1852vw, 1.3125rem);   /* 19   → 21   h3/dish */
+  --fs-xl:  clamp(1.3125rem, 1.25rem   + 0.2778vw, 1.5rem);      /* 21   → 24   card h  */
+  --fs-2xl: clamp(1.5rem,    1.375rem  + 0.5556vw, 1.875rem);    /* 24   → 30   h2      */
+  --fs-3xl: clamp(1.6875rem, 1.5rem    + 0.8333vw, 2.25rem);     /* 27   → 36   h1      */
+  --fs-4xl: clamp(1.875rem,  1.5833rem + 1.2963vw, 2.75rem);     /* 30   → 44   hero h1 */
+
+  /* ── leading · headings are smaller now, so they need more air ── */
+  --lh-display:1.16; --lh-head:1.22; --lh-sub:1.3; --lh-dish:1.35;
+  --lh-tight:1.4;    --lh-body:1.7;  --lh-loose:1.8;
+
+  /* ── measure, in em not ch: `ch` over-reports Hebrew by ~24% ──── */
   --measure-body:26em;   --measure-lede:23em;    --measure-answer:26em;
   --measure-dish:17em;   --measure-caption:18em; --measure-confirm:22em;
   --measure-max:29em;
 
-  /* ── space (§3.1) ───────────────────────────────────────── */
+  /* ── space ──────────────────────────────────────────────────── */
   --w:1140px;
-  --pad-sec:      clamp(4.5rem, 9vw, 8.5rem);
-  --pad-sec-tight:clamp(2.75rem, 5.5vw, 4.5rem);
+  --pad-sec:      clamp(3.5rem, 7vw, 6rem);
+  --pad-sec-tight:clamp(2.25rem, 4.5vw, 3.5rem);
   --pad-gutter:   clamp(1.15rem, 4vw, 2.5rem);
-  --gap-head:     clamp(2.5rem, 5vw, 4rem);
+  --gap-head:     clamp(1.75rem, 3.5vw, 2.75rem);
   --gap-grid:     clamp(1rem, 2vw, 1.5rem);
-  --gap-col:      clamp(2rem, 5vw, 4.5rem);
-  --gap-course:   clamp(2.2rem, 4vw, 3.2rem);
-  --pad-card:     clamp(1.6rem, 3vw, 2.3rem);
-  --pad-form:     clamp(1.4rem, 3.5vw, 2.5rem);
+  --gap-col:      clamp(2rem, 5vw, 4rem);
+  --gap-course:   clamp(2rem, 3.5vw, 2.75rem);
+  --pad-card:     clamp(1.25rem, 2.5vw, 1.75rem);
+  --pad-form:     clamp(1.25rem, 3vw, 2rem);
 
   /* fixed steps, component internals only */
   --s-1:.25rem; --s-2:.5rem;  --s-3:.75rem; --s-4:1rem;
   --s-5:1.25rem;--s-6:1.5rem; --s-8:2rem;   --s-10:2.5rem; --s-12:3rem;
 
-  /* ── radii, borders, the three permitted shadows (§3.2–3.5) */
-  --r:3px; --r-pill:99px; --radius:3px;   /* --radius kept for shadcn derivation */
+  /* ── radii (04 §4): 8px dominant, 12/16 cards, 50px pills ────── */
+  --r:8px; --r-card:12px; --r-card-lg:16px; --r-pill:50px;
+  --radius:8px;                        /* shadcn derivation */
   --bw:1px; --bw-rule:2px; --bw-chev:1.6px; --bw-leader:1px;
-  --shadow-sticky:0 -6px 24px rgba(30,26,23,.09);  /* sticky mobile CTA bar ONLY */
-  --ring-inset:inset 0 0 0 1px var(--line);        /* layout-free border substitute */
-  --rule-double:0 1px 0 var(--ink);                /* a doubled RULE, not a glow */
 
-  /* ── motion (§8) ────────────────────────────────────────── */
+  /* On a near-black ground a soft shadow is invisible; depth comes from
+     the surface step (night → night-card) and a hairline. These three are
+     the whole allowlist — 04 §4 forbids heavy gradients and glows. */
+  --shadow-sticky:0 -10px 30px rgba(0,0,0,.55);
+  --ring-inset:inset 0 0 0 1px var(--rule);
+  --rule-double:0 1px 0 var(--rule-control);
+
+  /* ── motion ─────────────────────────────────────────────────── */
   --dur-state:180ms; --dur-state-slow:220ms; --dur-reveal:550ms; --dur-shake:300ms;
   --ease:cubic-bezier(.2,0,.2,1);
-  --dir:1;                                /* direction sign for physical-only props (§9.4) */
+  --dir:1;                             /* direction sign for physical-only props */
 
-  /* ── editing affordance — dev only (§7.30) ──────────────── */
-  --slot-bg:#fff5cc; --slot-ring:#e8d489;
-
-  /* ── shadcn aliases, re-pointed at the real tokens ──────── */
-  --background:var(--paper);
-  --foreground:var(--ink);                 /* 16.31:1 */
-  --card:var(--paper);
-  --card-foreground:var(--ink);            /* 16.31:1 */
-  --popover:var(--paper);
-  --popover-foreground:var(--ink);         /* 16.31:1 */
-  --muted:var(--paper-2);
-  --muted-foreground:var(--ink-2);         /*  8.14:1 on --muted */
-  --primary:var(--ink);
-  --primary-foreground:var(--paper);       /* 16.31:1 */
-  --secondary:var(--paper-2);
-  --secondary-foreground:var(--ink);       /* 14.97:1 */
-  --accent-foreground:var(--accent-fg);    /*  6.06:1 on --accent */
-  --border:var(--line);
-  --input:var(--line-strong);              /* 1.4.11: inputs need the strong rule */
-  --ring:var(--tomato);
-  --destructive:var(--danger);
-  --destructive-foreground:#ffffff;        /*  7.33:1 */
+  /* ── editing affordance — dev only ──────────────────────────── */
+  --slot-bg:#3A2E12; --slot-ring:#6B551F;
 }
 
 [dir="rtl"]{ --dir:-1 }
 
-/* ── the ink band: at most one per route, always the kitchens band (L-9) ──
-   tomato is 2.85:1 here, so the accent is re-derived and every role is
-   overridden wholesale. Components need zero band-awareness. */
-[data-band="ink"]{
-  --bg:var(--ink);
-  --bg-alt:#2c2622; --bg-form:#2c2622;
-  --fg:var(--paper);         /* 16.31:1 on ink · 14.08 on #2c2622 */
-  --fg-muted:#cfc6ba;        /* 10.24:1 on ink ·  8.84 on #2c2622 */
-  --fg-subtle:#a89d90;       /*  6.49:1 on ink ·  5.61 on #2c2622 */
-  --fg-decor:#7a6f65;        /*  3.53:1 on ink — NON-TEXT ONLY */
-  --accent:#e0a79c;          /*  8.37:1 on ink ·  7.23 on #2c2622 */
-  --accent-strong:#f0b3a8;   /*  9.64:1 on ink */
-  --accent-fg:var(--ink);    /* 8.37:1 — inverted fill text on the band accent */
-  --rule:#3a332c;            /*  1.39:1 — decorative rules only */
-  --rule-control:#7d7269;    /*  3.69:1 on ink · 3.19 on #2c2622 — see note below */
-  --focus:#e0a79c;           /*  8.37:1 */
-  --btn-bg:var(--paper); --btn-fg:var(--ink);
-  --danger:#f0b3a8;          /*  9.64:1 */
-  --destructive:#f0b3a8;
-  --destructive-foreground:var(--ink);
-  --slot-bg:#4a3c1f; --slot-ring:#6d5a2e;
-  --surface-hover:#2c2622;
-  background:var(--ink); color:var(--fg-muted);
-}
-/* NOTE (correction to §2.1): the spec's --ink-band-line-strong #736860 measures
-   3.19:1 on --ink but only 2.76:1 on the band's own --bg-alt/--bg-form #2c2622,
-   where builder controls actually sit — a 1.4.11 failure. Raised to #7d7269,
-   which clears 3:1 on both surfaces (3.69 / 3.19). */
+/* ═══ THE CREAM BAND · [data-band="cream"] ═══════════════════════
+   ── WHEN TO USE IT (the alternation policy) ─────────────────────
+   A wholly dark page is exhausting past ~200 words, and this site
+   has routes that are nothing but words. The rule is by JOB, not by
+   rhythm:
 
-/* ── high contrast: a token override, NEVER a filter (§2.4) ─────
-   A contrast filter on a paper palette erases every hairline and the
-   dish-row dotted leader, and re-anchors position:fixed. */
+     DARK  — the default. Hero, every conversion band, the quote
+             builder, the price/CTA strips, header, footer, sticky bar.
+             Amber on near-black is the highest-salience pair we have
+             and it is where the leads come from.
+     CREAM — the long read. The menu leaves, the FAQ answers, the
+             kitchen/story prose, and the legal routes (terms, privacy,
+             accessibility) wholesale.
+
+   Never alternate for its own sake. Two dark bands in a row is fine;
+   a cream band with 40 words in it is not — it reads as a mistake.
+
+   ── THE CTA CAVEAT ──────────────────────────────────────────────
+   The brand amber #F39402 cannot carry text on cream (2.22:1) and
+   white cannot sit on it (2.32:1), so a primary button that lands on
+   a cream band degrades to --amber-ink #8A4E00 with white text
+   (6.62:1) — same hue family, AA in both directions. That degradation
+   is a safety net, not a design: keep primary CTAs on dark bands and
+   the amber stays bright everywhere it matters. */
+[data-band="cream"],[data-band="light"]{
+  --bg:           var(--cream);
+  --bg-alt:       var(--cream-2);
+  --bg-form:      var(--cream-3);
+  --surface-hover:var(--cream-hi);
+
+  --fg:        var(--k-1);      /* 16.60:1 */
+  --fg-muted:  var(--k-2);      /* 11.07:1 */
+  --fg-subtle: var(--k-3);      /*  5.70:1 */
+  --fg-decor:  var(--k-4);      /*  3.69:1 — NON-TEXT ONLY */
+
+  --accent:        var(--amber-ink);    /* 6.33:1 on cream · 5.38 on cream-3 */
+  --accent-hover:  var(--amber-ink-2);  /* 8.61:1 on cream */
+  --accent-active: var(--amber-ink-3);
+  --accent-strong: var(--amber-ink-2);  /* 8.61:1 */
+  --accent-fg:     #FFFFFF;             /* 6.62:1 on --accent */
+  --accent-edge:   var(--amber-ink);    /* 6.33:1 — gives a flat-amber control a
+                                           1.4.11-legal boundary on a light ground */
+
+  --rule:         var(--line-cream);
+  --rule-control: var(--line-cream-strong);
+
+  --btn-bg: var(--amber-ink);   /* see THE CTA CAVEAT above */
+  --btn-fg: #FFFFFF;            /* 6.62:1 */
+
+  --focus:  var(--amber-ink);   /* 6.33:1 on cream · 5.38 on cream-3 */
+
+  --danger: var(--err-cream);   /* 6.24:1 */
+  --ok:     var(--ok-cream);    /* 7.20:1 */
+
+  --on-danger: #FFFFFF;         /* 6.54:1 on --err-cream */
+
+  --slot-bg:#FFF3CC; --slot-ring:#D6B968;
+
+  background:var(--bg); color:var(--fg);
+}
+
+/* ═══ [data-band="ink"] · the dark band, stated explicitly ═══════
+   The ground is already dark, so this is normally a no-op. It exists
+   for two real cases: a dark band nested INSIDE a cream band, and the
+   ~8 components that already ship `data-band="ink"` and expect the
+   attribute to paint its own surface. Every role is restated so the
+   nesting case is correct rather than inherited. */
+[data-band="ink"],[data-band="dark"]{
+  --bg:var(--night); --bg-alt:var(--night-deep); --bg-form:var(--night-card);
+  --surface-hover:var(--night-hi);
+  --fg:var(--w-1); --fg-muted:var(--w-2); --fg-subtle:var(--w-3); --fg-decor:var(--w-4);
+  --accent:var(--amber); --accent-hover:var(--amber-lift);
+  --accent-active:var(--amber-hold); --accent-strong:var(--amber-lift);
+  --accent-fg:var(--night); --accent-edge:transparent;
+  --rule:var(--line-dark); --rule-control:var(--line-dark-strong);
+  --btn-bg:var(--amber); --btn-fg:var(--night);
+  --focus:var(--amber-lift);
+  --danger:var(--err-dark); --on-danger:var(--night); --ok:var(--ok-dark);
+  --slot-bg:#3A2E12; --slot-ring:#6B551F;
+  background:var(--bg); color:var(--fg);
+}
+
+/* ═══ DERIVED · re-resolved on every band ════════════════════════
+   A custom property whose value contains var() is substituted at the
+   element where it is DECLARED, and descendants inherit the already
+   resolved value. So `--border:var(--rule)` written once on :root
+   would freeze the dark hairline and follow a cream band down the
+   tree unchanged — the exact class of bug that makes token systems
+   fail silently at AA. Listing every band selector here re-resolves
+   the whole derived layer against that band's own roles.
+   :root and [data-band] have equal specificity; the values are
+   identical text, so order between them is irrelevant. */
+:root,
+[data-band="ink"],[data-band="dark"],
+[data-band="cream"],[data-band="light"]{
+  /* composites */
+  --ring-inset:inset 0 0 0 1px var(--rule);
+  --rule-double:0 1px 0 var(--rule-control);
+
+  /* shadcn aliases, re-pointed at the real roles */
+  --background:var(--bg);
+  --foreground:var(--fg);                   /* 17.38:1 dark · 16.60 cream */
+  --card:var(--bg-form);
+  --card-foreground:var(--fg);              /* 15.48:1 dark · 14.12 cream */
+  --popover:var(--bg-form);
+  --popover-foreground:var(--fg);
+  --muted:var(--bg-alt);
+  --muted-foreground:var(--fg-subtle);      /*  7.59:1 dark ·  5.29 cream */
+  --primary:var(--btn-bg);
+  --primary-foreground:var(--btn-fg);       /*  7.49:1 dark ·  6.62 cream */
+  --secondary:var(--bg-form);
+  --secondary-foreground:var(--fg);
+  --accent-foreground:var(--accent-fg);     /*  7.49:1 dark ·  6.62 cream */
+  --border:var(--rule);
+  --input:var(--rule-control);              /* 1.4.11: inputs need the strong rule */
+  --ring:var(--focus);
+  --destructive:var(--danger);
+  --destructive-foreground:var(--on-danger);/*  7.59:1 dark ·  6.54 cream */
+
+  /* ── the scrim ─────────────────────────────────────────────────
+     A modal veil is dark in BOTH bands — it exists to push the page
+     away, and a light veil over a dark page does the opposite. */
+  --scrim:var(--night);
+
+  /* ── COMPAT · raw names from the deleted paper system ──────────
+     Two components still read these directly in arbitrary values:
+     header.tsx (the dialog scrim) and photo-frame.tsx (the empty-frame
+     gradient). An undefined custom property fails at computed-value
+     time and takes the whole declaration with it — a white-on-white
+     modal, silently. Aliased rather than left to die; both call sites
+     are reported so they can move to the semantic names.
+     NOTE the one divergence: `--ink` here is the SCRIM (always
+     near-black), while the Tailwind `ink` key is band-relative text.
+     New code uses --scrim or --fg, never --ink.                    */
+  --paper:var(--bg); --paper-2:var(--bg-alt); --paper-3:var(--bg-form);
+  --ink:var(--scrim);
+  --ink-2:var(--fg-muted); --ink-3:var(--fg-subtle); --ink-4:var(--fg-decor);
+  --line:var(--rule); --line-strong:var(--rule-control);
+  --tomato:var(--accent); --tomato-dk:var(--accent-strong);
+  --olive:var(--ok); --wa-dk:var(--wa-hover);
+}
+
+/* ═══ high contrast · a token override, NEVER a filter ═══════════
+   A contrast filter re-anchors position:fixed and flattens the amber
+   into a single mud. This raises the ground to pure black, the text
+   to pure white and the accent to the lightest amber that still takes
+   near-black text. */
 html[data-contrast="high"]{
-  --paper:#ffffff; --paper-2:#f2f2f2; --paper-3:#e9e9e9;
-  --line:#8a8079; --line-strong:#5f574f;   /* 7.09:1 on white · 5.84 on paper-3 */
-  --ink:#000000;                            /* 21.00:1 on white · 17.30 on paper-3 */
-  --ink-2:#1f1b18;                          /* 17.28:1 on white · 14.08 on paper-3 */
-  --ink-3:#3d372f;                          /* 11.90:1 on white ·  9.69 on paper-3 */
-  --ink-4:#5f574f;                          /*  7.09:1 on white — still non-text only */
-  --tomato:#8e2c20;                         /*  8.30:1 on white ·  6.83 on paper-3 */
-  --tomato-dk:#71221a;
+  --night:#000000; --night-deep:#000000; --night-card:#111114; --night-hi:#1C1C20;
+  --w-1:#FFFFFF;                 /* 21.00:1 on black */
+  --w-2:#FFFFFF;                 /* 21.00:1 */
+  --w-3:#E6E6E6;                 /* 16.75:1 */
+  --w-4:#9C9C9C;                 /*  7.65:1 */
+  --line-dark:#5A5A5F; --line-dark-strong:#9C9C9C;
+  --amber:#FFB84D;               /* 12.22:1 on black · near-black on it 10.11:1 */
+  --amber-lift:#FFCC80; --amber-hold:#FFA51F;
+  --cream:#FFFFFF; --cream-2:#FFFFFF; --cream-3:#F2F2F2;
+  --k-1:#000000;                 /* 21.00:1 on white */
+  --k-2:#000000; --k-3:#2B2B2B;  /* 14.83:1 */
+  --k-4:#5F574F;
+  --line-cream:#8A8079; --line-cream-strong:#3D3833;
+  --amber-ink:#6E3D00;           /* 9.01:1 on white */
+  --amber-ink-2:#5C3300; --amber-ink-3:#4A2900;
 }
 
 @layer base{
@@ -189,8 +375,9 @@ html[data-contrast="high"]{
 
   html{
     scroll-behavior:smooth;
+    background:var(--night);
     /* NOTE: no font-size is ever set here. Setting it overrides the user's
-       browser text-size preference — see §10.4. */
+       browser text-size preference. */
   }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
 
@@ -200,41 +387,41 @@ html[data-contrast="high"]{
     font-family:var(--sans); font-weight:400;
     font-size:var(--fs-base); line-height:var(--lh-body);
     direction:rtl;
+    -webkit-font-smoothing:antialiased;   /* light-on-dark Hebrew renders too
+                                             heavy without this on WebKit */
+    text-rendering:optimizeLegibility;
   }
-
-  /* paper grain — one fixed composited layer, ~400 bytes, zero requests (§3.6).
-     Never raise the opacity. z-index:900 must stay the topmost layer.
-     CSP implication: any policy for this site must allow img-src data:. */
-  body::after{
-    content:"";position:fixed;inset:0;z-index:900;pointer-events:none;opacity:.028;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  html[data-contrast="high"] body::after{display:none}
 
   img,svg,video{max-width:100%;height:auto;display:block}
 
-  h1,h2,h3,h4{font-family:var(--serif);margin:0;letter-spacing:-.01em}
-  h1{font-size:var(--fs-3xl);font-weight:500;line-height:var(--lh-display)}
-  h2{font-size:var(--fs-2xl);font-weight:500;line-height:var(--lh-head)}
-  h3{font-size:var(--fs-lg); font-weight:700;line-height:var(--lh-sub)}
-  h4{font-size:var(--fs-sm); font-weight:600;line-height:var(--lh-sub);font-family:var(--sans)}
+  /* One family, weight-differentiated (04 §3). The old system set h1–h3 in
+     Frank Ruhl Libre; nothing here is serif. Sizes are the restrained scale:
+     an inner h1 is 36px at 1440, not 50px. */
+  h1,h2,h3,h4{font-family:var(--sans);margin:0;letter-spacing:-.015em}
+  h1{font-size:var(--fs-3xl);font-weight:700;line-height:var(--lh-display)}
+  h2{font-size:var(--fs-2xl);font-weight:700;line-height:var(--lh-head)}
+  h3{font-size:var(--fs-lg); font-weight:600;line-height:var(--lh-sub);letter-spacing:-.01em}
+  h4{font-size:var(--fs-sm); font-weight:600;line-height:var(--lh-sub);letter-spacing:0}
   p{margin:0 0 1.1em;max-width:var(--measure-body)}
   p:last-child{margin-bottom:0}
 
-  /* Hebrew has no sloped tradition and neither shipped family carries one;
-     the browser would synthesise an oblique and degrade the letterforms (§4.8).
-     The Hebrew emphasis devices are weight and tracking. */
+  /* Hebrew has no sloped tradition and Assistant carries no italic; the
+     browser would synthesise an oblique and wreck the letterforms. The
+     Hebrew emphasis devices are weight and tracking. */
   em,i,cite,dfn,address,blockquote,q,var{font-style:normal}
   em,strong,b{font-weight:600}
 
+  /* Links are amber — 04 §2: the accent carries every action. The underline
+     is inherited from the band rule so it reads as a link without shouting;
+     it goes amber on hover to confirm the target. */
   a{color:inherit;text-decoration-color:var(--rule);text-underline-offset:.22em}
   a:hover{text-decoration-color:var(--accent)}
 
-  /* the single focus treatment (§10.1) — never removed, never a ring */
-  :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
+  /* the single focus treatment — never removed, never a soft ring */
+  :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:var(--r)}
   :focus:not(:focus-visible){outline:none}
 
-  ::selection{background:var(--paper-3);color:var(--ink)}
+  ::selection{background:var(--accent);color:var(--accent-fg)}
 
   /* RTL-correct inputs: dir=ltr fixes the caret while typing digits,
      the Hebrew placeholder stays on the reading edge */
@@ -243,18 +430,36 @@ html[data-contrast="high"]{
 
   /* every in-page anchor target clears the sticky header */
   [id]{scroll-margin-top:88px}
+
+  /* form controls inherit the family; on dark, UA defaults are white boxes */
+  input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit}
+  input,select,textarea{background-color:transparent}
+  /* Chrome's autofill paints its own near-white block over the field. The
+     inset shadow is the only way to repaint it without !important on colour. */
+  input:-webkit-autofill,textarea:-webkit-autofill,select:-webkit-autofill{
+    -webkit-text-fill-color:var(--fg);
+    -webkit-box-shadow:0 0 0 1000px var(--bg-form) inset;
+    caret-color:var(--fg);
+  }
+  ::placeholder{color:var(--fg-subtle);opacity:1}   /* 7.05:1 / 5.70:1 */
+  /* the native controls follow the band instead of the OS light default */
+  input[type="checkbox"],input[type="radio"],input[type="range"],progress{accent-color:var(--accent)}
+  :root{color-scheme:dark}
+  [data-band="cream"],[data-band="light"]{color-scheme:light}
 }
 
-/* ═══ self-hosted webfonts (§4.2, INV-10) ═══════════════════════
-   Frank Ruhl Libre + Assistant, Hebrew and Latin subsets, served from
-   our own origin. Previously both families loaded from fonts.gstatic.com,
-   which handed every visitor's IP address to a third party before a single
-   line of our JavaScript ran — disclosed on /privacy at the time, and that
-   disclosure is removed in the same commit as this block.
+/* ═══ self-hosted webfonts (INV-10) ═════════════════════════════
+   Assistant, Hebrew and Latin subsets, served from our own origin.
+   Loading them from fonts.gstatic.com handed every visitor's IP to a
+   third party before a line of our JS ran.
 
-   Hebrew carries U+20AA, so prices resolve here; Latin carries the digits.
-   font-display:swap pairs with the metric-matched fallbacks below, which is
-   what holds the type-led hero at 0 CLS while these load. */
+   Hebrew carries U+20AA so ₪ resolves here; Latin carries the digits.
+   font-display:swap pairs with the metric-matched fallback below, which
+   is what holds the hero at 0 CLS while these load.
+
+   Frank Ruhl Libre is REMOVED (04 §3, "one family, no serif pair").
+   Its four woff2 files are still on disk and still preloaded in
+   client/index.html — neither is mine to change; both are reported. */
 @font-face{
   font-family:'Assistant';
   font-style:normal;
@@ -319,52 +524,15 @@ html[data-contrast="high"]{
   src:url('/fonts/assistant-700-latin.woff2') format('woff2');
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-@font-face{
-  font-family:'Frank Ruhl Libre';
-  font-style:normal;
-  font-weight:500;
-  font-display:swap;
-  src:url('/fonts/frank-ruhl-libre-500-hebrew.woff2') format('woff2');
-  unicode-range:U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-@font-face{
-  font-family:'Frank Ruhl Libre';
-  font-style:normal;
-  font-weight:500;
-  font-display:swap;
-  src:url('/fonts/frank-ruhl-libre-500-latin.woff2') format('woff2');
-  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face{
-  font-family:'Frank Ruhl Libre';
-  font-style:normal;
-  font-weight:700;
-  font-display:swap;
-  src:url('/fonts/frank-ruhl-libre-700-hebrew.woff2') format('woff2');
-  unicode-range:U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-}
-@font-face{
-  font-family:'Frank Ruhl Libre';
-  font-style:normal;
-  font-weight:700;
-  font-display:swap;
-  src:url('/fonts/frank-ruhl-libre-700-latin.woff2') format('woff2');
-  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 
-/* ═══ metric-matched fallbacks (§4.2) ═══════════════════════════
-   Values computed from the font binaries at upm 1000. These remove the
-   line-box shift under font-display:swap, which is what keeps the type-led
-   hero at 0 CLS. size-adjust is deliberately omitted — the commonly quoted
-   93% is derived from Noto Sans Hebrew and creates CLS on macOS/Windows.
+/* ═══ metric-matched fallback ═══════════════════════════════════
+   Computed from the font binary at upm 1000 (hhea asc 1021, desc -287,
+   lineGap 0). This removes the line-box shift under font-display:swap.
+   size-adjust is deliberately omitted — the commonly quoted 93% is
+   derived from Noto Sans Hebrew and creates CLS on macOS/Windows.
 
-   The self-hosted faces they pair with are declared above. */
-@font-face{                          /* FRL: hhea asc 957, desc -334, lineGap 0 */
-  font-family:'FRL Fallback';
-  src:local('Times New Roman'),local('Georgia');
-  ascent-override:95.7%;descent-override:33.4%;line-gap-override:0%;
-}
-@font-face{                          /* Assistant: hhea asc 1021, desc -287, lineGap 0 */
+   The FRL Fallback face is deleted with the family. */
+@font-face{
   font-family:'Assistant Fallback';
   src:local('Arial Hebrew'),local('Arial');
   ascent-override:102.1%;descent-override:28.7%;line-gap-override:0%;
@@ -376,32 +544,43 @@ html[data-contrast="high"]{
   .sec--alt{background:var(--bg-alt);border-block:var(--bw) solid var(--rule)}
   .sec--tight{padding-block:var(--pad-sec-tight)}
 
-  /* tabular figures (§4.6). Frank Ruhl Libre is the numeral carrier: Assistant
-     has no tnum feature at all and its default '1' is 0.038em narrower than
-     every other digit, so a column containing a 1 cannot be aligned in CSS.
-     Mandatory on prices, the phone number, guest counts, dates and hours. */
-  .num{font-family:var(--serif);font-feature-settings:"tnum" 1;font-variant-numeric:tabular-nums}
-  .num-inline{font-size:.94em;font-feature-settings:"tnum" 1;font-variant-numeric:tabular-nums}
-  .shekel{font-size:1.15em;line-height:1}
+  /* ── figures ────────────────────────────────────────────────────
+     `.num` no longer switches family: 04 §3 allows exactly one family,
+     and the old numeral carrier was Frank Ruhl Libre.
+
+     CAVEAT, stated because it is a real defect and not a preference:
+     the Assistant subset we ship declares no `tnum` feature, and its
+     '1' is 0.038em narrower than its other digits, so a column of
+     prices cannot be perfectly aligned in CSS alone. The declarations
+     below are correct and become correct in effect the moment a
+     tnum-carrying Assistant build is shipped — which is the same task
+     as fixing the font files themselves (reported: all four weight
+     files on disk are byte-identical, and all four are ExtraLight).
+     Do not "fix" this by borrowing digits from another family: mixed
+     digits inside Hebrew are worse than 0.038em. */
+  .num{font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
+  .num-inline{font-size:.96em;font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
+  .shekel{font-size:1.1em;line-height:1}
   .nowrap{white-space:nowrap}
 
   .eyebrow{font-size:var(--fs-2xs);font-weight:600;letter-spacing:.09em;color:var(--fg-subtle)}
-  .sec__num{font-size:var(--fs-2xs);font-weight:600;letter-spacing:.09em;color:var(--accent)}
+  /* the section numeral is one of the four places 04 §2 puts the accent */
+  .sec__num{font-size:var(--fs-2xs);font-weight:700;letter-spacing:.09em;color:var(--accent)}
   .lede{font-size:var(--fs-md);color:var(--fg-muted);max-width:var(--measure-lede);line-height:1.6}
 
   .em{font-weight:600}
   .em-track{letter-spacing:.06em}
-  .rule-top{border-top:var(--bw-rule) solid var(--fg)}
+  .rule-top{border-top:var(--bw-rule) solid var(--rule-control)}
   .hairline{border-top:var(--bw) solid var(--rule)}
 
   .skip{position:absolute;inset-inline-start:-9999px}
-  .skip:focus{inset-inline-start:1rem;top:1rem;z-index:999;
-    background:var(--ink);color:var(--paper);padding:.6rem 1rem}
+  .skip:focus{inset-inline-start:1rem;top:1rem;z-index:999;border-radius:var(--r);
+    background:var(--accent);color:var(--accent-fg);padding:.6rem 1rem}  /* 7.49:1 */
 
-  /* icon mirroring is a policy, not a blanket flip (§9.2) */
+  /* icon mirroring is a policy, not a blanket flip */
   [dir="rtl"] .icon-flip{transform:scaleX(-1)}
 
-  /* the one motion primitive (§8) — fires once, never loops */
+  /* the one motion primitive — fires once, never loops */
   .reveal{opacity:0;transform:translateY(10px);
     transition:opacity var(--dur-reveal) var(--ease),transform var(--dur-reveal) var(--ease)}
   .reveal.is-in{opacity:1;transform:none}
@@ -422,26 +601,31 @@ html[data-contrast="high"]{
   }
 }
 
-/* ═══ the print sheet — the menu is a document (§11, L-16) ══════
-   A. home and /menus print as a single-colour A4 menu.
-   B. the brief card prints as a one-page order sheet. */
+/* ═══ the print sheet — the menu is a document ═══════════════════
+   The page ground is now near-black, so printing is a full inversion,
+   not a tidy-up: an A4 sheet of ink is unprintable and would be the
+   fastest way to lose a customer who tries to print the menu. */
 @media print{
   @page{ margin:14mm }
 
-  body{ background:#fff; color:#000; padding-bottom:0; font-size:11pt }
-  body::after{ display:none }                    /* grain prints as a grey wash */
+  html,body{ background:#fff!important; color:#000!important; padding-bottom:0; font-size:11pt }
+
+  /* every band, whatever its data-band, prints as paper */
+  :root,[data-band="ink"],[data-band="dark"],[data-band="cream"],[data-band="light"]{
+    background:#fff!important; color:#000!important;
+    --bg:#fff; --bg-alt:#fff; --bg-form:#fff; --surface-hover:#fff;
+    --fg:#000; --fg-muted:#222; --fg-subtle:#444; --fg-decor:#666;
+    --rule:#bbb; --rule-control:#666;
+    --accent:#000; --accent-hover:#000; --accent-active:#000;
+    --accent-strong:#000; --accent-fg:#fff; --accent-edge:#000;
+    --btn-bg:#fff; --btn-fg:#000;
+    --danger:#000; --on-danger:#fff; --ok:#000;
+  }
 
   /* chrome, conversion and navigation are not part of a menu */
   .head,.sticky,.skip,.checklist,.calc__nav,.cta-pair,.reveal-only,
   [data-print="hide"]{ display:none!important }
   .reveal{ opacity:1!important; transform:none!important }
-
-  /* dark bands invert to paper — an A4 sheet of ink is unprintable */
-  [data-band="ink"]{
-    background:#fff!important; color:#000!important;
-    --bg:#fff; --fg:#000; --fg-muted:#222; --fg-subtle:#444;
-    --rule:#bbb; --rule-control:#666; --accent:#000;
-  }
 
   .menu-leaf{ break-inside:auto }
   .course{ break-inside:avoid-page }

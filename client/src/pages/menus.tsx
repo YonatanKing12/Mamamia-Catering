@@ -6,6 +6,14 @@
  * תחת TAFRIT זה הדף השני בחשיבותו באתר, והוא הדף שהכיוון קרוי על שמו.
  *
  * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית ההמרה — זהה בששת העמודים שבבעלות הקובץ הזה
+ * ─────────────────────────────────────────────────────────────────────
+ *   1. **הבנייה — משטח אחד בעמוד.** `MenuConfigurator` כשיש מנות וחבילות,
+ *      בנאי ארבע השאלות כשאין. פקד **ענבר ממולא אחד** מוביל אליו.
+ *   2. **וואטסאפ — ערוץ שני, אחד בכרום של העמוד.** ירוק־ghost בהירו.
+ *   3. **טלפון — קישור טקסט.** לעולם לא כפתור.
+ *
+ * ─────────────────────────────────────────────────────────────────────
  *  הדף במצב «אפס מנות», וזו התנהגות תקינה
  * ─────────────────────────────────────────────────────────────────────
  * ‎`content/dishes.ts` ריק. ‎§3.3 שורת "0" קובעת ש־`MenuSheet` **אינו
@@ -21,18 +29,31 @@
  *   LimitsBlock          אין שורת מגבלה שנמסרה.
  *   Faq                  אין ולו תשובה אחת שנמסרה. הפריטים כתובים כאן
  *                        וקשורים למשבצות, ולכן הבאנד נדלק מאליו.
+ *   ReviewsBlock/Gallery ‎`content/proof.ts` ריק. השער נבדק **בעמוד**, כדי
+ *                        שלא ייווצר `.sec` עם padding סביב `null`.
  *
  * מה שנשאר הוא מה שאנחנו באמת יודעים: איך תפריט לאירוע נבנה, שהוא יוצא
  * ממטבח של מסעדה פעילה, והדרך להתחיל. **המבחן שהעמוד נבנה לעבור הוא
  * להיראות מכוון וגמור כשכל המשבצות ריקות** — כי זה המצב היום.
  *
  * ─────────────────────────────────────────────────────────────────────
+ *  הבאנד הקרם — ולמה דווקא כאן
+ * ─────────────────────────────────────────────────────────────────────
+ * מדיניות ההחלפה ב־`index.css`: כהה לכל משטחי ההמרה, קרם ל**קריאה
+ * הארוכה** בלבד, ולעולם לא לסירוגין לשם הקצב. בעמוד הזה הקריאה הארוכה
+ * היא בדיוק שני הסקשנים הרצופים «איך נבנה תפריט» ו־`KitchenNote` — ולכן
+ * שניהם יושבים בתוך עטיפת `data-band="cream"` אחת, כפרק אחד, ולא כשתי
+ * רצועות שמתחלפות. `MenuSheet` נכנס לאותה עטיפה כשיימסרו מנות: עלה
+ * תפריט הוא מסמך לקריאה, וזה גם מה שיוצא נכון בהדפסה.
+ *
+ * ─────────────────────────────────────────────────────────────────────
  *  מה קורה ברגע ש־`DISHES` מתמלא — בלי שינוי קוד
  * ─────────────────────────────────────────────────────────────────────
  * ‎`MenuSheet` נדלק במיקום 01 ודוחף את שאר המספור למטה (המספור נקבע
- * לפי מיקום, §3.1, ולא קשיח). `grouping="auto"` מיישם לבד את ספי §3.3:
- * קיבוץ לכותרות מנה מ־8 מנות ומעלה, רשימה אחת מתחת לזה. כותרת ההירו
- * עוברת לנוסח המפרט, `Menu` נכנס ל־JSON-LD, וקישור ההדפסה מופיע.
+ * לפי מיקום, §3.1, ולא קשיח). `grouping="auto"` מיישם לבד את ספי §3.3.
+ * במקביל, ברגע ש־`dish-categories` ו־`packages` יתמלאו, משטח הבנייה
+ * מחליף את עצמו מבנאי ארבע השאלות ל־`MenuConfigurator` — בלי שינוי קוד
+ * ובלי שינוי בעוגן `#quote`.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  «הוסיפו לתפריט שלי» — מה עובד ומה עוד לא
@@ -50,6 +71,7 @@
  */
 
 import * as React from "react";
+import { useLocation } from "wouter";
 import { Head } from "@/components/seo/head";
 import { Button, Prose, SectionHeader } from "@/components/primitives";
 import {
@@ -58,11 +80,13 @@ import {
   MenuSheet,
   NextSteps,
   OccasionIntro,
-  QuoteCta,
   type DishLine,
   type FaqItem,
 } from "@/components/bands";
-import type { DishSelection } from "@/components/quote/use-quote-builder";
+import { MenuConfigurator } from "@/components/configurator";
+import { Gallery, ReviewsBlock } from "@/components/trust";
+import { QuoteBuilder } from "@/components/quote/quote-builder";
+import type { DishSelection, QuoteAnswers } from "@/components/quote/use-quote-builder";
 import { SLOTS, filled } from "@/content/business";
 import {
   CATERING_DISHES,
@@ -72,6 +96,9 @@ import {
   hasDishes,
   provenanceMark,
 } from "@/content/dishes";
+import { hasConfigurator } from "@/content/dish-categories";
+import { hasPackages } from "@/content/packages";
+import { hasGallery, hasGoogleReviews, hasTestimonials } from "@/content/proof";
 import { kashrutClauseHe, resolveExtraMeta, stripEmptyJsonLd } from "@/lib/page-meta-extra";
 import type { PageMetaExtra } from "@/lib/page-meta-extra";
 import { buildBreadcrumbList, buildFaqPage, buildMenu, buildWebPage } from "@/lib/seo";
@@ -82,6 +109,9 @@ import { track } from "@/lib/analytics";
 const META = resolveExtraMeta("/menus") as PageMetaExtra;
 
 const SOURCE_PAGE = "/menus";
+
+/** המשטח שמוגש בפועל. ראו הערת «מה קורה ברגע ש־DISHES מתמלא». */
+const CONFIGURATOR_LIVE = hasConfigurator() && hasPackages();
 
 /* ═══════════════════ מסלול הוואטסאפ בהירו ═══════════════════ */
 
@@ -159,14 +189,33 @@ function faqItems(): PageFaq[] {
 /* ═══════════════════ הסקשן שהוא הדף ═══════════════════ */
 
 /**
- * הסקשן הייחודי של `/menus` (T-1). הוא מסביר **את התפריט**, ולא את
- * תהליך ההתקשרות — זה כבר יושב בדף הבית ואסור לו לחזור כאן במילים
- * מוחלפות.
+ * שלושת השלבים. הסקשן הייחודי של `/menus` (T-1): הוא מסביר **את התפריט**,
+ * ולא את תהליך ההתקשרות הכללי — זה כבר יושב בדף הבית ואסור לו לחזור כאן
+ * במילים מוחלפות.
+ *
+ * הצורה — רשימה ממוספרת בענבר, משפט אחד לשלב — נבחרה גם למנוע תשובות:
+ * שלושה שלבים קצרים ומפורשים הם מה שמנוע תשובות מצטט בפועל, ופסקה
+ * זורמת אינה.
  *
  * מה שנאמר כאן ומה שאסור היה להיאמר: אין «חבילות», אין «אין מינימום»,
- * אין טווח סועדים, אין זמן הכנה ואין אזור. כל אלה משבצות ריקות. מה
- * שכן נאמר הוא איך תפריט נבנה — תיאור תהליך, לא התחייבות מסחרית.
+ * אין טווח סועדים, אין זמן הכנה, אין זמן תגובה ואין אזור. כל אלה משבצות
+ * ריקות. מה שכן נאמר הוא איך תפריט נבנה — תיאור תהליך, לא התחייבות.
  */
+const STEPS: readonly { title: string; body: string }[] = [
+  {
+    title: "מספרים לנו על האירוע",
+    body: "כמה סועדים, מתי, ובאיזו עיר. בטופס, בוואטסאפ או בטלפון.",
+  },
+  {
+    title: "אנחנו מרכיבים תפריט",
+    body: "מהמנות שהמטבח של המסעדה מבשל, לפי מספר הסועדים ולפי מה שחשוב לכם שיהיה על השולחן.",
+  },
+  {
+    title: "חוזרים אליכם עם הצעה",
+    body: "התפריט והמחיר בכתב, כדי שיהיה מה להראות למי שצריך לאשר.",
+  },
+];
+
 function HowTheMenuWorks({ num, canPrint }: { num?: string; canPrint: boolean }) {
   const onPrint = React.useCallback<React.MouseEventHandler<HTMLButtonElement & HTMLAnchorElement>>(
     () => {
@@ -182,16 +231,24 @@ function HowTheMenuWorks({ num, canPrint }: { num?: string; canPrint: boolean })
         <SectionHeader
           num={num}
           title="איך נבנה תפריט לאירוע"
-          lede="המנות הן המנות של המסעדה. התפריט לאירוע מורכב מהן — לפי מספר הסועדים, לפי צורת ההגשה, ולפי מה שחשוב לכם שיהיה על השולחן."
+          lede="אין כאן עגלת קניות ואין תפריט קבוע להורדה. התפריט מורכב לאירוע, ולכן הוא מתחיל בשיחה."
           reveal={false}
         />
 
-        <Prose size="body" measure="body">
-          <p>
-            לכן אין כאן עגלת קניות ואין תפריט קבוע להורדה. מספרים לנו על האירוע — כמה
-            סועדים, מתי ובאיזה אזור — ואנחנו חוזרים עם תפריט שמתאים לו.
-          </p>
-        </Prose>
+        <ol className="m-0 grid list-none gap-grid p-0 min-[760px]:grid-cols-3">
+          {STEPS.map((step, i) => (
+            <li
+              key={step.title}
+              className="m-0 flex flex-col gap-3 rounded-card border border-solid border-[color:var(--rule)] bg-bg-form p-card"
+            >
+              <span className="sec__num num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="m-0 text-lg font-bold">{step.title}</h3>
+              <p className="m-0 text-xs leading-[1.6] text-fg-muted">{step.body}</p>
+            </li>
+          ))}
+        </ol>
 
         {/* ‎§4 P-02: קישור טקסט אחד, לא כפתור. אינו קולט דבר ואינו חוסם דבר.
             מוצג רק כשיש מה להדפיס — גיליון A4 ריק אינו תפריט. */}
@@ -204,6 +261,93 @@ function HowTheMenuWorks({ num, canPrint }: { num?: string; canPrint: boolean })
         ) : null}
       </div>
     </section>
+  );
+}
+
+/* ═══════════════════ שכבת האמון ═══════════════════ */
+
+const ReviewsSection = ({ num }: { num?: string }) => (
+  <section id="reviews" className="sec sec--tight">
+    <div className="wrap">
+      {/* הכותרת בעמוד ולא ב־`ReviewsBlock`: המספר נקבע לפי מיקום ואין
+          לקומפוננטה prop `num`. מבוקש בדוח החזרה. */}
+      <SectionHeader
+        num={num}
+        eyebrow="מה אומרים"
+        title="ביקורות בגוגל"
+        lede="הדירוג והמונה כפי שהם מופיעים בפרופיל הציבורי, עם קישור לאימות."
+      />
+      <ReviewsBlock />
+    </div>
+  </section>
+);
+
+const GallerySection = ({ num }: { num?: string }) => (
+  <section id="gallery" className="sec sec--tight">
+    <div className="wrap">
+      <SectionHeader num={num} eyebrow="מהאירועים" title="איך זה נראה על השולחן" />
+      <Gallery />
+    </div>
+  </section>
+);
+
+/* ═══════════════════ משטח הבנייה ═══════════════════ */
+
+/**
+ * **אחד בעמוד**, והוא היעד של פקד הענבר היחיד בהירו ושל הפס הדביק.
+ *
+ * ‎`QuoteCta` (ספריית הבאנדים) עוטף `QuoteBuilder` בלבד ואין לו מסלול
+ * מגדיר, ולכן העטיפה נכתבת כאן. **אין לזה עותק שני בעמוד** — ברגע
+ * ש־`QuoteCta` יקבל תמיכה במגדיר (מבוקש בדוח החזרה) הבלוק הזה נמחק
+ * לטובתו.
+ *
+ * הזריעה: `seed.dishes` נתמכת בבנאי בלבד. למגדיר יש בחירה מתמידה משלו
+ * (`use-configurator`), ולכן במסלול המגדיר אין מה לזרוע.
+ */
+function BuildSection({ num, seedDishes }: { num?: string; seedDishes: DishSelection[] }) {
+  const [, navigate] = useLocation();
+
+  const onSubmitted = React.useCallback(
+    (ref: string, answers: QuoteAnswers) =>
+      navigate(`/thanks?ref=${encodeURIComponent(ref)}`, { state: { ref, answers } }),
+    [navigate],
+  );
+
+  return (
+    <div id="quote" className="border-y border-solid border-y-[color:var(--rule)] bg-bg-form">
+      <div className="wrap pt-sec">
+        <SectionHeader
+          num={num}
+          title="התפריט שלכם"
+          lede={
+            CONFIGURATOR_LIVE
+              ? "בוחרים מנות מול המכסה של החבילה, ומשאירים פרטים. אין שדה תקציב."
+              : "ארבע שאלות על האירוע, ואז פרטים ליצירת קשר. אין שדה תקציב, ואין מה למלא כדי לראות מחיר."
+          }
+          reveal={false}
+        />
+      </div>
+
+      {CONFIGURATOR_LIVE ? (
+        <div className="wrap pb-sec">
+          <MenuConfigurator
+            id="quote-builder"
+            sourcePage={SOURCE_PAGE}
+            showHeader={false}
+            onSubmitted={onSubmitted}
+          />
+        </div>
+      ) : (
+        <QuoteBuilder
+          id="quote-builder"
+          sourcePage={SOURCE_PAGE}
+          seed={seedDishes.length > 0 ? { dishes: seedDishes } : undefined}
+          showHeader={false}
+          className="!pt-0"
+          onSubmitted={onSubmitted}
+        />
+      )}
+    </div>
   );
 }
 
@@ -254,6 +398,8 @@ export default function Menus() {
   const briefIds = React.useMemo(() => brief.map((d) => d.id), [brief]);
 
   const showMenuSheet = dishes.length > 0;
+  const showReviews = hasGoogleReviews() || hasTestimonials();
+  const showGallery = hasGallery();
   const faqs = faqItems();
 
   /* ‎§3.1 — מקור המספור היחיד. סקשן שנשמט אינו משאיר חור ברצף, וחור
@@ -262,6 +408,8 @@ export default function Menus() {
     showMenuSheet ? "menu" : null,
     "how-menu",
     "kitchen",
+    showReviews ? "reviews" : null,
+    showGallery ? "gallery" : null,
     "quote",
     faqs.some((f) => f.answerHe) ? "faq" : null,
   ].filter((k): k is string => k !== null);
@@ -323,7 +471,7 @@ export default function Menus() {
             </>
           )
         }
-        lede="קייטרינג מאמאמיה מבושל במטבח של מסעדה איטלקית פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים. מה שיוצא ממנו הוא מה שנכנס לתפריט של האירוע."
+        lede="קייטרינג מאמאמיה מבושל במטבח של מסעדה איטלקית פעילה. מה שיוצא ממנו לסועדים של המסעדה הוא מה שנכנס לתפריט של האירוע."
         facts={facts}
         primary={{ label: "בנו תפריט לאירוע", href: "#quote" }}
         secondary={{
@@ -352,33 +500,35 @@ export default function Menus() {
         </Prose>
       </OccasionIntro>
 
-      {/* 01 · מהתפריט של המסעדה. מחזיר null בעצמו כשאין מנות — התנאי
-          כאן קיים רק כדי שהמספור לא יקצה ספרה לסקשן שלא יופיע. */}
-      {showMenuSheet ? (
-        <MenuSheet
-          id="menu"
-          num={num("menu")}
-          dishes={dishes}
-          grouping="auto"
-          courseLabel={COURSE_LABEL}
-          courseOrder={COURSES}
-          eyebrow="מהתפריט של המסעדה"
-          title="המנות"
-          onAdd={toggleDish}
-          addedIds={briefIds}
-        />
-      ) : null}
+      {/* ─── הפרק הקרם: הקריאה הארוכה של העמוד, פרק אחד ולא שתי רצועות.
+          ראו ההסבר בראש הקובץ ומדיניות ההחלפה ב־index.css. ─── */}
+      <div data-band="cream">
+        {/* 01 · מהתפריט של המסעדה. מחזיר null בעצמו כשאין מנות — התנאי
+            כאן קיים רק כדי שהמספור לא יקצה ספרה לסקשן שלא יופיע. */}
+        {showMenuSheet ? (
+          <MenuSheet
+            id="menu"
+            num={num("menu")}
+            dishes={dishes}
+            grouping="auto"
+            courseLabel={COURSE_LABEL}
+            courseOrder={COURSES}
+            eyebrow="מהתפריט של המסעדה"
+            title="המנות"
+            onAdd={toggleDish}
+            addedIds={briefIds}
+          />
+        ) : null}
 
-      <HowTheMenuWorks num={num("how-menu")} canPrint={hasDishes()} />
+        <HowTheMenuWorks num={num("how-menu")} canPrint={hasDishes()} />
 
-      <KitchenNote num={num("kitchen")} />
+        <KitchenNote num={num("kitchen")} />
+      </div>
 
-      <QuoteCta
-        num={num("quote")}
-        sourcePage={SOURCE_PAGE}
-        seed={brief.length > 0 ? { dishes: brief } : undefined}
-        lede="ארבע שאלות על האירוע, ואז פרטים ליצירת קשר. אפשר גם פשוט לכתוב בוואטסאפ."
-      />
+      {showReviews ? <ReviewsSection num={num("reviews")} /> : null}
+      {showGallery ? <GallerySection num={num("gallery")} /> : null}
+
+      <BuildSection num={num("quote")} seedDishes={brief} />
 
       <FaqBand num={num("faq")} items={faqs} title="שאלות שנשאלות בטלפון" />
 

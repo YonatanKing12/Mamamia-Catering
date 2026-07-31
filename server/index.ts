@@ -12,6 +12,7 @@
 
 import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
+import compression from "compression";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storageKind, assertLeadParity } from "./storage";
@@ -23,6 +24,17 @@ const isProd = process.env.NODE_ENV === "production";
 /* מאחורי פרוקסי של ספק אחסון — כדי ש־req.ip יהיה אמיתי ולא של הפרוקסי */
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
+
+/*
+ * דחיסה — לפני כל מגיש תוכן.
+ *
+ * בלי זה כל מבקר הוריד 562KB של JS גולמי ו־46KB CSS, במקום 203KB ו־11KB.
+ * פי 2.8 בתים בנתיב הקריטי של תנועה ממומנת, כלומר על כל קליק ששולם עליו.
+ *
+ * אם ספק האחסון או CDN כבר דוחסים בקצה — השכבה הזאת מיותרת אך אינה מזיקה:
+ * compression מדלג כשכבר קיים Content-Encoding.
+ */
+app.use(compression());
 
 app.use(express.json({ limit: "64kb" }));
 app.use(express.urlencoded({ extended: false, limit: "64kb" }));

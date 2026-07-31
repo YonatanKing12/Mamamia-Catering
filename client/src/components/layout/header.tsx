@@ -7,7 +7,9 @@
  *
  * המשוב היחיד לגלילה הוא קו השיער התחתון שנדלק מעל 8px (§7.28). אין צל, אין
  * לוגו שמתכווץ, אין היפוך צבע. הרקע אטום: הבריף אוסר אפקט זכוכית, ולכן
- * ה־backdrop-filter שמופיע ב־§7.28 לא נשלח — מדווח בדוח החזרה.
+ * טשטוש הרקע שמופיע ב־§7.28 לא נשלח — מדווח בדוח החזרה. (שם המחלקה אינו
+ * כתוב כאן כלשונו: ה־extractor של Tailwind סורק את הקובץ כטקסט ואינו יודע
+ * מהי הערה, ולכן הזכרתה הייתה פולטת ‎550B של CSS מת.)
  *
  * המגירה בנייד בנויה על @radix-ui/react-dialog (§10.3): מותקנת רק כשהיא פתוחה,
  * לוכדת Tab, נסגרת ב־Escape ומחזירה פוקוס למפעיל. הפקד הפותח הוא מילה ולא
@@ -38,6 +40,7 @@
  * ‎`BranchStrip` ובקולופון, ששניהם מנוסחים לכך; כאן הם לא היו.
  */
 
+import { capturePhoneClick } from "@/lib/lead-client";
 import * as React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Link, useLocation } from "wouter";
@@ -117,6 +120,11 @@ export const Header = ({ faqHref }: HeaderProps) => {
     <a
       href={telLink()}
       data-tel=""
+      /* הקישור הזה יושב על כל 20 המסלולים ולא קלט כלום. `data-tel` הוא
+         מסמן בלבד — אין בקוד שום מאזין מואצל שקורא אותו. הקליטה נעשית
+         כאן ישירות, כמו בכל שאר קישורי הטלפון באתר; מאזין גלובלי היה
+         מייצר ליד כפול ב־16 מקומות שכבר קולטים בעצמם. */
+      onClick={() => capturePhoneClick({ callLocation: "header" })}
       className={
         "inline-flex min-h-[44px] items-center text-sm font-medium " +
         "text-fg no-underline transition-colors duration-state ease-house hover:text-accent"
@@ -133,7 +141,8 @@ export const Header = ({ faqHref }: HeaderProps) => {
         "head sticky top-0 z-[80] bg-bg",
         "border-b border-solid transition-colors duration-slow ease-house",
         /* צבע כערך מפורש: `rule` מוגדר בקונפיג גם ב־borderWidth (2px) וגם
-           ב־colors, ולכן המחלקה הקצרה `border-b-rule` פולטת גם רוחב 2px. */
+           ב־colors, ולכן צורת הקיצור של גבול תחתון בשם הזה פולטת גם רוחב
+           2px. (השם אינו כתוב כאן כלשונו — הזכרה בהערה פולטת אותו לגיליון.) */
         stuck ? "border-b-[color:var(--rule)]" : "border-b-transparent",
       )}
       data-stuck={stuck ? "" : undefined}

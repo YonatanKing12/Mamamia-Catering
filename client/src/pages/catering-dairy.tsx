@@ -10,8 +10,7 @@
  * ‎§4 P-14 מצטט `קייטרינג חלבי איטלקי — אותו תקציב, שולחן עשיר יותר.`
  * ‎00-spec-review §A2 פוסל את זה: «אותו תקציב, שולחן עשיר יותר» היא טענה
  * **השוואתית על יחס מחיר־לערך**, באתר שאין בו ולו מחיר אחד ושבו
- * ‎`SLOTS.pricePerPerson` ריק מעצם הבנייה. הביקורת גוברת על המפרט, וה־H1
- * כאן הוא הנוסח שהיא קובעת: `קייטרינג חלבי איטלקי — מהמטבח של המסעדה.`
+ * ‎`SLOTS.pricePerPerson` ריק מעצם הבנייה. הביקורת גוברת על המפרט.
  *
  * הטיעון החלבי עצמו **לא נמחק** — הוא ירד מהכותרת לגוף הדף, ושם הוא
  * מנוסח כעובדת קטגוריה («מטבח איטלקי בנוי סביב חלב מלכתחילה») ולא
@@ -35,22 +34,33 @@
  *     השאלה שקונה שומר כשרות באמת שואל.
  *
  * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית הפעולה — ראו `pages/catering.tsx`, מוחזקת כאן זהה
+ * ─────────────────────────────────────────────────────────────────────
+ *   1. המגדיר (`#quote`) — הענבר. מיד אחרי ההירו: הקונה מגיע מקמפיין עם
+ *      כוונה קיימת, והדבר השני שהוא רואה חייב להיות המקום שבו הוא בונה
+ *      את האירוע, לא טיעון על חלב. הטיעון יושב מתחת ומשרת את מי שגלל.
+ *      ‎`MenuConfigurator` בולע בעצמו את בנאי ארבע השאלות, ולכן אין בדף
+ *      גם מגדיר וגם `QuoteCta` — משטח אחד.
+ *   2. וואטסאפ — ירוק, בהירו ובבאנד הסוגר בלבד. אין באנד וואטסאפ באמצע.
+ *   3. טלפון — שורת טקסט, לא פקד שלישי (L-10).
+ *
+ * ─────────────────────────────────────────────────────────────────────
  *  מה נשמט היום, וזו התנהגות תקינה (INV-2)
  * ─────────────────────────────────────────────────────────────────────
  *   MenuSheet       ‎`content/dishes.ts` ריק ⇒ 0 מנות בחתך החלבי ⇒ הסקשן
- *                   אינו מרונדר (‎§3.3 שורת "0"), והדף עובר לרג׳יסטר
- *                   התפעולי. זה גם המקום שבו הדף הזה יהפוך לחזק ביותר
+ *                   אינו מרונדר. זה גם המקום שבו הדף הזה יהפוך לחזק ביותר
  *                   באתר ברגע שהמנות יימסרו: שמות מנות אמיתיים כטיפוגרפיה.
- *   ServiceFormats  ‎`offered === true` הוא אישור בעלים, ו־
- *                   ‎`config/service-formats.ts` טרם נוצר. אף פורמט אינו
- *                   מאושר ⇒ הבאנד מחזיר null, והדף אינו אומר «מלצרים».
+ *   ServiceFormats  ‎`offered === true` הוא אישור בעלים ואינו קיים.
  *   OpsFacts        מינימום, זמן התראה, אזור ותנאי תשלום — כולם `null`.
- *   FaqBand         נדלק חלקית: מה שיש לו תשובה מרונדר, השאר לא.
+ *   ReviewsBlock ·  ‎`content/proof.ts` ריק ⇒ אין דירוג בהירו ואין סקשן
+ *   Gallery         הוכחה. 04 §5 מזהה את מונה הביקורות כאות האמון המרכזי
+ *                   בקטגוריה, ובדיוק לכן אסור להמציא אותו.
  *
  * המבחן שהדף נבנה לעבור: להיראות מכוון וגמור כשכל המשבצות ריקות.
  */
 
 import * as React from "react";
+import { useLocation } from "wouter";
 import { Head } from "@/components/seo/head";
 import { Num, Prose, SectionHeader } from "@/components/primitives";
 import {
@@ -60,19 +70,20 @@ import {
   NextSteps,
   OccasionIntro,
   OpsFacts,
-  QuoteCta,
   ServiceFormats,
-  WhatsAppBand,
   type DishLine,
   type FaqItem,
   type NextStepLink,
   type OpsFactRow,
   type ServiceFormatSpec,
 } from "@/components/bands";
+import { MenuConfigurator } from "@/components/configurator";
+import { ContactBar, Gallery, ReviewsBlock } from "@/components/trust";
 import { SLOTS, filled } from "@/content/business";
 import { dishesForCut, provenanceMark } from "@/content/dishes";
 import { cateringServiceArea } from "@/content/locations";
 import { occasionById, serviceFormatsFor } from "@/content/occasions";
+import { hasAnyProof } from "@/content/proof";
 import { buildWaHref, captureWaIntent, newRef } from "@/lib/lead-client";
 import { track } from "@/lib/analytics";
 import { kashrutClauseHe, resolveExtraMeta, stripEmptyJsonLd } from "@/lib/page-meta-extra";
@@ -87,6 +98,10 @@ const SOURCE_PAGE = "/catering/dairy";
 /** מקור יחיד לשם, לכוונה ולחתך התפריט — לא נכתבים כאן. */
 const OCCASION = occasionById("dairy");
 
+/** הטענה היחידה המותרת על מוצא האוכל, בלשון יחיד. נכתבת פעם אחת. */
+const KITCHEN_FACT_HE =
+  "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.";
+
 /* ═══════════════════ מסלול הוואטסאפ בהירו ═══════════════════ */
 
 /**
@@ -94,9 +109,8 @@ const OCCASION = occasionById("dairy");
  * ובלי בדיקת תשובה. המזהה נוצר ברינדור, ולכן ה־href הסטטי נושא אותו גם
  * בלי JS, גם בלשונית חדשה וגם כשמעתיקים את הכתובת.
  *
- * ‎TODO(01 §5.7): עותק נוסף של אותו קוד (`WhatsAppBand`, `pages/home.tsx`,
- * ‎`pages/catering-business.tsx`, `pages/catering-holidays.tsx`). מקומו
- * ב־`lib/whatsapp.ts openWhatsApp()`. מדווח בדוח החזרה.
+ * ‎TODO(01 §5.7): עותק נוסף של אותו קוד. מקומו ב־`lib/whatsapp.ts
+ * openWhatsApp()` — מדווח בדוח החזרה.
  */
 function useHeroWhatsApp() {
   const [ref] = React.useState(() => newRef());
@@ -164,6 +178,48 @@ function opsRows(): OpsFactRow[] {
   ];
 }
 
+/* ═══════════════════ המגדיר ═══════════════════ */
+
+/**
+ * ‎04 §6: המגדיר **בונה** את האירוע במקום **לבקש** הצעה בארבע שאלות. מי
+ * שהשקיע דקות בבחירת מנות נוטש הרבה פחות, והליד נושא את הבחירות עצמן.
+ *
+ * ‎`MenuConfigurator` בולע בעצמו את המצב שאין בו מנות ומגיש במקומו את בנאי
+ * ארבע השאלות — הסקשן הזה **לעולם אינו ריק**, ואין כאן שער.
+ *
+ * אין זריעת `eventType`: `occasions.ts` קובע `eventTypeSeed: null` לדף
+ * הזה, כי חלבי הוא חתך תפריט ולא סוג אירוע — אותו קונה יכול להיות חברה,
+ * שמחה או חג. תיוג שגוי גרוע מתיוג חסר (02 §1.7).
+ */
+function ConfiguratorSection({ num }: { num?: string }) {
+  const [, navigate] = useLocation();
+
+  return (
+    <div
+      id="quote"
+      className="border-y border-solid border-y-[color:var(--rule)] bg-bg-form py-sec [&_.sec]:py-0 [&_.wrap]:max-w-none [&_.wrap]:px-0"
+    >
+      <div className="wrap">
+        <SectionHeader
+          num={num}
+          eyebrow="בונים את האירוע"
+          title="התפריט החלבי שלכם"
+          lede="מספרים לנו כמה סועדים, מתי ואיפה. אנחנו חוזרים אליכם עם תפריט והצעה בכתב."
+        />
+
+        <MenuConfigurator
+          id="quote-builder"
+          sourcePage={SOURCE_PAGE}
+          showHeader={false}
+          onSubmitted={(ref, answers) =>
+            navigate(`/thanks?ref=${encodeURIComponent(ref)}`, { state: { ref, answers } })
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════ הסקשן הייחודי של הדף ═══════════════════ */
 
 /**
@@ -172,8 +228,8 @@ function opsRows(): OpsFactRow[] {
  * על המטבח האיטלקי**, לא טענה על התמחור שלנו.
  *
  * שלוש השורות נבדקו אחת־אחת מול שאלה אחת: האם היא נכונה גם כשכל משבצת
- * באתר ריקה. אין בהן מחיר, אין השוואה, אין מספר, אין שם מנה (‎`DISHES`
- * ריק — שם מנה כאן היה בדיוק כשל §A6), ואין טענה על ההפרדה במטבח.
+ * באתר ריקה. אין בהן מחיר, אין השוואה, אין מספר, אין שם מנה, ואין טענה
+ * על ההפרדה במטבח.
  */
 const DAIRY_POINTS = [
   {
@@ -182,7 +238,7 @@ const DAIRY_POINTS = [
       "בקטגוריות אחרות תפריט חלבי הוא מה שנשאר אחרי שמורידים ממנו את הבשר. במטבח איטלקי זה הפוך: הגבינות, החמאה והשמנת הן העמוד שהמטבח עומד עליו, ולא תחליף למשהו.",
   },
   {
-    titleHe: "אירוע חלבי מקל על שולחן מעורב",
+    titleHe: "שולחן חלבי מקל על שולחן מעורב",
     bodyHe:
       "כשכל השולחן חלבי, נשאלת שאלה אחת פחות מול כל אורח. מי שלא אוכל בשר, מי שמקפיד על הפרדה בבית ומי שפשוט לא רעב לבשר — כולם יושבים לאותו תפריט.",
   },
@@ -202,19 +258,21 @@ function DairyArgument({ num }: { num?: string }) {
           eyebrow="למה דווקא איטלקי"
           title="חלבי הוא לא מה שנשאר"
           lede="זה הטיעון שהשוק הישראלי כבר מכיר, והוא הסיבה שהמטבח הזה נכנס לקטגוריה הזאת בצורה טבעית."
-          reveal={false}
         />
 
-        <ul className="m-0 list-none border-t border-solid border-t-[color:var(--rule)] p-0">
-          {DAIRY_POINTS.map((point) => (
+        {/* כרטיסים, לא שורות ברשימה: 04 §4 קובע רדיוס 12px לכרטיס, והגבול
+            הופך לענבר ב־hover — אותה שפה בדיוק של כרטיסי האירועים. */}
+        <ul className="m-0 grid list-none gap-grid p-0 [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]">
+          {DAIRY_POINTS.map((point, i) => (
             <li
               key={point.titleHe}
-              className="m-0 border-b border-solid border-b-[color:var(--rule)] py-7"
+              className="m-0 rounded-card border border-solid border-[color:var(--rule)] bg-bg-alt p-card transition-colors duration-state ease-house hover:border-accent"
             >
-              <div className="max-w-body pe-6">
-                <h3 className="m-0 font-serif text-lg font-bold">{point.titleHe}</h3>
-                <p className="mt-2 text-xs leading-[1.6] text-fg-muted">{point.bodyHe}</p>
-              </div>
+              <span className="sec__num num">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="mt-3 text-lg font-semibold">{point.titleHe}</h3>
+              <p className="mt-2 max-w-none text-xs leading-[1.6] text-fg-muted">
+                {point.bodyHe}
+              </p>
             </li>
           ))}
         </ul>
@@ -231,6 +289,9 @@ type PageFaq = FaqItem & { answerHe: string | null };
  * סט ייחודי לדף (T-1): אלה השאלות שנשאלות על תפריט חלבי ולא על אירוע
  * חברה או על חג. שאלה בלי תשובה אינה מרונדרת, ואותו סינון בדיוק מזין
  * את ה־`FAQPage` — כך אי אפשר לפלוט למנוע חיפוש שאלה שאינה על המסך.
+ *
+ * כל תשובה כתובה כמשפט שלם שעומד בפני עצמו מחוץ להקשר. זו היחידה שמנוע
+ * תשובות מצטט מילה במילה, ולכן היא נכתבת כמו ציטוט ולא כמו פסקה בדף.
  */
 function faqItems(): PageFaq[] {
   return [
@@ -245,15 +306,23 @@ function faqItems(): PageFaq[] {
     },
     {
       id: "faq-kashrut",
-      questionHe: "האם האוכל כשר?",
+      questionHe: "האם הקייטרינג החלבי כשר?",
       /* כלשון הבעלים, דרך המשבצת. לעולם לא כמחרוזת קשיחה (LAW 1). */
-      answerHe: kashrutClauseHe("general"),
+      answerHe: (() => {
+        const k = kashrutClauseHe("general");
+        return k ? `הקייטרינג ${k}.` : null;
+      })(),
     },
     {
       id: "faq-who-cooks",
-      questionHe: "מי מבשל את זה?",
+      questionHe: "מי מבשל את התפריט החלבי?",
+      answerHe: KITCHEN_FACT_HE,
+    },
+    {
+      id: "faq-how",
+      questionHe: "איך מקבלים הצעה לתפריט חלבי?",
       answerHe:
-        "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
+        "בונים את התפריט כאן בדף ומשאירים פרטים, או שולחים את פרטי האירוע בוואטסאפ. אנחנו חוזרים אליכם, עוברים על מספר הסועדים ועל התאריך, ושולחים הצעה בכתב.",
     },
     {
       id: "faq-mixed-table",
@@ -308,7 +377,6 @@ const NEXT: NextStepLink[] = [
     descriptionHe: "אירוע משפחתי בבית או במקום שנבחר.",
   },
   { href: "/menus", titleHe: "התפריטים", descriptionHe: "מה שהמטבח מבשל, במקום אחד." },
-  { href: "/quote", titleHe: "בקשת הצעה", descriptionHe: "ארבע שאלות, ואנחנו חוזרים אליכם." },
 ];
 
 /* ═══════════════════ העמוד ═══════════════════ */
@@ -342,16 +410,22 @@ export default function CateringDairy() {
 
   const rows = opsRows();
   const faqs = faqItems();
+  const answered = faqs.filter(
+    (f): f is FaqItem & { answerHe: string } => f.answerHe !== null,
+  );
   const showMenuSheet = dishes.length > 0;
+  const proof = hasAnyProof();
 
-  /* ‎§3.1 — מקור המספור היחיד. סקשן שנשמט אינו משאיר חור ברצף. */
+  /* ‎§3.1 — מקור המספור היחיד. סקשן שנשמט אינו משאיר חור ברצף.
+     הבאנד הסוגר אינו ממוספר: הוא אינו פרק, הוא הדרך לפנות. */
   const order = [
+    "quote",
     showMenuSheet ? "menu" : null,
     formats.some((f) => f.offered) ? "formats" : null,
     "dairy-argument",
+    proof ? "proof" : null,
     "kitchen",
-    "quote",
-    faqs.some((f) => f.answerHe) ? "faq" : null,
+    answered.length > 0 ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
   const num = (key: string) => {
@@ -384,7 +458,7 @@ export default function CateringDairy() {
             }),
           ),
           buildBreadcrumbList(META.breadcrumb),
-          buildFaqPage(faqs),
+          buildFaqPage(answered),
         ]}
       />
 
@@ -396,17 +470,15 @@ export default function CateringDairy() {
           <>
             קייטרינג חלבי איטלקי
             <br />
-            מהמטבח
-            <br />
-            של המסעדה.
+            מהמטבח של המסעדה.
           </>
         }
-        lede="תפריט חלבי שהוא לא גרסה מצומצמת של תפריט אחר. זה מה שמטבח איטלקי עושה ממילא — אנטיפסטי, פסטות וקינוחים — והוא נבנה אצלכם לאירוע לפי מספר הסועדים ולפי אופי הערב."
+        lede="תפריט חלבי שהוא לא גרסה מצומצמת של תפריט אחר. אנטיפסטי, פסטות וקינוחים — זה מה שמטבח איטלקי עושה ממילא, והוא נבנה לאירוע שלכם לפי מספר הסועדים ולפי אופי הערב."
         facts={facts}
-        primary={{ label: "בנו תפריט לאירוע", href: "#quote" }}
+        primary={{ label: "לבנות את התפריט לאירוע", href: "#quote" }}
         secondary={{
-          label: "דברו איתנו בוואטסאפ",
-          variant: "ghost",
+          label: "לכתוב לנו בוואטסאפ",
+          variant: "wa",
           href: wa.href,
           target: "_blank",
           rel: "noopener noreferrer",
@@ -419,7 +491,7 @@ export default function CateringDairy() {
         <Prose
           size="fine"
           measure="body"
-          className="mt-5 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
+          className="mt-3 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
         >
           <p>
             בלחיצה על וואטסאפ נשמרת אצלנו פנייה עם פרטי האירוע שמופיעים בהודעה.{" "}
@@ -428,18 +500,31 @@ export default function CateringDairy() {
             </a>
           </p>
         </Prose>
+
+        {/* ‎04 §5: מונה הביקורות הוא אות האמון המרכזי בקטגוריה. ריק היום
+            ⇒ הרצועה אינה מרונדרת, ואין מקום שמור שנראה כמו חור. */}
+        <ReviewsBlock ratingOnly className="mt-6" />
       </OccasionIntro>
 
       <OpsFacts rows={rows} variant="strip" />
 
-      {/* 01 · גיליון התפריט, בחתך החלבי. ריק היום ⇒ אינו מרונדר. */}
-      <MenuSheet
-        id="menu"
-        num={num("menu")}
-        dishes={dishes}
-        title="החתך החלבי מהתפריט"
-        lede="המנות הן המנות של המסעדה. מה שמסומן חלבי כאן הוא מה שנכנס לתפריט של אירוע חלבי."
-      />
+      {/* 01 · המגדיר, מיד אחרי ההירו. הקונה מגיע עם כוונה קיימת. */}
+      <ConfiguratorSection num={num("quote")} />
+
+      {/* גיליון התפריט בחתך החלבי — הקריאה הארוכה של הדף, ולכן על קרם
+          (מדיניות ההחלפה ב־`index.css`). ריק היום ⇒ אינו מרונדר, ואין
+          מעטפת ריקה שנשארת מאחור. */}
+      {showMenuSheet ? (
+        <div data-band="cream">
+          <MenuSheet
+            id="menu"
+            num={num("menu")}
+            dishes={dishes}
+            title="החתך החלבי מהתפריט"
+            lede="המנות הן המנות של המסעדה. מה שמסומן חלבי כאן הוא מה שנכנס לתפריט של אירוע חלבי."
+          />
+        </div>
+      ) : null}
 
       <ServiceFormats
         id="formats"
@@ -451,35 +536,52 @@ export default function CateringDairy() {
 
       <DairyArgument num={num("dairy-argument")} />
 
+      {/* ‎`content/proof.ts` ריק ⇒ אין סקשן. אין ריבוע אפור ואין «בקרוב». */}
+      {proof ? (
+        <section id="proof" className="sec sec--alt">
+          <div className="wrap">
+            <SectionHeader num={num("proof")} eyebrow="מה אומרים" title="לקוחות שכבר הזמינו" />
+            <ReviewsBlock className="mt-2" />
+            <Gallery className="mt-10" columns={3} />
+          </div>
+        </section>
+      ) : null}
+
       <KitchenNote num={num("kitchen")} />
 
-      {/* ‎`seed` ריק בכוונה: `occasions.ts` קובע `eventTypeSeed: null` לדף
-          הזה, כי חלבי הוא חתך תפריט ולא סוג אירוע — אותו קונה יכול להיות
-          חברה, שמחה או חג. זריעת סוג אירוע כאן הייתה מתייגת ליד לא נכון,
-          וזה כשל גרוע יותר מתיוג חסר (02 §1.7). */}
-      <QuoteCta
-        num={num("quote")}
-        sourcePage={SOURCE_PAGE}
-        title="התפריט שלכם"
-        lede="ארבע שאלות על האירוע, ואז פרטים ליצירת קשר. ההצעה חוזרת בכתב."
-      />
+      {answered.length > 0 ? (
+        <div data-band="cream">
+          <FaqBand
+            id="faq"
+            num={num("faq")}
+            items={faqs}
+            eyebrow="לפני שמזמינים"
+            title="שאלות שנשאלות על תפריט חלבי"
+            lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
+          />
+        </div>
+      ) : null}
 
-      {/* המסלול השני, למי שגלל עד הטופס ובחר לא למלא אותו. */}
-      <WhatsAppBand
-        waLocation="quote_alt"
-        title="מעדיפים לכתוב?"
-        lede="אפשר לשלוח את פרטי האירוע בהודעה, ולהמשיך משם."
-        labelHe="עדיף לי בוואטסאפ"
-        callLocation="quote_alt"
-      />
+      {/* ═══ הבאנד הסוגר ═══
+          אותם שלושה ערוצים של ההירו, באותו סדר, בלי לבקש דבר חדש. */}
+      <section id="contact" className="sec sec--alt">
+        <div className="wrap">
+          <SectionHeader
+            eyebrow="לסגור את האירוע"
+            title="נבנה לכם תפריט חלבי"
+            lede="ספרו לנו כמה סועדים ומתי, ונחזור אליכם עם תפריט והצעה בכתב."
+          />
 
-      <FaqBand
-        id="faq"
-        num={num("faq")}
-        items={faqs}
-        title="שאלות שנשאלות על תפריט חלבי"
-        lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
-      />
+          <ContactBar
+            waLocation="footer"
+            primary="whatsapp"
+            quoteHref="#quote"
+            labels={{ quote: "לבנות את התפריט" }}
+            callLocation="footer"
+            framed={false}
+          />
+        </div>
+      </section>
 
       <NextSteps sourcePage={SOURCE_PAGE} links={NEXT} />
     </>

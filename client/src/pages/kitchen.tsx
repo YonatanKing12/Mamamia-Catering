@@ -4,6 +4,21 @@
  * ═══════════════════════════════════════════════════════════════════════
  *
  * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית ההמרה — זהה בששת העמודים שבבעלות הקובץ הזה
+ * ─────────────────────────────────────────────────────────────────────
+ * שלושה מסלולים קיימים בכל עמוד, ובאותו סדר בדיוק. הסדר הוא מה שמונע
+ * מהם לדלל זה את זה:
+ *
+ *   1. **הבנייה — משטח אחד בעמוד.** הוא `MenuConfigurator` כשיש מנות
+ *      וחבילות, והוא בנאי ארבע השאלות כשאין (`04 §6`: מגדיר בלי מנות
+ *      הוא מסך לבן; טופס ליד עובד ריק). פקד **ענבר ממולא אחד** מוביל
+ *      אליו, ואין באתר שני פקדי ענבר באותו viewport.
+ *   2. **וואטסאפ — ערוץ שני, אחד בכרום של העמוד.** ירוק, לעולם ענבר,
+ *      ותמיד אחרי שהבנייה כבר הוצעה. (הבנאי נושא וואטסאפ משלו בשלב
+ *      פרטי הקשר — זה רגע ההחלטה עצמו, ואינו פקד שני בעמוד.)
+ *   3. **טלפון — קישור טקסט.** לעולם לא כפתור, תמיד מתחת.
+ *
+ * ─────────────────────────────────────────────────────────────────────
  *  למה הדף הזה מחליף את `/kitchens` ואת שלושת דפי הסניף
  * ─────────────────────────────────────────────────────────────────────
  * ‏spec 01 §4 P-03…P-06 תיאר מפרק מטבחים ושלושה דפי סניף, וכולם נכתבו תחת
@@ -30,34 +45,21 @@
  *   · אזור שירות כלשהו, ובוודאי לא כזה שנגזר משלוש נקודות על מפה.
  *   · «כל יום», «הערב», «תוך שעה» — כל אחת מהן היא טענה על שעות ועל
  *     מהירות, ושתי המשבצות ריקות.
- *   · «בואו לטעום» — `tastingPolicy` ריק, ו־`liveMenuUrl` ריק. בלי תפריט
- *     חי של המסעדה אין סימן «מוגש היום», גם לא בגרסה מרוככת.
- *   · «מטבח הדגל». התג הזה קיים ב־`BRANCHES` ומרונדר בדף הבית, אבל כאן —
- *     בדף שכל נושאו הוא איזה מטבח מבשל — הוא היה נקרא כתשובה לשאלה הזאת.
+ *   · «בואו לטעום» — `tastingPolicy` ריק, ו־`liveMenuUrl` ריק.
+ *   · «מטבח הדגל». התג קיים ב־`BRANCHES`, אבל כאן — בדף שכל נושאו הוא
+ *     איזה מטבח מבשל — הוא היה נקרא כתשובה לשאלה הזאת.
  *
  * ─────────────────────────────────────────────────────────────────────
- *  כשהמשבצת תתמלא, זו מילוי ולא כתיבה מחדש
+ *  שכבת האמון — נוכחת, מחווטת, וריקה היום
  * ─────────────────────────────────────────────────────────────────────
- * ברגע ש־`SLOTS.cateringKitchenBranch` יימסר, `cateringKitchenRestaurant()`
- * מחזיר מסעדה, ה־lede של סקשן המסעדות נוקב בשמה, והשורה שלה ברשימה נושאת
- * תג. שום פסקה אינה משתנה, ואין מה לנסח מחדש. אותו דבר לגבי בלוק פרטי
- * המסעדות: `anyRestaurantDetail()` שקרי היום ⇒ הבלוק אינו קיים; כשתגיע
- * כתובת אחת הוא נולד עם שורה אחת, ולא עם ארבעה תאים ריקים.
+ * ‏`04 §5` קובע שבקטגוריה הזאת מונה ביקורות גלוי הוא אות האמון המרכזי.
+ * שלושת הנשאים משובצים כאן במקומם: `KashrutBadge` בהירו (נדלק היום —
+ * ‏`SLOTS.kashrutByBranch` מלא), `ReviewsBlock` ו־`Gallery` כסקשנים
+ * ממוספרים. שניהם מחזירים `null` היום, ולכן **הסקשן כולו אינו מרונדר**
+ * והספרה שלו אינה מוקצית — השער נבדק בעמוד, לפני הרינדור, כדי שלא
+ * ייווצר `.sec` ריק עם padding.
  *
- * ─────────────────────────────────────────────────────────────────────
- *  מספור, באנדים, ומה שאינו כאן
- * ─────────────────────────────────────────────────────────────────────
- * ‏§3.1: הספרות נקבעות **בזמן רינדור לפי מיקום**. `order` למטה הוא המקור
- * היחיד להן, ולכן סקשן שנשמט אינו משאיר חור ברצף — החור הזה הוא האות
- * הרועשת ביותר ל«תבנית עם חלקים חסרים».
- *
- * ‏INV-3 מתיר באנד כהה אחד למסלול, והפוטר כבר נושא אותו. לכן הסקשן המודגש
- * כאן הוא `.sec--alt`, לא `data-band="ink"`.
- *
- * ואין כאן: `Faq` (אין ולו תשובה שנמסרה), `TastingBand`, `GoogleReviews`
- * (אין ביקורת שניתן לייחס), `DriveTimeTable` (זמן נסיעה מאיפה?), ו־`Photo`
- * (אין ולו תצלום אחד; הדף נבנה כדי לעבוד עם אפס תמונות, לא כדי לשאת מסגרת
- * ממלאת מקום).
+ * ואין כאן: `Faq` (אין ולו תשובה שנמסרה), `TastingBand`, `DriveTimeTable`.
  */
 
 import * as React from "react";
@@ -65,7 +67,13 @@ import { useLocation } from "wouter";
 import { Head } from "@/components/seo/head";
 import { CtaPair, Ltr, Num, Prose, Rule, SectionHeader } from "@/components/primitives";
 import { QuoteBuilder } from "@/components/quote/quote-builder";
+import type { QuoteAnswers } from "@/components/quote/use-quote-builder";
+import { MenuConfigurator } from "@/components/configurator";
+import { Gallery, KashrutBadge, ReviewsBlock } from "@/components/trust";
 import { PHONE, SLOTS, filled, telLink, waLink } from "@/content/business";
+import { hasConfigurator } from "@/content/dish-categories";
+import { hasPackages } from "@/content/packages";
+import { hasGallery, hasGoogleReviews, hasTestimonials } from "@/content/proof";
 import {
   RESTAURANTS,
   RESTAURANT_FACT_LABEL_HE,
@@ -81,20 +89,25 @@ import {
 } from "@/content/locations";
 import { capturePhoneClick, captureWaIntent, buildWaHref } from "@/lib/lead-client";
 import { track } from "@/lib/analytics";
-import { kashrutClauseHe, pageMetaExtra, stripEmptyJsonLd } from "@/lib/page-meta-extra";
+import { pageMetaExtra, stripEmptyJsonLd } from "@/lib/page-meta-extra";
 import { buildBreadcrumbList, buildWebPage, type JsonLdNode } from "@/lib/seo";
 
 const META = pageMetaExtra()["/kitchen"];
 
+const SOURCE_PAGE = "/kitchen";
+
+/**
+ * המשטח שמוגש בפועל. נקרא פעם אחת בטעינת המודול — שני הבוררים קוראים
+ * מודולי תוכן סטטיים, ואין להם מצב שמשתנה בזמן ריצה.
+ */
+const CONFIGURATOR_LIVE = hasConfigurator() && hasPackages();
+
 /* ═══════════════════ עזרים מקומיים ═══════════════════ */
 
 /**
- * ‏`stripEmptyJsonLd` על כל צומת לפני שהוא נכנס לגרף.
- *
- * ‏`<Head>` מריץ `compact()` ממילא, וזו אינה סיבה לוותר: הבונים ב־`lib/seo.ts`
- * פולטים `null` לכל Slot ריק, והכלל «צומת נבדק במקום שבו הוא נבנה» הוא מה
- * שישרוד גם צומת שייכתב כאן ביד בעוד חצי שנה. `null` בתוך המערך מותר —
- * ‏`<Head>` מסנן אותו.
+ * ‏`stripEmptyJsonLd` על כל צומת לפני שהוא נכנס לגרף. `<Head>` מריץ
+ * ‏`compact()` ממילא, וזו אינה סיבה לוותר: הכלל «צומת נבדק במקום שבו הוא
+ * נבנה» הוא מה שישרוד גם צומת שייכתב כאן ביד בעוד חצי שנה.
  */
 const clean = (node: JsonLdNode | null): JsonLdNode | null =>
   node ? stripEmptyJsonLd(node) : null;
@@ -103,9 +116,9 @@ const clean = (node: JsonLdNode | null): JsonLdNode | null =>
  * קליק וואטסאפ: קליטה מקדימה ואז ניווט **באותו tick**. ה־href הסטטי נשאר
  * תקין ללא JS ולפתיחה בלשונית חדשה.
  *
- * ‏`WA_LOCATIONS` ב־`shared/lead-schema.ts` היא רשימה סגורה ואין בה ערך
- * למסלול הזה. `hero` ו־`footer` הם המיקומים בעמוד, וזה מה שהשדה מודד —
- * מדווח בדוח החזרה כבקשה להוסיף `kitchen`.
+ * ‏`WA_LOCATIONS` ב־`shared/lead-constants.ts` היא רשימה סגורה ואין בה ערך
+ * למסלול הזה. `hero` הוא המיקום בעמוד, וזה מה שהשדה מודד — מדווח בדוח
+ * החזרה כבקשה להוסיף `kitchen`.
  *
  * ‏TODO(01 §5.7): להעביר ל־`lib/whatsapp.ts openWhatsApp()` כשייווצר.
  */
@@ -129,14 +142,14 @@ const WA_OPENER = "היי, קראתי על המטבח ורוצה הצעה לקי
 
 /**
  * ‏L-2: אין תמונה מעל הקיפול, ואין כאן גם מסגרת במקומה. L-10: פקד ממולא
- * אחד, שני ghost, והטלפון הוא קישור טקסט מתחת ולא פקד שלישי.
+ * אחד (ענבר), ghost אחד (וואטסאפ), והטלפון הוא קישור טקסט מתחת.
  *
- * סיומת הכשרות מגיעה מ־`kashrutClauseHe()` ולעולם לא נכתבת כליטרל: היא
- * ההצהרה בעלת הסיכון הגבוה ביותר באתר, ומקורה היחיד הוא מודול העובדות.
+ * הכשרות **אינה** נכתבת עוד בתוך ה־lede. היא עברה ל־`KashrutBadge` —
+ * גלולה בשורת ההוכחה, שם היא נקראת כאות אמון ולא כזנב של פסקה, וזה
+ * גם המקום שאליו יצטרף מונה הביקורות ברגע שיימסר.
  */
 const KitchenHero = () => {
   const onWhatsApp = useWhatsAppHandoff("hero");
-  const kashrut = kashrutClauseHe("general");
 
   return (
     <section className="pb-sec pt-[clamp(2.5rem,7vw,5rem)]">
@@ -149,22 +162,29 @@ const KitchenHero = () => {
           לא מטבח ייצור.
         </h1>
 
-        <Prose size="lede" measure="lede" className="mt-7">
+        <Prose size="lede" measure="lede" className="mt-6">
           <p>
-            קייטרינג מאמאמיה מבושל במטבח של מסעדה איטלקית פעילה — מטבח שמבשל
+            קייטרינג מאמאמיה מבושל במטבח של מסעדה איטלקית פעילה. מטבח שמבשל
             לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.
-            {kashrut ? ` ${kashrut}.` : null}
           </p>
         </Prose>
 
+        {/* שורת ההוכחה. שני הנשאים שואלים שער בעצמם: הכשרות נדלקת היום,
+            הדירוג עדיין לא. אין כאן מסגרת ואין מרווח שמור לריק. */}
+        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <KashrutBadge variant="pill" size="sm" />
+          <ReviewsBlock ratingOnly />
+        </div>
+
         <CtaPair
-          className="mt-9"
+          className="mt-8"
           primary={{ label: "בנו תפריט לאירוע", href: "#quote" }}
           secondary={{
             label: "דברו איתנו בוואטסאפ",
             variant: "ghost",
             href: waLink(WA_OPENER),
             target: "_blank",
+            rel: "noopener noreferrer",
             onClick: onWhatsApp,
           }}
         />
@@ -174,7 +194,7 @@ const KitchenHero = () => {
           <a
             href={telLink()}
             data-tel=""
-            className="text-fg no-underline hover:text-accent"
+            className="font-semibold text-fg no-underline hover:text-accent"
             onClick={() => capturePhoneClick({ callLocation: "kitchen_hero" })}
           >
             <Num>{PHONE.display}</Num>
@@ -191,6 +211,10 @@ const KitchenHero = () => {
  * שלוש שורות, וכל אחת מהן נגזרת ישירות מהעובדה היחידה שנמסרה. אין כאן
  * מספר, אין מהירות, אין תדירות ואין אזור — רק מה ההבדל אומר בפועל.
  *
+ * הצורה היא שלושה כרטיסים ברדיוס 12px על משטח `--bg-form`, עם ספרה
+ * בענבר — הצורה של הקטגוריה (04 §4). הרשימה הקודמת הייתה שלושה קווים
+ * אופקיים על רקע ריק, וזו הייתה הצורה של מערכת הנייר שנמחקה.
+ *
  * השורה השלישית נושאת את השם המשפטי כשהוא מלא, כי זו ההוכחה הזולה ביותר
  * לכך שיש עסק רשום מאחורי הדף. `companyId` ריק, ולכן אין כאן ח.פ.
  */
@@ -204,14 +228,14 @@ const DifferenceSection = ({ num }: { num?: string }) => {
     },
     {
       title: "מנה שכבר עברה שולחן",
-      body: "מה שמגיע לאירוע הוא מה שהמטבח מבשל לסועדים שלו. האירוע שלכם אינו הפעם הראשונה שהמנה הזאת יוצאת מהמטבח.",
+      body: "מה שמגיע לאירוע הוא מה שהמטבח מבשל לסועדים שלו. האירוע שלכם אינו הפעם הראשונה שהמנה הזאת יוצאת.",
     },
     {
-      title: "יש עסק מאחורי זה",
+      title: "עסק רשום מאחורי האוכל",
       body: (
         <>
-          קייטרינג מאמאמיה אינו מטבח רפאים ואינו בישול ביתי. מאחוריו עומדת
-          מסעדה איטלקית שפועלת לקהל הרחב
+          לא מטבח רפאים ולא בישול ביתי. מאחורי הקייטרינג עומדת מסעדה איטלקית
+          שפועלת לקהל הרחב
           {legal ? <>, ומאחוריה ישות רשומה — {legal}</> : null}.
         </>
       ),
@@ -228,14 +252,17 @@ const DifferenceSection = ({ num }: { num?: string }) => {
           lede="מטבח של מסעדה ומטבח שנפתח כדי לשרת אירועים אינם אותו דבר. אלה שלושת ההבדלים."
         />
 
-        <ul className="m-0 list-none p-0">
+        <ul className="m-0 grid list-none gap-grid p-0 min-[760px]:grid-cols-3">
           {rows.map((row, i) => (
-            <li key={row.title} className="m-0">
-              {i > 0 ? <Rule /> : null}
-              <div className="max-w-body py-[1.7rem] pe-6">
-                <h3 className="m-0 font-serif text-lg font-bold">{row.title}</h3>
-                <p className="mt-2 text-xs leading-[1.6] text-fg-muted">{row.body}</p>
-              </div>
+            <li
+              key={row.title}
+              className="m-0 flex flex-col gap-3 rounded-card border border-solid border-[color:var(--rule)] bg-bg-form p-card"
+            >
+              <span className="sec__num num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="m-0 text-lg font-bold">{row.title}</h3>
+              <p className="m-0 text-xs leading-[1.6] text-fg-muted">{row.body}</p>
             </li>
           ))}
         </ul>
@@ -321,10 +348,10 @@ const RestaurantsSection = ({ num }: { num?: string }) => {
               <li key={r.id} className="m-0">
                 {i > 0 ? <Rule /> : null}
                 <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2 py-[1.6rem]">
-                  <h3 className="m-0 font-serif text-2xl font-medium">{r.nameHe}</h3>
+                  <h3 className="m-0 text-xl font-semibold">{r.nameHe}</h3>
 
                   {isCateringKitchen ? (
-                    <span className="rounded-pill border border-solid border-rule-control px-3 py-[.3rem] text-2xs font-semibold text-fg-subtle">
+                    <span className="rounded-pill border border-solid border-accent px-3 py-[.3rem] text-2xs font-semibold text-accent">
                       המטבח שמבשל את הקייטרינג
                     </span>
                   ) : null}
@@ -358,58 +385,102 @@ const RestaurantsSection = ({ num }: { num?: string }) => {
   );
 };
 
-/* ═══════════════════ 4 · התפריט שלכם ═══════════════════ */
+/* ═══════════════════ 4 · הביקורות · 5 · הצילומים ═══════════════════ */
 
 /**
+ * שני הסקשנים האלה אינם קיימים היום, ולא בגלל החלטה עיצובית: `proof.ts`
+ * ריק. השער נבדק **בעמוד** (`hasGoogleReviews()`, `hasGallery()`) ולא רק
+ * בתוך הקומפוננטה, כי `.sec` עם padding סביב קומפוננטה שמחזירה `null`
+ * הוא בדיוק החור שהמבחן «העמוד נראה גמור עם כל משבצת ריקה» אוסר.
+ */
+const ReviewsSection = ({ num }: { num?: string }) => (
+  <section id="reviews" className="sec sec--tight">
+    <div className="wrap">
+      {/* הכותרת נכתבת בעמוד ולא נמסרת ל־`ReviewsBlock`: המספר נקבע לפי
+          מיקום, ולקומפוננטה אין prop `num`. מבוקש בדוח החזרה. */}
+      <SectionHeader
+        num={num}
+        eyebrow="מה אומרים"
+        title="ביקורות בגוגל"
+        lede="הדירוג והמונה כפי שהם מופיעים בפרופיל הציבורי, עם קישור לאימות."
+      />
+      <ReviewsBlock />
+    </div>
+  </section>
+);
+
+const GallerySection = ({ num }: { num?: string }) => (
+  <section id="gallery" className="sec sec--tight">
+    <div className="wrap">
+      <SectionHeader num={num} eyebrow="מהאירועים" title="איך זה נראה על השולחן" />
+      <Gallery />
+    </div>
+  </section>
+);
+
+/* ═══════════════════ 6 · התפריט שלכם ═══════════════════ */
+
+/**
+ * משטח הבנייה. **אחד בעמוד**, והוא היעד של פקד הענבר היחיד בהירו.
+ *
  * ‏`showHeader={false}` והכותרת נכתבת כאן: המספר נקבע **לפי מיקום** (§3.1),
- * ורק העמוד יודע באיזה מיקום הבנאי יושב אצלו.
+ * ורק העמוד יודע באיזה מיקום המשטח יושב אצלו.
  *
  * העוגן `#quote` יושב על העטיפה ולא על הבנאי, כדי שקפיצה מה־CTA בהירו
  * ומהפס הדביק תנחת על הכותרת ולא מתחתיה.
  *
  * ‏`sourcePage` הוא prop חובה (02 §3.9) — הוא מה שמצמיד את הודעת האיסוף
  * ואת הייחוס לטופס בכל מסלול. `onSubmitted` מנווט ל־`/thanks?ref=`: מעבר
- * מסלול ולא החלפה במקום (02 §5.1).
+ * מסלול ולא החלפה במקום (02 §5.1), אחרת שום פלטפורמת מדידה לא רושמת המרה.
  *
- * הפסקה מתחת ל־lede היא מסלול הוואטסאפ השני בעמוד. הוא כאן ולא רק בהירו
- * כי מי שגלל עד הטופס ובחר לא למלא אותו הוא בדיוק מי שצריך ערוץ שני.
+ * אין כאן קישור וואטסאפ שני. הבנאי נושא אחד בשלב פרטי הקשר, וזה רגע
+ * ההחלטה; פקד נוסף בכותרת רק היה מושך החוצה מהטופס שכבר נפתח.
  */
-const QuoteSection = ({ num }: { num?: string }) => {
+const BuildSection = ({ num }: { num?: string }) => {
   const [, navigate] = useLocation();
-  const onWhatsApp = useWhatsAppHandoff("footer");
+
+  const onSubmitted = React.useCallback(
+    (ref: string, answers: QuoteAnswers) =>
+      navigate(`/thanks?ref=${encodeURIComponent(ref)}`, { state: { ref, answers } }),
+    [navigate],
+  );
 
   return (
-    <div id="quote" className="border-y border-solid border-[color:var(--rule)] bg-paper-3">
+    <div
+      id="quote"
+      className="border-y border-solid border-y-[color:var(--rule)] bg-bg-form"
+    >
       <div className="wrap pt-sec">
         <SectionHeader
           num={num}
           title="התפריט שלכם"
-          lede="ארבע שאלות על האירוע, ואז פרטים ליצירת קשר. אין שדה תקציב, ואין מה למלא כדי לראות מחיר."
+          lede={
+            CONFIGURATOR_LIVE
+              ? "בוחרים מנות מול המכסה של החבילה, ומשאירים פרטים. אין שדה תקציב."
+              : "ארבע שאלות על האירוע, ואז פרטים ליצירת קשר. אין שדה תקציב, ואין מה למלא כדי לראות מחיר."
+          }
+          reveal={false}
         />
-
-        <p className="mb-8 text-xs text-fg-subtle">
-          מעדיפים לכתוב?{" "}
-          <a
-            href={waLink(WA_OPENER)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-fg no-underline hover:text-accent"
-            onClick={onWhatsApp}
-          >
-            דברו איתנו בוואטסאפ
-          </a>
-        </p>
       </div>
 
-      <QuoteBuilder
-        id="quote-builder"
-        sourcePage="/kitchen"
-        showHeader={false}
-        className="!pt-0"
-        onSubmitted={(ref, answers) =>
-          navigate(`/thanks?ref=${encodeURIComponent(ref)}`, { state: { ref, answers } })
-        }
-      />
+      {CONFIGURATOR_LIVE ? (
+        <div className="wrap pb-sec">
+          <MenuConfigurator
+            id="quote-builder"
+            sourcePage={SOURCE_PAGE}
+            showHeader={false}
+            onSubmitted={onSubmitted}
+          />
+        </div>
+      ) : (
+        <QuoteBuilder
+          id="quote-builder"
+          sourcePage={SOURCE_PAGE}
+          showHeader={false}
+          className="!pt-0"
+          onSubmitted={onSubmitted}
+        />
+      )}
     </div>
   );
 };
@@ -417,11 +488,20 @@ const QuoteSection = ({ num }: { num?: string }) => {
 /* ═══════════════════ העמוד ═══════════════════ */
 
 export default function Kitchen() {
-  /* ‎§3.1 — מקור המספור היחיד. סקשן שנשמט אינו משאיר חור ברצף. */
+  /* ‎§3.1 — מקור המספור היחיד. סקשן שנשמט אינו משאיר חור ברצף, וחור
+     במספור הוא האות הרועשת ביותר ל«תבנית עם חלקים חסרים». */
   const showRestaurants = RESTAURANTS.length > 0;
-  const order = ["difference", showRestaurants ? "restaurants" : null, "quote"].filter(
-    (k): k is string => k !== null,
-  );
+  const showReviews = hasGoogleReviews() || hasTestimonials();
+  const showGallery = hasGallery();
+
+  const order = [
+    "difference",
+    showRestaurants ? "restaurants" : null,
+    showReviews ? "reviews" : null,
+    showGallery ? "gallery" : null,
+    "quote",
+  ].filter((k): k is string => k !== null);
+
   const num = (key: string) => {
     const i = order.indexOf(key);
     return i < 0 ? undefined : String(i + 1).padStart(2, "0");
@@ -445,9 +525,21 @@ export default function Kitchen() {
       />
 
       <KitchenHero />
-      <DifferenceSection num={num("difference")} />
-      {showRestaurants ? <RestaurantsSection num={num("restaurants")} /> : null}
-      <QuoteSection num={num("quote")} />
+
+      {/* ─── הפרק הקרם. מדיניות ההחלפה ב־`index.css` נוקבת במפורש
+          ב«‏kitchen/story prose» כמקרה קרם, וזו בדיוק הקריאה הארוכה של
+          העמוד: מה ההבדל אומר, ומי המסעדות. פרק אחד ולא שתי רצועות
+          מתחלפות — `RestaurantsSection` נושא `.sec--alt`, שבתוך קרם הוא
+          ‎`--cream-2`, ולכן שני הסקשנים נקראים כשני עמודים של אותו פרק.
+          ההירו, ההוכחה ומשטח הבנייה נשארים כהים: שם יושבות הפעולות. ─── */}
+      <div data-band="cream">
+        <DifferenceSection num={num("difference")} />
+        {showRestaurants ? <RestaurantsSection num={num("restaurants")} /> : null}
+      </div>
+
+      {showReviews ? <ReviewsSection num={num("reviews")} /> : null}
+      {showGallery ? <GallerySection num={num("gallery")} /> : null}
+      <BuildSection num={num("quote")} />
     </>
   );
 }

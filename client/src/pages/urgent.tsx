@@ -10,44 +10,41 @@
  * תימסר. הדף הזה נבנה כדי להיות כן ושימושי **בלי** השעה.
  *
  * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית הפעולה — החריג היחיד בסבב, ומדוע
+ * ─────────────────────────────────────────────────────────────────────
+ * בארבעת הדפים האחרים שלי הדירוג הוא מגדיר ← וואטסאפ ← טלפון. כאן הוא
+ * מתהפך, ולא כהעדפה: `shared/routes.ts` מצהיר על המסלול הזה
+ * ‎`ctaMode: "phone"`, `stickyBar: "phone"`, `hasBuilder: false`, וזו
+ * הסמכות על `RouteDef`. הדירוג בפועל:
+ *
+ *   1. **טלפון** — המספר עצמו הוא הפקד הממולא בענבר, בראש הדף.
+ *   2. **וואטסאפ** — ירוק, לצדו בהירו ובבאנד הסוגר.
+ *   3. **המגדיר** — מוצע כבלוק מסומן ל־`/quote`, עמוד נפרד שהמבקר בוחר
+ *      להיכנס אליו. ‏§4 P-15 נוקב בנוסח: «אם זה לא דחוף — בנו תפריט».
+ *
+ * ‎**המגדיר אינו מרונדר בדף הזה, וזו הכרעה ולא השמטה.** ‎§4 P-15 גובר
+ * במפורש על 02 §1.5: טופס בן ארבעה שלבים הוא הכלי הלא נכון למי שצריך
+ * אוכל בעוד ארבע שעות, וטופס מקופל עדיין עולה יעד גלילה ונתח קוד. אם
+ * הבריף של הסבב ידרוש מגדיר גם כאן — `hasBuilder` הוא זה שצריך להתהפך,
+ * ב־`shared/routes.ts`, שאינו בבעלות הקובץ הזה. מדווח.
+ *
+ * ─────────────────────────────────────────────────────────────────────
  *  שלוש טענות שהמפרט כותב, ושאינן נכתבות כאן
  * ─────────────────────────────────────────────────────────────────────
  *  1. **«שלושה מטבחים».** ‎§4 P-15 מצטט כותרת `צריכים אוכל להיום? שלושה
  *     מטבחים זה שלוש הזדמנויות שזה יסתדר.` — ‏`content/business.ts`
  *     (מקטע המיצוב, 30 ביולי 2026) קובע שהקייטרינג מבושל במטבח של **אחת**
- *     מהמסעדות. «שלושה מטבחים» היא בדיוק ההנחה שנמחקה מכל האתר, והיא
- *     אסורה בכל דף, meta ו־JSON-LD. הקיבולת שהדף נשען עליה היא מטבח
- *     מסעדה פעילה אחד, וזו גם היחידה שנמסרה.
- *  2. **«משלוח מהיר».** ‎`lib/page-meta-extra.ts` כבר הסיר אותה מה־title.
- *     אין לה שדה ב־`business.ts`, והיא התחייבות תפעולית לכל דבר.
- *  3. **`ProductionSheet` בשלוש עמודות, טלפון וואטסאפ לכל מטבח.** ‏§4
- *     P-15 מונה אותו; הוא נגזר ישירות ממודל שלושת המטבחים שנדחה, ואין
- *     מספר טלפון סניפי מאומת (`phoneFor()` מחזיר את המספר המרכזי בלבד).
+ *     מהמסעדות. «שלושה מטבחים» היא בדיוק ההנחה שנמחקה מכל האתר.
+ *  2. **«משלוח מהיר».** אין לה שדה ב־`business.ts`, והיא התחייבות
+ *     תפעולית לכל דבר.
+ *  3. **`ProductionSheet` בשלוש עמודות, טלפון וואטסאפ לכל מטבח.** נגזר
+ *     ישירות ממודל שלושת המטבחים שנדחה, ואין מספר טלפון סניפי מאומת.
  *     במקומו: מספר אחד, ברור, בראש הדף.
  *
  * ואין כאן **טענת מהירות** בשום ניסוח: לא «תוך שעתיים», לא «מיידי», לא
  * «זמין עכשיו» ולא «עונים מיד». `responseTime` ו־`staffedHours` ריקים.
  * זכייה בקלאסטר הזה ואז החמצה של הבטחה היא כשל מוניטין בלי דרך חזרה
- * בשוק שמונע מביקורות, ועם שמות שלוש מסעדות מחוברים אליו.
- *
- * ─────────────────────────────────────────────────────────────────────
- *  מה הדף כן אומר
- * ─────────────────────────────────────────────────────────────────────
- * שהתשובה לשאלה «אפשר להיום?» תלויה בשעה, בכמות ובמה שכבר על האש —
- * ושהדרך היחידה לדעת היא לשאול. זו אמירה נכונה בלי אף משבצת מלאה, והיא
- * גם מה שמצדיק מבנית את החלטת «בלי בנאי».
- *
- * ─────────────────────────────────────────────────────────────────────
- *  בלי בנאי בעמוד — הכרעה, לא השמטה
- * ─────────────────────────────────────────────────────────────────────
- * ‎§4 P-15 מכריע במפורש וגובר על 02 §1.5: **אין בנאי הצעה בדף הזה.** לא
- * מתחת לקיפול ולא מקופל. `shared/routes.ts` מצהיר `hasBuilder: false`
- * ו־`ctaMode: "phone"` בהתאם. טופס בן ארבעה שלבים הוא הכלי הלא נכון למי
- * שצריך אוכל בעוד ארבע שעות, וטופס מקופל עדיין עולה יעד גלילה ונתח קוד.
- *
- * מסלול הבנאי **מוצע** — כקישור טקסט מסומן ל־`/quote`, שהוא עמוד נפרד
- * שהמבקר בוחר להיכנס אליו. ‏§4 P-15 נוקב בנוסח: «אם זה לא דחוף — בנו
- * תפריט». שלושת המסלולים בדף: טלפון · וואטסאפ · `/quote`.
+ * בשוק שמונע מביקורות.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  הקאט־אוף
@@ -58,32 +55,35 @@
  * כלשונה ומסומנת שעון ישראל; היא לעולם אינה מחושבת משעון המכשיר.
  *
  * ─────────────────────────────────────────────────────────────────────
- *  פס ה־CTA הדביק
+ *  המערכת החזותית
  * ─────────────────────────────────────────────────────────────────────
- * ‎`stickyBar: "phone"` (`shared/routes.ts`). הפס מגיע מ־`PageShell` דרך
- * ‎`RouteDef` ולא מכאן.
+ * ‎04 גובר על 03 §2–§6. אין בקובץ אף `font-serif` ואף hex; הענבר נושא
+ * את הפעולה, והוא כאן **מבטא תפעולי** ולא חגיגי: הוא צובע את המספר
+ * שמתקשרים אליו, את שעת החיתום ואת הספרות הסידוריות, ותו לא.
  */
 
 import * as React from "react";
 import { Link } from "wouter";
 import { Head } from "@/components/seo/head";
-import { Num, Prose, Rule, SectionHeader } from "@/components/primitives";
+import { Num, Prose, SectionHeader } from "@/components/primitives";
 import {
   FaqBand,
   KitchenNote,
   MenuSheet,
   OccasionIntro,
   OpsFacts,
-  WhatsAppBand,
   type DishLine,
   type FaqItem,
   type OpsFactRow,
 } from "@/components/bands";
+import { ContactBar, Gallery, ReviewsBlock } from "@/components/trust";
 import { PHONE, SLOTS, filled, telLink } from "@/content/business";
 import { dishesForCut, provenanceMark } from "@/content/dishes";
 import { cateringServiceArea } from "@/content/locations";
 import { occasionById } from "@/content/occasions";
-import { capturePhoneClick } from "@/lib/lead-client";
+import { hasAnyProof } from "@/content/proof";
+import { buildWaHref, capturePhoneClick, captureWaIntent, newRef } from "@/lib/lead-client";
+import { track } from "@/lib/analytics";
 import { kashrutClauseHe, resolveExtraMeta, stripEmptyJsonLd } from "@/lib/page-meta-extra";
 import type { PageMetaExtra } from "@/lib/page-meta-extra";
 import { buildBreadcrumbList, buildFaqPage, buildService, buildWebPage } from "@/lib/seo";
@@ -96,6 +96,46 @@ const SOURCE_PAGE = "/urgent";
 /** מקור יחיד לשם, לכוונה ולחתך התפריט — לא נכתבים כאן. */
 const OCCASION = occasionById("urgent");
 
+/** הטענה היחידה המותרת על מוצא האוכל, בלשון יחיד. נכתבת פעם אחת. */
+const KITCHEN_FACT_HE =
+  "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.";
+
+/* ═══════════════════ מסלול הוואטסאפ בהירו ═══════════════════ */
+
+/**
+ * ‎`waLocation: "urgent"` ולא `"hero"` — זהו הערך הייעודי ב־
+ * ‎`shared/lead-constants.ts`, והוא מה שמפריד את הלידים האלה בדוח. ליד
+ * דחוף שנרשם כ־`hero` נבלע בין כל השאר, וזה בדיוק הליד שצריך להיענות
+ * ראשון.
+ *
+ * חוזה 02 §6.1–§6.3: קליטה מקדימה ואז ניווט **באותו tick**, בלי `await`.
+ * ‎TODO(01 §5.7): מקומו ב־`lib/whatsapp.ts openWhatsApp()` — מדווח.
+ */
+function useHeroWhatsApp() {
+  const [ref] = React.useState(() => newRef());
+  const href = React.useMemo(() => buildWaHref({}, ref), [ref]);
+
+  const onClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement & HTMLAnchorElement>>(
+    (e) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+
+      track("whatsapp_click", { wa_location: "urgent", has_lead: false });
+      captureWaIntent({ ref, waLocation: "urgent" });
+      track("whatsapp_handoff", { lead_ref: ref, wa_location: "urgent" });
+
+      const mobile =
+        typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (mobile) {
+        e.preventDefault();
+        window.location.href = href;
+      }
+    },
+    [href, ref],
+  );
+
+  return { href, onClick };
+}
+
 /* ═══════════════════ באנד הקאט־אוף ═══════════════════ */
 
 /**
@@ -105,6 +145,9 @@ const OCCASION = occasionById("urgent");
  * INV-9: השעה מוצגת **כלשונה כפי שנמסרה**, מסומנת שעון ישראל, ולעולם
  * אינה נגזרת מ־`new Date()` של המכשיר. השעון של המבקר אינו נאמן, והפרש
  * של שעה בדף הזה הוא הזמנה שלא תעמוד.
+ *
+ * השעה עצמה היא המספר החשוב ביותר בדף, ולכן היא — ולא הכותרת — נושאת
+ * את הענבר. הסקאלה נשארת מרוסנת (04 §3): `text-2xl`, לא כותרת ענק.
  */
 function CutoffBand({ num }: { num?: string }) {
   if (!filled(SLOTS.sameDayCutoff)) return null;
@@ -112,16 +155,9 @@ function CutoffBand({ num }: { num?: string }) {
   return (
     <section id="cutoff" className="sec sec--alt sec--tight rule-top">
       <div className="wrap">
-        <SectionHeader
-          num={num}
-          eyebrow="הזמנה לאותו יום"
-          title="עד מתי אפשר להזמין להיום"
-          reveal={false}
-        />
+        <SectionHeader num={num} eyebrow="הזמנה לאותו יום" title="עד מתי אפשר להזמין להיום" />
 
-        {/* ‎§4.6: `Num` חובה על שעה — Frank Ruhl Libre היא נושאת הספרות,
-            ו־Assistant אינה מיישרת טור שיש בו 1. */}
-        <p className="m-0 font-serif text-2xl font-medium">
+        <p className="m-0 text-2xl font-bold text-accent">
           <Num>{SLOTS.sameDayCutoff}</Num>
         </p>
         <p className="m-0 mt-2 max-w-body text-xs text-fg-subtle">
@@ -217,20 +253,19 @@ function CallChecklist({ num }: { num?: string }) {
           eyebrow="לפני שמתקשרים"
           title="ארבעה דברים שיקצרו את השיחה"
           lede="אף אחד מהם אינו טופס. זה פשוט מה שנשאל בטלפון, ולכן עדיף שיהיה ביד."
-          reveal={false}
         />
 
-        <ol className="m-0 list-none p-0">
+        <ol className="m-0 grid list-none gap-grid p-0 [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
           {CALL_POINTS.map((point, i) => (
-            <li key={point.titleHe} className="m-0">
-              {i > 0 ? <Rule /> : null}
-              <div className="max-w-body py-[1.7rem] pe-6">
-                <span className="num block font-serif text-lg font-medium text-fg-subtle">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-3 font-serif text-lg font-bold">{point.titleHe}</h3>
-                <p className="mt-2 text-xs leading-[1.6] text-fg-muted">{point.bodyHe}</p>
-              </div>
+            <li
+              key={point.titleHe}
+              className="m-0 rounded-card border border-solid border-[color:var(--rule)] bg-bg-alt p-card transition-colors duration-state ease-house hover:border-accent"
+            >
+              <span className="sec__num num">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="mt-3 text-lg font-semibold">{point.titleHe}</h3>
+              <p className="mt-2 max-w-none text-xs leading-[1.6] text-fg-muted">
+                {point.bodyHe}
+              </p>
             </li>
           ))}
         </ol>
@@ -244,13 +279,14 @@ function CallChecklist({ num }: { num?: string }) {
 type PageFaq = FaqItem & { answerHe: string | null };
 
 /**
- * ‎§4 P-15 מבקש שלוש. ארבע נכתבות, וכל אחת נגזמת לחוד — התשובות שקשורות
- * למשבצת נדלקות מאליהן ביום שהיא תימסר. שאלה בלי תשובה אינה מרונדרת,
- * ואותו סינון בדיוק מזין את ה־`FAQPage`.
- *
  * ‎«אפשר להיום?» היא השאלה הראשונה בדף, והתשובה עליה היא `sameDayCutoff`
  * — ריקה. היא **לא** מקבלת כאן תשובה «שנשמעת נכון». זו הנקודה שכל הדף
  * נבנה סביבה.
+ *
+ * מה שכן עונה היום: תיאור התהליך, עובדת המטבח, והכשרות דרך הבורר —
+ * שלושתם נכונים כשכל משבצת ריקה, ושלושתם משפטים שלמים שעומדים בפני
+ * עצמם מחוץ להקשר. בלעדיהם `FAQPage` לא היה נפלט כלל מהדף בעל הכוונה
+ * הגבוהה ביותר באתר.
  */
 function faqItems(): PageFaq[] {
   const area = cateringServiceArea();
@@ -258,7 +294,7 @@ function faqItems(): PageFaq[] {
   return [
     {
       id: "faq-same-day",
-      questionHe: "אפשר להזמין להיום?",
+      questionHe: "אפשר להזמין קייטרינג להיום?",
       answerHe: filled(SLOTS.sameDayCutoff) ? SLOTS.sameDayCutoff : null,
     },
     {
@@ -268,6 +304,20 @@ function faqItems(): PageFaq[] {
          התחייבות זמן — ולכן הוא נכון גם כשכל משבצת ריקה. */
       answerHe:
         "מתקשרים. אומרים כמה אנשים, לאיזו שעה ולאיזו כתובת, ועוברים על מה שאפשר להוציא היום. מי שמעדיף לכתוב — אפשר גם בוואטסאפ.",
+    },
+    {
+      id: "faq-who-cooks",
+      questionHe: "מי מבשל את האוכל?",
+      answerHe: KITCHEN_FACT_HE,
+    },
+    {
+      id: "faq-kashrut",
+      questionHe: "האם האוכל כשר?",
+      /* דרך הבורר, כלשון הבעלים. לעולם לא כמחרוזת קשיחה (LAW 1). */
+      answerHe: (() => {
+        const k = kashrutClauseHe("general");
+        return k ? `הקייטרינג ${k}.` : null;
+      })(),
     },
     {
       id: "faq-minimum",
@@ -289,6 +339,8 @@ function faqItems(): PageFaq[] {
 /* ═══════════════════ העמוד ═══════════════════ */
 
 export default function Urgent() {
+  const wa = useHeroWhatsApp();
+
   /* החתך מ־`occasions.ts` (`platters` + `antipasti`) ולא רשימה שנכתבת
      כאן. ריק היום ⇒ `MenuSheet` אינו מרונדר. וגם כשיימלא — הכותרת אינה
      טוענת «מה יש היום»: זמינות יומית היא נתון תפעולי שאיש לא מסר. */
@@ -306,17 +358,22 @@ export default function Urgent() {
 
   const rows = opsRows();
   const faqs = faqItems();
+  const answered = faqs.filter(
+    (f): f is FaqItem & { answerHe: string } => f.answerHe !== null,
+  );
   const showCutoff = filled(SLOTS.sameDayCutoff);
   const showMenuSheet = dishes.length > 0;
+  const proof = hasAnyProof();
 
-  /* ‎§3.1 — המספור נקבע לפי מיקום. הרצועה התפעולית ובלוק יצירת הקשר
-     אינם ממוספרים: הם אינם פרקים בגיליון, הם הדרך לפנות. */
+  /* ‎§3.1 — המספור נקבע לפי מיקום. הרצועה התפעולית והבאנד הסוגר אינם
+     ממוספרים: הם אינם פרקים בגיליון, הם הדרך לפנות. */
   const order = [
     showCutoff ? "cutoff" : null,
     "call",
     showMenuSheet ? "menu" : null,
+    proof ? "proof" : null,
     "kitchen",
-    faqs.some((f) => f.answerHe) ? "faq" : null,
+    answered.length > 0 ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
   const num = (key: string) => {
@@ -347,7 +404,7 @@ export default function Urgent() {
             }),
           ),
           buildBreadcrumbList(META.breadcrumb),
-          buildFaqPage(faqs),
+          buildFaqPage(answered),
         ]}
       />
 
@@ -359,9 +416,7 @@ export default function Urgent() {
           <>
             צריכים אוכל להיום?
             <br />
-            זו שיחת טלפון,
-            <br />
-            לא טופס.
+            זו שיחת טלפון, לא טופס.
           </>
         }
         lede="אם זה אפשרי היום תלוי בשעה, בכמות ובמה שכבר עומד על האש — ואת זה אי אפשר לדעת מטופס. מתקשרים, אומרים כמה אנשים ולאיזו שעה, ובודקים יחד מה אפשר להוציא."
@@ -381,75 +436,134 @@ export default function Urgent() {
              מדווח בדוח החזרה כבקשה להוסיף `data-tel` ל־`ButtonProps`. */
           onClick: () => capturePhoneClick({ callLocation: "hero" }),
         }}
+        /* המסלול השני, מיד לצד המספר ולא באנד נפרד בהמשך: מי שלא יכול
+           לדבר עכשיו — בפגישה, בנסיעה, בבית מלא — צריך למצוא את זה בלי
+           לגלול. */
+        secondary={{
+          label: "לכתוב לנו בוואטסאפ",
+          variant: "wa",
+          href: wa.href,
+          target: "_blank",
+          rel: "noopener noreferrer",
+          onClick: wa.onClick,
+        }}
         showPhone={false}
         callLocation="hero"
-      />
+      >
+        {/* INV-6: קליק על וואטסאפ כותב שורת ליד לפני שנפתחת האפליקציה,
+            ולכן הודעת סעיף 11 צמודה לפקד. */}
+        <Prose
+          size="fine"
+          measure="body"
+          className="mt-3 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
+        >
+          <p>
+            בלחיצה על וואטסאפ נשמרת אצלנו פנייה עם הפרטים שמופיעים בהודעה.{" "}
+            <a href="/privacy" className="underline underline-offset-[.22em]">
+              מדיניות הפרטיות
+            </a>
+          </p>
+        </Prose>
+
+        {/* ‎04 §5. ריק היום ⇒ אינו מרונדר. */}
+        <ReviewsBlock ratingOnly className="mt-6" />
+      </OccasionIntro>
 
       {/* ממתין למשבצת. ריקה ⇒ אין באנד, ואין רמז שחסר כאן משהו. */}
       <CutoffBand num={num("cutoff")} />
 
       <OpsFacts rows={rows} variant="strip" />
 
-      {/* מסלול שני. `waLocation="urgent"` הוא הערך הייעודי ב־
-          `shared/lead-schema.ts`, והוא מה שמפריד את הלידים האלה בדוח.
-          יושב מיד אחרי ההירו: הדרך לפנות חייבת להישאר קצרה, וכשיימסרו
-          מנות `MenuSheet` יידחף מתחתיו ולא מעליו. */}
-      <WhatsAppBand
-        id="contact"
-        waLocation="urgent"
-        callLocation="contact"
-        title="קל יותר לכתוב?"
-        lede="שלחו בהודעה כמה אנשים, לאיזו שעה ולאיזו כתובת — ואנחנו נחזור אליכם."
-        labelHe="כתבו לנו בוואטסאפ"
-        phoneLeadHe="או בטלפון"
-      />
-
       <CallChecklist num={num("call")} />
 
-      {/* 0N · גיליון קצר. ריק היום. הכותרת אינה טוענת «מה יש היום» —
-          זמינות יומית היא נתון שאיש לא מסר. בלי מחירים ובלי «הוסיפו
-          לתפריט שלי»: אין בנאי בדף שיאסוף אותם. */}
-      <MenuSheet
-        id="menu"
-        num={num("menu")}
-        dishes={dishes}
-        grouping="flat"
-        title="מה יוצא מהמטבח"
-        lede="המנות של המסעדה. בהזמנה לאותו יום עוברים עליהן בטלפון ומרכיבים מהן את מה שאפשר."
-      />
+      {/* גיליון קצר. ריק היום. הכותרת אינה טוענת «מה יש היום» — זמינות
+          יומית היא נתון שאיש לא מסר. בלי מחירים ובלי «הוסיפו לתפריט
+          שלי»: אין בנאי בדף שיאסוף אותם. */}
+      {showMenuSheet ? (
+        <div data-band="cream">
+          <MenuSheet
+            id="menu"
+            num={num("menu")}
+            dishes={dishes}
+            grouping="flat"
+            title="מה יוצא מהמטבח"
+            lede="המנות של המסעדה. בהזמנה לאותו יום עוברים עליהן בטלפון ומרכיבים מהן את מה שאפשר."
+          />
+        </div>
+      ) : null}
+
+      {proof ? (
+        <section id="proof" className="sec sec--alt">
+          <div className="wrap">
+            <SectionHeader num={num("proof")} eyebrow="מה אומרים" title="לקוחות שכבר הזמינו" />
+            <ReviewsBlock className="mt-2" />
+            <Gallery className="mt-10" columns={3} />
+          </div>
+        </section>
+      ) : null}
 
       <KitchenNote num={num("kitchen")} />
 
-      {/* המסלול השלישי — הבנאי, כעמוד נפרד. ‎§4 P-15 אוסר בנאי **בדף
-          הזה** ונוקב בנוסח הקישור. זה בלוק מסומן ולא שורה קבורה: מי
-          שנחת כאן בטעות והאירוע שלו בעוד שבועיים צריך למצוא אותו. */}
+      {/* המסלול השלישי — המגדיר, כעמוד נפרד. ‎§4 P-15 אוסר בנאי **בדף
+          הזה** ונוקב בנוסח הקישור. זה כרטיס מסומן בגבול ענבר ולא שורה
+          קבורה: מי שנחת כאן בטעות והאירוע שלו בעוד שבועיים צריך למצוא
+          אותו בלי לחפש. */}
       <section id="not-urgent" className="sec sec--tight">
         <div className="wrap">
-          <div className="max-w-body border-s border-solid border-s-[color:var(--rule)] ps-[1.1rem]">
-            <h2 className="m-0 font-serif text-xl font-medium">אם זה לא דחוף</h2>
+          <div className="max-w-body rounded-card border border-solid border-[color:var(--rule-control)] bg-bg-alt p-card">
+            <h2 className="m-0 text-xl font-bold">אם זה לא דחוף</h2>
             <Prose size="body" measure="body" className="mt-3">
               <p>
-                לאירוע שיש לו תאריך, עדיף לבנות תפריט ולקבל הצעה בכתב.{" "}
-                <Link
-                  href="/quote"
-                  className="text-fg underline underline-offset-[.22em] hover:text-accent"
-                >
-                  בנו תפריט
-                </Link>{" "}
-                — ארבע שאלות, ואנחנו חוזרים אליכם.
+                לאירוע שיש לו תאריך, עדיף לבנות תפריט ולקבל הצעה בכתב. אותו מטבח, רק בלי
+                לחץ של שעות.
               </p>
             </Prose>
+            <Link
+              href="/quote"
+              className="mt-4 inline-flex items-center gap-[.4rem] rounded-pill border border-solid border-accent px-[1.05rem] py-[.5rem] text-sm font-semibold text-accent no-underline transition-colors duration-state ease-house hover:bg-accent hover:text-accent-foreground"
+            >
+              לבנות את התפריט לאירוע
+            </Link>
           </div>
         </div>
       </section>
 
-      <FaqBand
-        id="faq"
-        num={num("faq")}
-        items={faqs}
-        title="שאלות שנשאלות בטלפון"
-        lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
-      />
+      {answered.length > 0 ? (
+        <div data-band="cream">
+          <FaqBand
+            id="faq"
+            num={num("faq")}
+            items={faqs}
+            eyebrow="לפני שמתקשרים"
+            title="שאלות שנשאלות בטלפון"
+            lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
+          />
+        </div>
+      ) : null}
+
+      {/* ═══ הבאנד הסוגר ═══
+          אותם שני ערוצים של ההירו, באותו סדר: וואטסאפ ממולא, הטלפון
+          מתחתיו. `showQuote={false}` — מסלול המגדיר כבר יושב בכרטיס
+          המסומן שמעל, ופקד «הצעה» כאן היה מסלול רביעי בדף שכל עניינו
+          לקצר. */}
+      <section id="contact" className="sec sec--alt">
+        <div className="wrap">
+          <SectionHeader
+            eyebrow="לדבר עכשיו"
+            title="קל יותר לכתוב?"
+            lede="שלחו בהודעה כמה אנשים, לאיזו שעה ולאיזו כתובת — ואנחנו נחזור אליכם."
+          />
+
+          <ContactBar
+            waLocation="urgent"
+            primary="whatsapp"
+            showQuote={false}
+            labels={{ wa: "לכתוב לנו בוואטסאפ", phoneLead: "או פשוט חייגו" }}
+            callLocation="contact"
+            framed={false}
+          />
+        </div>
+      </section>
     </>
   );
 }

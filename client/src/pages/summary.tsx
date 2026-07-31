@@ -17,6 +17,27 @@
  * אין בעמוד טבלת שורות, אין סכומים, ואין «סה״כ».
  *
  * ─────────────────────────────────────────────────────────────────────
+ *  שלוש רצועות — ולמה המסמך עצמו הוא הרצועה הקרם היחידה באתר הזה
+ * ─────────────────────────────────────────────────────────────────────
+ * מדיניות ההחלפה ב־`index.css`: כהה לכל משטחי הפעולה, קרם לקריאה
+ * הארוכה בלבד. בעמוד הזה החלוקה יוצאת מעצמה מהתפקיד:
+ *
+ *   כהה  · הכותרת, מספר הפנייה ומצבי הטעינה — מה שקוראים ראשון.
+ *   קרם  · **המסמך.** ‎`BriefCard`, מה כלול, התנאים ומי מבשל. זו הקריאה
+ *          הארוכה, זה מה שנשלח למאשר, וזה גם מה שיוצא למדפסת — וגיליון
+ *          נייר של דיו כהה הוא הדרך המהירה ביותר לאבד לקוח שינסה להדפיס
+ *          את מה שהוא אמור להביא לישיבה.
+ *   כהה  · כל פעולה: וואטסאפ, טלפון, שיתוף, המשך.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית ההמרה — זהה בששת העמודים, עם אותה היפוך כמו ב־`/thanks`
+ * ─────────────────────────────────────────────────────────────────────
+ * הבנייה כבר קרתה, ולכן פקד הענבר היחיד בעמוד אינו «בנו תפריט» אלא
+ * ‎**«שלחו את הסיכום»** — הקליק השני שהעמוד הזה כולו קיים בשבילו, ושום
+ * מנגנון אחר באתר אינו מרוויח. וואטסאפ ירוק אחריו, טלפון כקישור טקסט,
+ * והמשך לבנייה רק בתחתית דרך `NextSteps`.
+ *
+ * ─────────────────────────────────────────────────────────────────────
  *  כלל הגישה — למה הקוד לבדו אינו מפתח
  * ─────────────────────────────────────────────────────────────────────
  * ‎`MM-XXXXXX` הוא שישה תווים מאלפבית בן 32. הוא מוקרא בטלפון, נשלח
@@ -68,7 +89,7 @@
 import * as React from "react";
 import { useSearch } from "wouter";
 import { Head } from "@/components/seo/head";
-import { Button, Ltr, Num, Prose, Rule } from "@/components/primitives";
+import { Button, Ltr, Num, Prose } from "@/components/primitives";
 import { BriefCard } from "@/components/quote/brief-card";
 import { TermsStrip } from "@/components/quote/legal-blocks";
 import { KITCHEN_NOTE_STATEMENT_HE, NextSteps, WhatsAppBand } from "@/components/bands";
@@ -332,8 +353,10 @@ function ShareRow({ leadRef }: { leadRef: string }) {
   };
 
   return (
+    /* הפקד הממולא היחיד בעמוד. ראו «היררכיית ההמרה» בראש הקובץ:
+       השיתוף הוא הקליק השני שהעמוד קיים בשבילו. */
     <div data-print="hide" className="mt-9 flex flex-wrap items-center gap-x-4 gap-y-3">
-      <Button variant="ghost" size="sm" onClick={() => void onShare()}>
+      <Button variant="primary" onClick={() => void onShare()}>
         {copied ? "הקישור הועתק" : "שלחו את הסיכום"}
       </Button>
       <Button variant="link" onClick={onPrint}>
@@ -449,7 +472,7 @@ function ContactBlock({ record, leadRef }: { record: SummaryRecord | null; leadR
   };
 
   return (
-    <div className="mt-10">
+    <div>
       <p className="eyebrow m-0">איך מגיעים אלינו</p>
 
       {href ? (
@@ -535,17 +558,25 @@ export default function Summary() {
         jsonLd={[stripEmptyJsonLd(buildWebPage(META))]}
       />
 
-      <section className="pb-sec pt-[clamp(2.5rem,7vw,4.5rem)]">
+      {/* ═══ רצועה 1 · כהה — הכותרת, המספר, והמצבים ═══════════════ */}
+      <section className="pb-sec-tight pt-[clamp(2.5rem,7vw,4.5rem)]">
         <div className="wrap">
           <div className="max-w-confirm">
             {/* ─── הבלוק העליון. הוא גם הבלוק הראשון בהדפסה (01 §4 P-19). ─── */}
             <p className="eyebrow m-0">סיכום פנייה</p>
             <h1 className="mt-4 text-3xl">מה ביקשתם מאיתנו</h1>
 
+            {/* מספר הפנייה הוא החפץ שהמסמך הזה נסוב עליו: הוא מוקרא
+                בטלפון ומודבק בהודעה. כרטיס מוגבה עם תווית ענבר, ספרות
+                טבלאיות, בידוד דו־כיווני, וסימון בקליק אחד. */}
             {leadRef ? (
-              <div className="mt-8 border-t-[length:var(--bw-rule)] border-solid border-t-[color:var(--fg)] pt-5">
-                <p className="eyebrow m-0">מספר פנייה</p>
-                <p className="mt-2 select-all font-serif text-2xl font-medium num">
+              <div className="mt-8 rounded-card border border-solid border-[color:var(--rule)] bg-bg-form p-card">
+                {/* לא `.eyebrow`: היא קובעת `color:var(--fg-subtle)` באותה
+                    שכבת utilities, ו־`text-accent` אינו מובטח לגבור עליה. */}
+                <p className="m-0 text-2xs font-semibold tracking-[.09em] text-accent">
+                  מספר פנייה
+                </p>
+                <p className="num mt-2 select-all text-2xl font-bold">
                   <Ltr>{leadRef}</Ltr>
                 </p>
               </div>
@@ -562,9 +593,9 @@ export default function Summary() {
             {remote.kind === "none" ? (
               <Prose measure="confirm" className="mt-8">
                 <p>
-                  בכתובת הזאת אין מספר פנייה, ולכן אין סיכום להציג. אם קיבלתם
-                  מספר פנייה, אפשר להקריא אותו בטלפון או לשלוח אותו בוואטסאפ
-                  ונמצא את הפרטים.
+                  בכתובת הזאת אין מספר פנייה, ולכן אין סיכום להציג. יש לכם מספר
+                  פנייה? הקריאו אותו בטלפון או שלחו אותו בוואטסאפ, ונמצא את
+                  הפרטים.
                 </p>
               </Prose>
             ) : null}
@@ -572,10 +603,7 @@ export default function Summary() {
             {remote.kind === "gone" ? (
               <Prose measure="confirm" className="mt-8">
                 <p>הסיכום הזה כבר לא זמין.</p>
-                <p>
-                  שמרו את מספר הפנייה ודברו איתנו — נאתר את הפרטים ונשלח אותם
-                  שוב.
-                </p>
+                <p>שמרו את מספר הפנייה ודברו איתנו. נאתר את הפרטים ונשלח שוב.</p>
               </Prose>
             ) : null}
 
@@ -591,12 +619,20 @@ export default function Summary() {
                 </div>
               </div>
             ) : null}
+          </div>
+        </div>
+      </section>
 
-            {/* ─── המסמך עצמו ─── */}
-
-            {record ? (
-              <>
-                <Prose measure="confirm" className="mt-8">
+      {/* ═══ רצועה 2 · קרם — המסמך. הקריאה הארוכה, וזה מה שמודפס. ═══ */}
+      {record ? (
+        <div
+          data-band="cream"
+          className="border-y border-solid border-y-[color:var(--rule)]"
+        >
+          <section className="sec sec--tight">
+            <div className="wrap">
+              <div className="max-w-confirm">
+                <Prose measure="confirm">
                   <p>
                     {submittedOn ? (
                       <>
@@ -617,15 +653,44 @@ export default function Summary() {
                 <TermsStrip className="mt-8" />
 
                 <KitchenLine />
-              </>
-            ) : null}
+              </div>
+            </div>
+          </section>
+        </div>
+      ) : null}
 
-            <Rule className="mt-10" />
-
+      {/* ═══ רצועה 3 · כהה — כל פעולה ═══════════════════════════════ */}
+      <section className="sec sec--tight">
+        <div className="wrap">
+          <div className="max-w-confirm">
             <ContactBlock record={record} leadRef={leadRef} />
           </div>
         </div>
       </section>
+
+      {/* ─── השיתוף. פעולה על המסמך, ולכן אחרי שקראו אותו — אבל **לפני**
+          ‏`NextSteps`: זו הפעולה בעלת התשואה הגבוהה ביותר בעמוד, ולקבור
+          אותה מתחת לרשימת קישורים זה לוותר עליה. רצועה `--alt` נפרדת,
+          כדי שפקד הענבר וכפתור הוואטסאפ לא ייקראו כזוג. מרונדר רק כשיש
+          מה לשתף, כלומר כשיש מספר פנייה. ─── */}
+      {leadRef ? (
+        <section data-print="hide" className="sec sec--tight sec--alt">
+          <div className="wrap">
+            <div className="max-w-confirm">
+              <p className="eyebrow m-0">שמרו או שלחו הלאה</p>
+              <Prose measure="confirm" className="mt-3">
+                <p>
+                  צריך אישור של עוד מישהו? זה הדף להעביר לו. הוא נפתח בכל
+                  מכשיר, ואפשר גם להדפיס אותו.
+                </p>
+              </Prose>
+              {/* לא `ref={…}` — `ref` היא תכונה שמורה של React ואינה
+                  מגיעה לקומפוננטת פונקציה כ־prop. */}
+              <ShareRow leadRef={leadRef} />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* ─────────────────────────────────────────────────────────────
           מסלול הוואטסאפ הגנרי ומסלול הבנאי.
@@ -672,26 +737,6 @@ export default function Summary() {
         />
       </div>
 
-      {/* השיתוף יושב אחרון: הוא פעולה על המסמך, ולכן הוא בא אחרי שקראו
-          אותו. הוא מרונדר רק כשיש מה לשתף — כלומר כשיש מספר פנייה. */}
-      {leadRef ? (
-        <section data-print="hide" className="sec sec--tight">
-          <div className="wrap">
-            <div className="max-w-confirm">
-              <p className="eyebrow m-0">שמרו או שלחו הלאה</p>
-              <Prose measure="confirm" className="mt-3">
-                <p>
-                  צריך אישור של עוד מישהו? זה הדף להעביר לו. הוא נפתח בכל
-                  מכשיר, ואפשר גם להדפיס אותו.
-                </p>
-              </Prose>
-              {/* לא `ref={…}` — `ref` היא תכונה שמורה של React ואינה
-                  מגיעה לקומפוננטת פונקציה כ־prop. */}
-              <ShareRow leadRef={leadRef} />
-            </div>
-          </div>
-        </section>
-      ) : null}
     </>
   );
 }

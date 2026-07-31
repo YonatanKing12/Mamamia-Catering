@@ -45,6 +45,7 @@
 
 import type { Express, Request, Response } from "express";
 import { sitemapPaths, robotsDisallow } from "@shared/routes";
+import { aiCrawlerPolicy } from "./geo";
 
 /* ═════════════════ origin ═════════════════ */
 
@@ -116,6 +117,11 @@ export function robotsTxt(origin: string): string {
     "Allow: /",
     ...disallowPrefixes().map((prefix) => `Disallow: ${prefix}`),
   ];
+
+  /* ‏קבוצות זחלני מנועי התשובות. `robots.txt` אינו מצטבר — זחלן ששמו נקוב
+     מתעלם לגמרי מקבוצת `*` — ולכן `aiCrawlerPolicy` חוזרת על מלוא ה־
+     Disallow בכל קבוצה, ומקבלת את הרשימה מכאן ולא מחשבת אותה שוב. */
+  lines.push(...aiCrawlerPolicy({ disallow: disallowPrefixes(), origin }));
 
   /* בלי origin אין שורת Sitemap: שורה יחסית אינה נקראת בידי אף זחלן,
      והשמטתה עדיפה — /sitemap.xml נבדק ממילא בכתובת המוסכמת. */

@@ -13,9 +13,6 @@
  * נכנס ל־sitemap. **אין לפתוח אותו כאן** — `enabled` מתהפך ב־
  * ‎`shared/routes.ts` באותו שינוי שבו נמסרות מגבלות העמדה, ולא לפני.
  *
- * הקובץ קיים כדי שהדף לא ייכתב מחדש בחיפזון ביום שהמשבצת תימסר, ובדיוק
- * מאותה סיבה שבגללה `pages/catering-shiva.tsx` קיים תחת שער קשיח משלו.
- *
  * ─────────────────────────────────────────────────────────────────────
  *  הכלל שמחזיק כל שורה בדף — לקרוא לפני שנוגעים בקופי
  * ─────────────────────────────────────────────────────────────────────
@@ -28,32 +25,42 @@
  * ‎§4 P-16 מצטט H1 `עמדת פסטה שהיא לא גימיק. זה מה שהמטבח שלנו עושה כל
  * יום.` — שתי בעיות, ושתיהן מסירות: «שהיא לא גימיק» מניחה שאנחנו
  * מפעילים אחת, ו«כל יום» היא טענה על שעות פעילות (`SLOTS.openingHours`
- * ריק; ‏00-spec-review §A3 מוחק בדיוק את הצירוף הזה מדף הבית). ה־H1 כאן
- * אומר את מה שנשאר, והוא עדיין הזווית של המפרט: פסטה היא עבודת קו של
- * מטבח מסעדה, ולא מוצר שנשכר לאירוע.
+ * ריק; ‏00-spec-review §A3 מוחק בדיוק את הצירוף הזה מדף הבית).
  *
- * ‎`StationsBlock` (‎§4 P-16, טווח סועדים · חשמל/מים/מקום · האם טבח נוסע)
- * **אינו מרונדר**: הוא נשען על `content/stations.ts`, מודול שטרם נוצר.
- * במקומו יושב בלוק השאלות — אותן ארבע נקודות בדיוק, מנוסחות כמה שצריך
- * לברר. ביום שהמגבלות יימסרו, הן ממלאות את אותו מקום כתשובות.
+ * ‎`StationsBlock` (טווח סועדים · חשמל/מים/מקום · האם טבח נוסע) **אינו
+ * מרונדר**: הוא נשען על `content/stations.ts`, מודול שטרם נוצר. במקומו
+ * יושב `CheckList` — אותן ארבע נקודות בדיוק, מנוסחות כמה שצריך לברר.
+ * ביום שהמגבלות יימסרו, הן ממלאות את אותו מקום כתשובות.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית הפעולה — ראו `pages/catering.tsx`, מוחזקת כאן זהה
+ * ─────────────────────────────────────────────────────────────────────
+ *   1. המגדיר (`#quote`) — הענבר, מיד אחרי ההירו. `MenuConfigurator`
+ *      בולע בעצמו את בנאי ארבע השאלות ⇒ משטח המרה אחד ולא שניים.
+ *   2. וואטסאפ — ירוק, בהירו ובבאנד הסוגר בלבד.
+ *   3. טלפון — שורת טקסט, לא פקד שלישי (L-10).
+ *
+ * הכפתור הראשי בדף הזה אומר «ספרו לנו על האירוע» ולא «להזמין עמדה»:
+ * הכיתוב עצמו הוא טענה, ו«להזמין עמדה» היה `SLOTS.liveStations` בתחפושת.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  מה נשמט היום, וזו התנהגות תקינה (INV-2)
  * ─────────────────────────────────────────────────────────────────────
  *   MenuSheet       ‎`content/dishes.ts` ריק ⇒ 0 מנות בחתך `pasta` ⇒
- *                   הסקשן אינו מרונדר (‎§3.3 שורת "0"). קישור צולב
- *                   לתפריט החי של המסעדה (`liveMenuUrlFor`) נגזר מדף
- *                   סניף חסום ולכן אינו נכתב.
+ *                   הסקשן אינו מרונדר.
  *   ServiceFormats  ‎`offered === true` הוא אישור בעלים; אף פורמט אינו
  *                   מאושר ⇒ הבאנד מחזיר null.
  *   OpsFacts        מינימום, מקסימום, זמן התראה ואזור — כולם `null`.
+ *   ReviewsBlock ·  ‎`content/proof.ts` ריק ⇒ אין דירוג בהירו ואין סקשן
+ *   Gallery         הוכחה.
  *   FaqBand         «האם מפעילים עמדה באירוע» קשורה ל־`liveStations`
  *                   וריקה. היא **לא** מקבלת תשובה שנשמעת נכון.
  */
 
 import * as React from "react";
+import { useLocation } from "wouter";
 import { Head } from "@/components/seo/head";
-import { Num, Prose, Rule, SectionHeader } from "@/components/primitives";
+import { Num, Prose, SectionHeader } from "@/components/primitives";
 import {
   FaqBand,
   KitchenNote,
@@ -61,19 +68,20 @@ import {
   NextSteps,
   OccasionIntro,
   OpsFacts,
-  QuoteCta,
   ServiceFormats,
-  WhatsAppBand,
   type DishLine,
   type FaqItem,
   type NextStepLink,
   type OpsFactRow,
   type ServiceFormatSpec,
 } from "@/components/bands";
+import { MenuConfigurator } from "@/components/configurator";
+import { ContactBar, Gallery, ReviewsBlock } from "@/components/trust";
 import { CATERING_NAME, SLOTS, filled } from "@/content/business";
 import { dishesForCut, provenanceMark } from "@/content/dishes";
 import { cateringServiceArea } from "@/content/locations";
 import { occasionById, serviceFormatsFor } from "@/content/occasions";
+import { hasAnyProof } from "@/content/proof";
 import { buildWaHref, captureWaIntent, newRef } from "@/lib/lead-client";
 import { track } from "@/lib/analytics";
 import { kashrutClauseHe, resolveExtraMeta, stripEmptyJsonLd } from "@/lib/page-meta-extra";
@@ -87,6 +95,10 @@ const SOURCE_PAGE = "/pasta-bar";
 
 /** מקור יחיד לחתך התפריט ולפורמטים — לא נכתבים כאן. */
 const OCCASION = occasionById("pasta-bar");
+
+/** הטענה היחידה המותרת על מוצא האוכל, בלשון יחיד. נכתבת פעם אחת. */
+const KITCHEN_FACT_HE =
+  "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.";
 
 /* ═══════════════════ מסלול הוואטסאפ בהירו ═══════════════════ */
 
@@ -158,6 +170,42 @@ function opsRows(): OpsFactRow[] {
   ];
 }
 
+/* ═══════════════════ המגדיר ═══════════════════ */
+
+/**
+ * אין זריעת `eventType`: `occasions.ts` קובע `eventTypeSeed: null` —
+ * עמדת פסטה היא מוצר ולא סוג אירוע, וזריעה כאן הייתה מתייגת ליד לא נכון
+ * (02 §1.7).
+ */
+function ConfiguratorSection({ num }: { num?: string }) {
+  const [, navigate] = useLocation();
+
+  return (
+    <div
+      id="quote"
+      className="border-y border-solid border-y-[color:var(--rule)] bg-bg-form py-sec [&_.sec]:py-0 [&_.wrap]:max-w-none [&_.wrap]:px-0"
+    >
+      <div className="wrap">
+        <SectionHeader
+          num={num}
+          eyebrow="בונים את האירוע"
+          title="ספרו לנו על האירוע"
+          lede="כמה סועדים, מתי ואיפה. אנחנו נחזור אליכם עם מה שמתאים לאירוע הזה, ועם הצעה בכתב."
+        />
+
+        <MenuConfigurator
+          id="quote-builder"
+          sourcePage={SOURCE_PAGE}
+          showHeader={false}
+          onSubmitted={(ref, answers) =>
+            navigate(`/thanks?ref=${encodeURIComponent(ref)}`, { state: { ref, answers } })
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════ הפורמט — מה זה בעצם ═══════════════════ */
 
 /**
@@ -170,7 +218,7 @@ const FORMAT_POINTS = [
   {
     titleHe: "זה קו עבודה, לא הצגה",
     bodyHe:
-      "פסטה נגמרת במחבת בשלושים שניות האחרונות: רוטב שכבר עמד, פסטה שיוצאת מהמים ברגע הנכון, ומעט ממי הבישול. מי שעושה את זה כל ערב במסעדה עושה את אותה תנועה בדיוק, רק על שולחן אחר.",
+      "פסטה נגמרת במחבת בשלושים השניות האחרונות: רוטב שכבר עמד, פסטה שיוצאת מהמים ברגע הנכון, ומעט ממי הבישול. מי שעושה את זה כל ערב במסעדה עושה את אותה תנועה בדיוק, רק על שולחן אחר.",
   },
   {
     titleHe: "המנה מגיעה חמה, כי היא נגמרת מול הסועד",
@@ -193,19 +241,19 @@ function FormatBlock({ num }: { num?: string }) {
           eyebrow="הפורמט"
           title="מה זו בעצם עמדת פסטה"
           lede="בלי הדימוי השיווקי, זה מה שקורה שם בפועל — ומה שקובע אם זה מתאים לאירוע שלכם."
-          reveal={false}
         />
 
-        <ul className="m-0 list-none border-t border-solid border-t-[color:var(--rule)] p-0">
-          {FORMAT_POINTS.map((point) => (
+        <ul className="m-0 grid list-none gap-grid p-0 [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]">
+          {FORMAT_POINTS.map((point, i) => (
             <li
               key={point.titleHe}
-              className="m-0 border-b border-solid border-b-[color:var(--rule)] py-7"
+              className="m-0 rounded-card border border-solid border-[color:var(--rule)] bg-bg-alt p-card transition-colors duration-state ease-house hover:border-accent"
             >
-              <div className="max-w-body pe-6">
-                <h3 className="m-0 font-serif text-lg font-bold">{point.titleHe}</h3>
-                <p className="mt-2 text-xs leading-[1.6] text-fg-muted">{point.bodyHe}</p>
-              </div>
+              <span className="sec__num num">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="mt-3 text-lg font-semibold">{point.titleHe}</h3>
+              <p className="mt-2 max-w-none text-xs leading-[1.6] text-fg-muted">
+                {point.bodyHe}
+              </p>
             </li>
           ))}
         </ul>
@@ -257,20 +305,19 @@ function CheckList({ num }: { num?: string }) {
           eyebrow="לפני שסוגרים"
           title="ארבעה דברים לברר על כל עמדה"
           lede="לא רק אצלנו. אלה הדברים שקובעים אם עמדה עובדת באירוע, ורובם מתגלים ביום האירוע כשלא שואלים עליהם מראש."
-          reveal={false}
         />
 
-        <ol className="m-0 list-none p-0">
+        <ol className="m-0 grid list-none gap-grid p-0 [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
           {CHECK_POINTS.map((point, i) => (
-            <li key={point.titleHe} className="m-0">
-              {i > 0 ? <Rule /> : null}
-              <div className="max-w-body py-[1.7rem] pe-6">
-                <span className="num block font-serif text-lg font-medium text-fg-subtle">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-3 font-serif text-lg font-bold">{point.titleHe}</h3>
-                <p className="mt-2 text-xs leading-[1.6] text-fg-muted">{point.bodyHe}</p>
-              </div>
+            <li
+              key={point.titleHe}
+              className="m-0 rounded-card border border-solid border-[color:var(--rule)] bg-bg p-card transition-colors duration-state ease-house hover:border-accent"
+            >
+              <span className="sec__num num">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="mt-3 text-lg font-semibold">{point.titleHe}</h3>
+              <p className="mt-2 max-w-none text-xs leading-[1.6] text-fg-muted">
+                {point.bodyHe}
+              </p>
             </li>
           ))}
         </ol>
@@ -288,6 +335,9 @@ type PageFaq = FaqItem & { answerHe: string | null };
  * באירוע» — והתשובה עליה היא `SLOTS.liveStations`, שהוא `null`. היא
  * נשארת בלי תשובה, ולכן אינה מרונדרת כלל, ולכן גם אינה נפלטת ל־`FAQPage`.
  * זה בדיוק המנגנון: ביום שהמשבצת תימסר, השאלה נדלקת מאליה.
+ *
+ * כל תשובה שכן נכתבת היא משפט שלם שעומד בפני עצמו מחוץ להקשר — זו
+ * היחידה שמנוע תשובות מצטט מילה במילה.
  */
 function faqItems(): PageFaq[] {
   return [
@@ -299,14 +349,16 @@ function faqItems(): PageFaq[] {
     {
       id: "faq-who-cooks",
       questionHe: "מי מבשל את הפסטה?",
-      answerHe:
-        "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
+      answerHe: KITCHEN_FACT_HE,
     },
     {
       id: "faq-kashrut",
       questionHe: "האם האוכל כשר?",
       /* כלשון הבעלים, דרך המשבצת. לעולם לא כמחרוזת קשיחה (LAW 1). */
-      answerHe: kashrutClauseHe("general"),
+      answerHe: (() => {
+        const k = kashrutClauseHe("general");
+        return k ? `הקייטרינג ${k}.` : null;
+      })(),
     },
     {
       id: "faq-alternative",
@@ -348,7 +400,6 @@ const NEXT: NextStepLink[] = [
     descriptionHe: "אירוע משפחתי בבית או במקום שנבחר.",
   },
   { href: "/menus", titleHe: "התפריטים", descriptionHe: "מה שהמטבח מבשל, במקום אחד." },
-  { href: "/quote", titleHe: "בקשת הצעה", descriptionHe: "ארבע שאלות, ואנחנו חוזרים אליכם." },
 ];
 
 /* ═══════════════════ העמוד ═══════════════════ */
@@ -379,17 +430,22 @@ export default function PastaBar() {
 
   const rows = opsRows();
   const faqs = faqItems();
+  const answered = faqs.filter(
+    (f): f is FaqItem & { answerHe: string } => f.answerHe !== null,
+  );
   const showMenuSheet = dishes.length > 0;
+  const proof = hasAnyProof();
 
   /* ‎§3.1 — מקור המספור היחיד. סקשן שנשמט אינו משאיר חור ברצף. */
   const order = [
+    "quote",
     showMenuSheet ? "menu" : null,
     formats.some((f) => f.offered) ? "formats" : null,
     "format",
     "check",
+    proof ? "proof" : null,
     "kitchen",
-    "quote",
-    faqs.some((f) => f.answerHe) ? "faq" : null,
+    answered.length > 0 ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
   const num = (key: string) => {
@@ -411,8 +467,7 @@ export default function PastaBar() {
           stripEmptyJsonLd(buildWebPage(META)),
           /* ‎`nameHe` הוא **פסטה לאירועים** ולא «עמדת פסטה»: צומת
              ‎`Service` בשם «עמדת פסטה» מצהיר בגרף שהעמדה היא שירות
-             שאנחנו מציעים, וזו בדיוק הטענה ש־`SLOTS.liveStations` חוסם.
-             הטיפוס נפלט לזיהוי ישות ולא לקישוט תוצאות (01 §7). */
+             שאנחנו מציעים, וזו בדיוק הטענה ש־`SLOTS.liveStations` חוסם. */
           stripEmptyJsonLd(
             buildService({
               path: SOURCE_PAGE,
@@ -422,29 +477,27 @@ export default function PastaBar() {
             }),
           ),
           buildBreadcrumbList(META.breadcrumb),
-          buildFaqPage(faqs),
+          buildFaqPage(answered),
         ]}
       />
 
       <OccasionIntro
         eyebrow="קייטרינג מאמאמיה · פסטה"
-        /* בלי «העמדה שלנו», בלי «לא גימיק» ובלי «כל יום». מה שנשאר הוא
-           הזווית של המפרט בלי הטענה שאין לה משבצת. */
+        /* בלי «העמדה שלנו», בלי «לא גימיק» ובלי «כל יום». */
         title={
           <>
-            עמדת פסטה
+            עמדת פסטה מתחילה
             <br />
-            מתחילה במטבח
-            <br />
-            שעושה פסטה.
+            במטבח שעושה פסטה.
           </>
         }
-        lede="פסטה היא עבודת קו: רוטב שכבר עמד, פסטה שיוצאת מהמים ברגע הנכון, ומחבת. הדף הזה מסביר איך הפורמט עובד ומה קובע אם הוא מתאים — ואם אתם מתכננים אירוע שהפסטה היא הלב שלו, ספרו לנו עליו."
+        lede="פסטה היא עבודת קו: רוטב שכבר עמד, פסטה שיוצאת מהמים ברגע הנכון, ומחבת. הדף הזה מסביר איך הפורמט עובד ומה קובע אם הוא מתאים — ואם הפסטה היא הלב של האירוע שלכם, ספרו לנו עליו."
         facts={facts}
+        /* «ספרו לנו על האירוע» ולא «להזמין עמדה»: הכיתוב עצמו הוא טענה. */
         primary={{ label: "ספרו לנו על האירוע", href: "#quote" }}
         secondary={{
-          label: "דברו איתנו בוואטסאפ",
-          variant: "ghost",
+          label: "לכתוב לנו בוואטסאפ",
+          variant: "wa",
           href: wa.href,
           target: "_blank",
           rel: "noopener noreferrer",
@@ -457,7 +510,7 @@ export default function PastaBar() {
         <Prose
           size="fine"
           measure="body"
-          className="mt-5 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
+          className="mt-3 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
         >
           <p>
             בלחיצה על וואטסאפ נשמרת אצלנו פנייה עם פרטי האירוע שמופיעים בהודעה.{" "}
@@ -466,19 +519,27 @@ export default function PastaBar() {
             </a>
           </p>
         </Prose>
+
+        <ReviewsBlock ratingOnly className="mt-6" />
       </OccasionIntro>
 
       <OpsFacts rows={rows} variant="strip" />
 
-      {/* 01 · מדור הפסטה מהתפריט. ריק היום ⇒ אינו מרונדר. */}
-      <MenuSheet
-        id="menu"
-        num={num("menu")}
-        dishes={dishes}
-        grouping="flat"
-        title="הפסטות שבתפריט"
-        lede="אלה הפסטות של המסעדה. תפריט לאירוע נבנה מתוכן."
-      />
+      {/* 01 · המגדיר, מיד אחרי ההירו. */}
+      <ConfiguratorSection num={num("quote")} />
+
+      {showMenuSheet ? (
+        <div data-band="cream">
+          <MenuSheet
+            id="menu"
+            num={num("menu")}
+            dishes={dishes}
+            grouping="flat"
+            title="הפסטות שבתפריט"
+            lede="אלה הפסטות של המסעדה. תפריט לאירוע נבנה מתוכן."
+          />
+        </div>
+      ) : null}
 
       <ServiceFormats
         id="formats"
@@ -492,34 +553,50 @@ export default function PastaBar() {
 
       <CheckList num={num("check")} />
 
+      {proof ? (
+        <section id="proof" className="sec">
+          <div className="wrap">
+            <SectionHeader num={num("proof")} eyebrow="מה אומרים" title="לקוחות שכבר הזמינו" />
+            <ReviewsBlock className="mt-2" />
+            <Gallery className="mt-10" columns={3} />
+          </div>
+        </section>
+      ) : null}
+
       <KitchenNote num={num("kitchen")} />
 
-      {/* ‎`seed` ריק: `occasions.ts` קובע `eventTypeSeed: null` — עמדת
-          פסטה היא מוצר ולא סוג אירוע, וזריעת סוג אירוע כאן הייתה מתייגת
-          ליד לא נכון (02 §1.7). */}
-      <QuoteCta
-        num={num("quote")}
-        sourcePage={SOURCE_PAGE}
-        title="ספרו לנו על האירוע"
-        lede="ארבע שאלות על האירוע, ואז פרטים ליצירת קשר. נחזור אליכם עם מה שמתאים לו."
-      />
+      {answered.length > 0 ? (
+        <div data-band="cream">
+          <FaqBand
+            id="faq"
+            num={num("faq")}
+            items={faqs}
+            eyebrow="לפני שסוגרים"
+            title="שאלות שנשאלות על עמדת פסטה"
+            lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
+          />
+        </div>
+      ) : null}
 
-      {/* מסלול שני, למי שגלל עד הטופס ובחר לא למלא אותו. */}
-      <WhatsAppBand
-        waLocation="quote_alt"
-        title="מעדיפים לכתוב?"
-        lede="אפשר לשלוח את פרטי האירוע בהודעה, ולהמשיך משם."
-        labelHe="עדיף לי בוואטסאפ"
-        callLocation="quote_alt"
-      />
+      {/* ═══ הבאנד הסוגר ═══ */}
+      <section id="contact" className="sec sec--alt">
+        <div className="wrap">
+          <SectionHeader
+            eyebrow="לסגור את האירוע"
+            title="ספרו לנו על האירוע"
+            lede="כמה סועדים, מתי ואיפה — ונחזור אליכם עם מה שמתאים לו."
+          />
 
-      <FaqBand
-        id="faq"
-        num={num("faq")}
-        items={faqs}
-        title="שאלות שנשאלות על עמדת פסטה"
-        lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
-      />
+          <ContactBar
+            waLocation="footer"
+            primary="whatsapp"
+            quoteHref="#quote"
+            labels={{ quote: "לבנות את התפריט" }}
+            callLocation="footer"
+            framed={false}
+          />
+        </div>
+      </section>
 
       <NextSteps sourcePage={SOURCE_PAGE} links={NEXT} />
     </>

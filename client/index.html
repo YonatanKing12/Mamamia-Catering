@@ -26,11 +26,13 @@
 
     <!-- גופנים מהשרת שלנו (INV-10). @font-face ב-index.css §4.2.
          אין להוסיף כאן קישור לגיליון גופנים חיצוני.
-         preload רק לעברית של משקלי הגוף והכותרת — הפנים שנדרשים ל-LCP. -->
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-          href="/fonts/frank-ruhl-libre-500-hebrew.woff2" />
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-          href="/fonts/frank-ruhl-libre-700-hebrew.woff2" />
+         preload רק לעברית של משקלי הגוף והכותרת — הפנים שנדרשים ל-LCP.
+
+         ‏Frank Ruhl Libre הוסר לגמרי (04 §3 — «משפחה אחת, בלי זוג סריפי»).
+         ה-@font-face שלו נמחק מ-index.css, קובצי ה-woff2 נמחקו מ-
+         client/public/fonts, ושתי שורות ה-preload שהיו כאן ירדו איתם:
+         preload לקובץ שאינו קיים הוא 404 בנתיב הקריטי, ו-preload לגופן
+         שאינו בשימוש הוא הורדה מבוזבזת לפני ה-LCP. -->
     <link rel="preload" as="font" type="font/woff2" crossorigin
           href="/fonts/assistant-400-hebrew.woff2" />
     <link rel="preload" as="font" type="font/woff2" crossorigin

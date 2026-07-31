@@ -115,8 +115,9 @@ export function OpsFacts({
             <dt className="col-start-1 m-0 font-serif text-lg font-medium leading-dish">
               {row.labelHe}
             </dt>
-            {/* ‎.num חובה על כל ערך מספרי — Frank Ruhl Libre היא נושאת
-                הספרות, ו־Assistant אינה מיישרת טור שיש בו 1 (§4.6). */}
+            {/* ‎.num חובה על כל ערך מספרי. תפקידה bidi — לבודד רצף ספרות
+                בתוך עברית — ולא בחירת גופן: מאז 04 §3 יש באתר משפחה אחת,
+                Assistant, והיא אינה מיישרת טור שיש בו 1 (§4.6). */}
             <dd className="num col-start-2 row-start-1 m-0 text-lg font-medium">{row.value}</dd>
             {row.noteHe ? (
               <p className="col-span-2 col-start-1 m-0 mt-[.2rem] max-w-dish text-xs text-fg-muted">

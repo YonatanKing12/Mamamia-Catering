@@ -3,73 +3,72 @@
  *  P-09 · `/catering/private-events` — שמחות פרטיות ואירוח בבית.
  * ═══════════════════════════════════════════════════════════════════════
  *
- * spec 01 §4 P-09, §3.1, §3.3, spec 02 §3.4, §3.9, spec 03 §7.8.
- * ‏`00-spec-review.md` גובר על המפרט בכל מקום שבו הם חלוקים.
+ * spec 01 §4 P-09, §3.1, §3.3, spec 02 §3.4, §3.9.
+ * המערכת החזותית היא `docs/spec/04-visual-reference.md`, שגובר על 03 §2–§6.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ *  היררכיית ההמרה — זהה בחמשת הדפים שבבעלותי
+ * ─────────────────────────────────────────────────────────────────────
+ *   1. **הבנאי, ב־`#quote`.** משבצת אחת, וכל פקד ענבר מצביע אליה. יש
+ *      מנות וחבילות ⇒ `MenuConfigurator`; אין ⇒ `QuoteCta` עם ההזרעה.
+ *   2. **וואטסאפ.** מתאר־קו בהירו, וירוק ממולא **פעם אחת** — ברצועה שמיד
+ *      מתחת לבנאי, למי שגלל עד הטופס ובחר לא למלא אותו.
+ *   3. **הטלפון.** מספר קריא בשורת טקסט, לעולם לא כפתור.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  הרג׳יסטר: מארח, לא מנהלת רכש
  * ─────────────────────────────────────────────────────────────────────
- * ‏P-08 מדבר בלשון תהליך; כאן הקונה מארח אנשים שהוא אוהב בבית שלו, והוא
- * מודד אותנו בשאלה אחרת לגמרי — האם אפשר לסמוך על זה. לכן אין בעמוד הזה
- * רצועת עובדות תפעולית מעל הקיפול, והסקשן הראשון הוא מה שבאמת עוברים
- * יחד לפני אירוח בבית.
+ * ‏P-08 מדבר בלשון תהליך; כאן הקונה מארח בבית שלו אנשים שהוא אוהב, והוא
+ * מודד אותנו בשאלה אחרת — האם אפשר לסמוך על זה. לכן אין בעמוד הזה רצועת
+ * עובדות תפעולית, והסקשן הייחודי הוא מה שבאמת עוברים לפני אירוח בבית.
  *
  * ─────────────────────────────────────────────────────────────────────
- *  שלוש סטיות מנוסח המפרט
+ *  שלוש סטיות מנוסח המפרט, וכולן הסרות
  * ─────────────────────────────────────────────────────────────────────
- *  1. **«עם הצוות שלנו בשטח».** ‏00-spec-review §A1 מוחק את הפסוקית משתי
- *     כותרות H1: `plated_staffed` טוען שיש מלצרים, ציוד הגשה וכלי פורצלן,
- *     וזו שאלה פתוחה לבעלים (02 §3.4). ה־H1 כאן הוא הנוסח המתוקן —
- *     ‏`— מהמטבח של המסעדה, אצלכם.` — ואין בעמוד כולו מילה על צוות הגשה.
- *
- *  2. **«אירוע פרטי במסעדה».** אירוח בתוך המסעדה הוא **מצג** שהמסעדות
- *     מארחות אירועים פרטיים — קיבולת ישיבה, אפשרות סגירת החלל, חניה
- *     ונגישות. ‏`privateEventCapacityFor()` מחזיר `null` לשלושתן, ולכן
- *     הסקשן, הפורמט והצ׳יפ המקביל בבנאי **אינם קיימים** (`offerAtRestaurant`
- *     נגזר מ־`anyPrivateEventCapacity()` ולא נכתב ידנית). שום דבר בעמוד
- *     אינו רומז על השכרת מקום. הכותרת ב־`page-meta-extra.ts` כבר תוקנה
- *     מאותה סיבה.
- *
- *  3. **`בר מצווה` הוסר מה־H1.** ‏§4 P-09 פותח בו, אבל ל־P-10 יש H1 כמעט
- *     זהה (`בר מצווה ובת מצווה — מהמטבח של המסעדה, אצלכם.`) והוא הדף
- *     שנבנה לקלאסטר הזה. שתי כותרות שמתחרות על אותה שאילתה מפצלות את
- *     האות ומכריחות את גוגל לבחור; הקישור לדף ההוא יושב ב־`NextSteps`.
+ *  1. **«עם הצוות שלנו בשטח».** `plated_staffed` טוען מלצרים, ציוד הגשה
+ *     וכלי פורצלן — שאלה פתוחה לבעלים (02 §3.4). אין בעמוד כולו מילה על
+ *     צוות הגשה.
+ *  2. **«אירוע פרטי במסעדה».** אירוח בתוך המסעדה הוא **מצג** על קיבולת,
+ *     סגירת חלל, חניה ונגישות. `privateEventCapacityFor()` מחזיר `null`
+ *     לשלושתן, ולכן הסקשן, הפורמט והצ׳יפ המקביל בבנאי אינם קיימים —
+ *     ‏`offerAtRestaurant` נגזר מ־`anyPrivateEventCapacity()` ולא נכתב ידנית.
+ *  3. **`בר מצווה` הוסר מה־H1.** ל־P-10 יש H1 כמעט זהה, והוא הדף שנבנה
+ *     לקלאסטר ההוא. שתי כותרות שמתחרות על אותה שאילתה מפצלות את האות.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  מה נשמט היום, וזו התנהגות תקינה (INV-2)
  * ─────────────────────────────────────────────────────────────────────
- *   ServiceFormats         ‏§4 P-09 מקדם אותו למקום 01 — «הפורמט הוא
- *                          ההחלטה כאן». אבל `offered === true` הוא אישור
- *                          בעלים, ו־`config/service-formats.ts` טרם קיים:
- *                          אף פורמט אינו מאושר, ולכן הבאנד היה מרנדר
- *                          כותרת מעל כלום. הוא אינו משובץ, והעמוד אינו
- *                          אומר «משלוח», «בופה» או «מלצרים» בשום מקום.
- *   MenuSheet              ‏`menus.ts` / `dishes.ts` ריקים ⇒ 0 מנות (§3.3).
- *   InclusionsExclusions · LimitsBlock · TermsStrip · PastEvents · TastingBand
- *                          אין ולו שורה שנמסרה לאף אחד מהם.
+ *   ReviewsBlock · Gallery   `content/proof.ts` ריק ⇒ מחזירות null,
+ *                            והסקשן שעוטף אותן אינו מרונדר כלל.
+ *   ServiceFormats · MenuSheet · InclusionsExclusions · LimitsBlock ·
+ *   TermsStrip · PastEvents · TastingBand
+ *                            אין ולו שורה שנמסרה לאף אחד מהם.
  *
- * ─────────────────────────────────────────────────────────────────────
- *  מספור
- * ─────────────────────────────────────────────────────────────────────
  * ‏§3.1: הספרות נקבעות בזמן רינדור **לפי מיקום**. `order` למטה הוא המקור
- * היחיד להן, וסקשן שנשמט אינו משאיר חור ברצף — חור כזה הוא האות הרועשת
- * ביותר ל«תבנית עם חלקים חסרים».
+ * היחיד להן, וסקשן שנשמט אינו משאיר חור ברצף.
  */
 
 import * as React from "react";
+import { useLocation } from "wouter";
 import { Head } from "@/components/seo/head";
-import { Num, Prose, Rule, SectionHeader } from "@/components/primitives";
+import { Num, Prose, SectionHeader } from "@/components/primitives";
 import {
   BranchStrip,
   FaqBand,
   KitchenNote,
-  NextSteps,
   OccasionIntro,
   QuoteCta,
-  WhatsAppBand,
   type FaqItem,
-  type NextStepLink,
 } from "@/components/bands";
+import { MenuConfigurator } from "@/components/configurator";
+import {
+  ContactBar,
+  Gallery,
+  KashrutBadge,
+  OccasionGrid,
+  ReviewsBlock,
+  hasKashrutWording,
+} from "@/components/trust";
 import { CATERING_NAME, SLOTS, filled } from "@/content/business";
 import {
   anyPrivateEventCapacity,
@@ -77,11 +76,12 @@ import {
   privateEventCapacityFor,
   restaurantsWithPrivateEvents,
 } from "@/content/locations";
-import { occasionById } from "@/content/occasions";
+import { buildableOccasions, occasionById } from "@/content/occasions";
+import { hasConfigurator, hasPackages } from "@/content/packages";
+import { hasGallery, hasGoogleReviews, hasTestimonials } from "@/content/proof";
 import { buildWaHref, captureWaIntent, newRef } from "@/lib/lead-client";
 import { track } from "@/lib/analytics";
 import {
-  kashrutClauseHe,
   resolveExtraMeta,
   stripEmptyJsonLd,
   type PageMetaExtra,
@@ -137,31 +137,101 @@ function useHeroWhatsApp(eventType: string | null) {
   return { href, onClick };
 }
 
-/* ═══════════════════ 01 · מה עוברים לפני אירוח בבית ═══════════════════ */
+/* ═══════════════════ הבנאי — משבצת ההמרה היחידה ═══════════════════ */
+
+type Seed = React.ComponentProps<typeof QuoteCta>["seed"];
+
+/**
+ * ‏04 §6: המגדיר **בונה** את האירוע במקום **לבקש** הצעה, ואינו מתפקד בלי
+ * מנות. כל עוד `PACKAGES` או `DISHES` ריקים המשבצת מחזיקה את בנאי ארבע
+ * השאלות — **עם ההזרעה**, ש־`MenuConfigurator` אינו מקבל.
+ *
+ * ‏TODO(dev): `seed` על `MenuConfiguratorProps`, ואז הענף הזה מיותר.
+ * הקומפוננטה אינה בבעלותי — מדווח.
+ */
+function BuilderSection({
+  num,
+  seed,
+  title,
+  lede,
+  offerAtRestaurant,
+}: {
+  num?: string;
+  seed: Seed;
+  title: React.ReactNode;
+  lede: React.ReactNode;
+  offerAtRestaurant: boolean;
+}) {
+  const [, navigate] = useLocation();
+  const live = hasConfigurator() && hasPackages();
+
+  if (!live) {
+    return (
+      <QuoteCta
+        id="quote"
+        num={num}
+        sourcePage={SOURCE_PAGE}
+        seed={seed}
+        offerAtRestaurant={offerAtRestaurant}
+        eyebrow="בונים את האירוע"
+        title={title}
+        lede={lede}
+      />
+    );
+  }
+
+  return (
+    <div
+      id="quote"
+      className="border-y border-solid border-y-[color:var(--rule)] bg-bg-form py-sec [&_.sec]:py-0 [&_.wrap]:max-w-none [&_.wrap]:px-0"
+    >
+      <div className="wrap">
+        <SectionHeader
+          num={num}
+          eyebrow="בונים את האירוע"
+          title={title}
+          lede={lede}
+          reveal={false}
+        />
+        <MenuConfigurator
+          id="quote-builder"
+          sourcePage={SOURCE_PAGE}
+          offerAtRestaurant={offerAtRestaurant}
+          showHeader={false}
+          onSubmitted={(ref, answers) =>
+            navigate(`/thanks?ref=${encodeURIComponent(ref)}`, { state: { ref, answers } })
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════ מה עוברים לפני אירוח בבית ═══════════════════ */
 
 /**
  * הסקשן הייחודי של העמוד (מבחן T-1: החליפו «בבית» ב«במשרד» והוא נשבר).
  *
  * ארבע השורות הן **שאלות שנשאל**, לא שירותים שאנחנו מבטיחים. ההבחנה היא
- * כל ההבדל: «כמה שולחנות יש» היא שאלה שנשארת נכונה כשכל המשבצות ריקות,
- * ואילו «אנחנו מביאים שולחנות» היא התחייבות שאיש לא מסר.
+ * כל ההבדל: «כמה שולחנות יש» נשארת נכונה כשכל המשבצות ריקות, «אנחנו
+ * מביאים שולחנות» היא התחייבות שאיש לא מסר.
  */
 const HOSTING = [
   {
     title: "כמה אנשים, ובאיזה בית",
-    body: "סלון, גינה או מרפסת — המקום קובע איך האוכל מוגש לא פחות מהתפריט עצמו. מספר משוער מספיק בשלב הזה.",
+    body: "סלון, גינה או מרפסת. המקום קובע איך האוכל מוגש לא פחות מהתפריט. מספר משוער מספיק.",
   },
   {
-    title: "מתי האוכל צריך להיות על השולחן",
-    body: "לא השעה שבה מגיעים האורחים, אלא השעה שבה אתם רוצים שיתחילו לאכול. משם בונים אחורה.",
+    title: "מתי האוכל על השולחן",
+    body: "לא השעה שבה מגיעים האורחים, אלא השעה שבה מתחילים לאכול. משם בונים אחורה.",
   },
   {
     title: "מה יש לכם בבית",
-    body: "תנור פנוי, מקום קר, שולחן להגשה. עוברים על זה מראש כדי שביום האירוע לא תגלו את זה תוך כדי.",
+    body: "תנור פנוי, מקום קר, שולחן להגשה. עוברים על זה מראש ולא ביום האירוע.",
   },
   {
     title: "מה חייב להיות על השולחן",
-    body: "מנה שסבתא מצפה לה, ילד שאוכל רק פסטה, אורח שלא אוכל גלוטן. אלה הדברים שמרכיבים תפריט אמיתי, ולכן שואלים עליהם בהתחלה.",
+    body: "מנה שסבתא מצפה לה, ילד שאוכל רק פסטה, אורח שלא אוכל גלוטן. אלה הדברים שמרכיבים תפריט אמיתי.",
   },
 ] as const;
 
@@ -172,20 +242,22 @@ const HostingSection = ({ num }: { num?: string }) => (
         num={num}
         eyebrow="אירוח בבית"
         title="מה עוברים איתכם"
-        lede="אירוע בבית אינו מסעדה קטנה יותר — הוא אירוע עם מטבח אחד, מקרר אחד ושולחן אחד. אלה הדברים שמדברים עליהם לפני שמרכיבים תפריט."
+        lede="אירוע בבית אינו מסעדה קטנה יותר. הוא אירוע עם מטבח אחד, מקרר אחד ושולחן אחד — ואלה הדברים שמדברים עליהם לפני שמרכיבים תפריט."
       />
 
-      <ul className="m-0 list-none p-0">
+      <ol className="m-0 grid list-none gap-grid p-0 [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
         {HOSTING.map((row, i) => (
-          <li key={row.title} className="m-0">
-            {i > 0 ? <Rule /> : null}
-            <div className="max-w-body py-[1.7rem] pe-6">
-              <h3 className="m-0 font-serif text-lg font-bold">{row.title}</h3>
-              <p className="mt-2 text-xs leading-[1.6] text-fg-muted">{row.body}</p>
-            </div>
+          <li
+            key={row.title}
+            className="m-0 rounded-card border border-solid border-[color:var(--rule)] p-card"
+          >
+            {/* הספרה בענבר — אחת מארבע הנקודות ש־04 §2 שם בהן את המבטא. */}
+            <span className="sec__num num">{String(i + 1).padStart(2, "0")}</span>
+            <h3 className="mt-3 text-lg font-semibold">{row.title}</h3>
+            <p className="mt-2 max-w-none text-xs leading-[1.6] text-fg-muted">{row.body}</p>
           </li>
         ))}
-      </ul>
+      </ol>
     </div>
   </section>
 );
@@ -194,12 +266,11 @@ const HostingSection = ({ num }: { num?: string }) => (
 
 /**
  * ‏§4 P-09, שער `private_event_capacity`. הסקשן קיים **רק** אם נמסרה
- * קיבולת אירוע פרטי למסעדה כלשהי, והוא נוקב באותן מסעדות בשמן — לא
- * מדבר בכללי ולא רומז. אין קיבולת ⇒ אין סקשן, ואין בעמוד שום דבר
- * שמרמז על השכרת מקום.
+ * קיבולת אירוע פרטי למסעדה כלשהי, והוא נוקב באותן מסעדות בשמן. אין
+ * קיבולת ⇒ אין סקשן, ואין בעמוד שום דבר שמרמז על השכרת מקום.
  *
- * כל שורת קיבולת נגזמת לחוד: מספר יושבים, מספר עומדים, אפשרות סגירה
- * וחניה — כל אחד נעלם לבד, ולעולם אין כאן תא ריק.
+ * כל שורת קיבולת נגזמת לחוד — יושבים, עומדים, סגירה, חניה ונגישות —
+ * ולעולם אין כאן תא ריק.
  */
 const AtRestaurantSection = ({ num }: { num?: string }) => {
   const hosts = restaurantsWithPrivateEvents();
@@ -215,8 +286,8 @@ const AtRestaurantSection = ({ num }: { num?: string }) => {
           lede="לא כל אירוע צריך להתקיים בבית. אלה המסעדות שמארחות אירועים פרטיים, ומה שידוע עליהן."
         />
 
-        <ul className="m-0 list-none p-0">
-          {hosts.map((restaurant, i) => {
+        <ul className="m-0 grid list-none gap-grid p-0 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
+          {hosts.map((restaurant) => {
             const capacity = privateEventCapacityFor(restaurant.id);
             if (!capacity) return null;
 
@@ -240,20 +311,20 @@ const AtRestaurantSection = ({ num }: { num?: string }) => {
             if (capacity.accessible === true) lines.push(<>המקום נגיש</>);
 
             return (
-              <li key={restaurant.id} className="m-0">
-                {i > 0 ? <Rule /> : null}
-                <div className="py-[1.6rem]">
-                  <h3 className="m-0 font-serif text-2xl font-medium">{restaurant.nameHe}</h3>
-                  {lines.length > 0 ? (
-                    <ul className="m-0 mt-3 list-none p-0">
-                      {lines.map((line, j) => (
-                        <li key={j} className="mb-[.35rem] text-xs text-fg-muted">
-                          {line}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </div>
+              <li
+                key={restaurant.id}
+                className="m-0 rounded-card border border-solid border-[color:var(--rule)] bg-bg p-card"
+              >
+                <h3 className="m-0 text-lg font-semibold">{restaurant.nameHe}</h3>
+                {lines.length > 0 ? (
+                  <ul className="m-0 mt-3 list-none p-0">
+                    {lines.map((line, j) => (
+                      <li key={j} className="mb-[.35rem] text-xs text-fg-muted">
+                        {line}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </li>
             );
           })}
@@ -270,7 +341,7 @@ type PageFaq = FaqItem & { answerHe: string | null };
 /**
  * סט בצורת **אירוח**, ולא בצורת רכש — זה מה שמפריד אותו מהסט של P-08
  * (T-1). שאלה בלי תשובה אינה מרונדרת, ואותו סינון בדיוק מזין את
- * ה־`FAQPage`.
+ * ה־`FAQPage`. כל תשובה היא משפט שלם שעומד בפני עצמו מחוץ להקשר.
  */
 function faqItems(): PageFaq[] {
   const includes = filled(SLOTS.priceIncludes) ? SLOTS.priceIncludes : null;
@@ -287,7 +358,7 @@ function faqItems(): PageFaq[] {
       id: "faq-how-to-order",
       questionHe: "איך מתחילים?",
       answerHe:
-        "ממלאים את הטופס בעמוד או כותבים לנו בוואטסאפ. חוזרים אליכם, עוברים על האירוע, ומרכיבים תפריט לפי מה שסיפרתם.",
+        "בונים את התפריט כאן בעמוד ומשאירים פרטים, או כותבים לנו בוואטסאפ. חוזרים אליכם, עוברים על האירוע, ומרכיבים תפריט לפי מה שסיפרתם.",
     },
     {
       id: "faq-staffing",
@@ -330,27 +401,6 @@ function faqItems(): PageFaq[] {
   ];
 }
 
-/* ═══════════════════ להמשיך מכאן ═══════════════════ */
-
-const NEXT: NextStepLink[] = [
-  {
-    href: "/catering/bar-mitzvah",
-    titleHe: "בר מצווה ובת מצווה",
-    descriptionHe: "אירוע שמתוכנן חודשים מראש.",
-  },
-  {
-    href: "/catering/holidays",
-    titleHe: "ארוחת חג",
-    descriptionHe: "שולחן חג לבית שמארח.",
-  },
-  {
-    href: "/catering/dairy",
-    titleHe: "תפריט חלבי",
-    descriptionHe: "חיתוך חלבי של אותו מטבח.",
-  },
-  { href: "/catering", titleHe: "כל סוגי האירועים", descriptionHe: "המפרק המלא." },
-];
-
 /* ═══════════════════ העמוד ═══════════════════ */
 
 export default function CateringPrivate() {
@@ -363,13 +413,23 @@ export default function CateringPrivate() {
 
   const faqs = faqItems();
 
+  const showProof = hasGoogleReviews() || hasTestimonials();
+  const showGallery = hasGallery();
+
+  /* אותו שער בדיוק שהרשת משתמשת בו, מחושב כאן כדי שהעמוד יידע אם
+     לרנדר את הרצועה בכלל. */
+  const otherOccasions = React.useMemo(
+    () => buildableOccasions().filter((o) => o.id !== OCCASION.id),
+    [],
+  );
+
   /* ‏§3.1 — מקור המספור היחיד. */
   const order = [
+    "quote",
     "hosting",
     offerAtRestaurant ? "at-restaurant" : null,
     "kitchen",
     "branches",
-    "quote",
     faqs.some((f) => f.answerHe) ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
@@ -378,10 +438,12 @@ export default function CateringPrivate() {
     return i < 0 ? undefined : String(i + 1).padStart(2, "0");
   };
 
-  /* גיזום ברמת הפסוקית (G5). הכשרות נקראת מהמשבצת ולא נכתבת קשיח. */
-  const facts = ["מטבח של מסעדה איטלקית פעילה", kashrutClauseHe("general")].filter(
-    (c): c is string => Boolean(c),
-  );
+  /* גיזום ברמת הפסוקית (G5). הכשרות אינה נכתבת כאן כמחרוזת: `KashrutBadge`
+     מצטט את המשבצת, וכשאין נוסח אין תג ואין רווח שמור. */
+  const facts: React.ReactNode[] = [
+    hasKashrutWording() ? <KashrutBadge key="kashrut" variant="pill" /> : null,
+    "מטבח של מסעדה איטלקית פעילה",
+  ].filter(Boolean);
 
   const cities = cateringServiceCities();
 
@@ -390,9 +452,8 @@ export default function CateringPrivate() {
       <Head
         meta={META}
         jsonLd={[
-          /* ‏`Service` לזיהוי ישות בלבד — אין לו תוצאה עשירה מקבילה בגוגל.
-             ‏`areaServed` נפלט רק מערים שנמסרו, ולעולם לא נגזר ממיקומי
-             המסעדות. */
+          /* ‏`Service` לזיהוי ישות בלבד. `areaServed` נפלט רק מערים שנמסרו,
+             ולעולם לא נגזר ממיקומי המסעדות. */
           stripEmptyJsonLd(buildWebPage(META)),
           stripEmptyJsonLd(
             buildService({
@@ -409,21 +470,19 @@ export default function CateringPrivate() {
       />
 
       <OccasionIntro
-        eyebrow="קייטרינג · שמחות פרטיות"
+        eyebrow="קייטרינג מאמאמיה · שמחות פרטיות"
         title={
           <>
             אירוסין, יום הולדת, ערב משפחתי —
             <br />
-            מהמטבח של המסעדה,
-            <br />
-            אצלכם.
+            מהמטבח של המסעדה, אצלכם.
           </>
         }
         lede="אתם מארחים, אנחנו מבשלים. התפריט נסגר מראש, האוכל יוצא מהמטבח של המסעדה, ואתם נשארים עם האורחים ולא במטבח."
         facts={facts}
-        primary={{ label: "בנו תפריט לאירוע", href: "#quote" }}
+        primary={{ label: "לבנות את התפריט", href: "#quote" }}
         secondary={{
-          label: "דברו איתנו בוואטסאפ",
+          label: "לכתוב לנו בוואטסאפ",
           variant: "ghost",
           href: wa.href,
           target: "_blank",
@@ -432,12 +491,16 @@ export default function CateringPrivate() {
         }}
         callLocation="hero"
       >
+        {/* ‏04 §5: מונה הביקורות הוא אות האמון המרכזי בקטגוריה. הבלוק
+            מחווט ומחזיר `null` עד שהמספר האמיתי יימסר. */}
+        <ReviewsBlock ratingOnly className="mt-8" />
+
         {/* INV-6: קליק על וואטסאפ כותב שורת ליד, ולכן הודעת סעיף 11 צמודה
             לפקד. אין להסיר אותה כדי «לנקות» את ההירו. */}
         <Prose
           size="fine"
           measure="body"
-          className="mt-5 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
+          className="mt-6 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]"
         >
           <p>
             בלחיצה על וואטסאפ נשמרת אצלנו פנייה עם פרטי האירוע שמופיעים בהודעה.{" "}
@@ -448,9 +511,50 @@ export default function CateringPrivate() {
         </Prose>
       </OccasionIntro>
 
+      {/* ═══ 01 · משבצת ההמרה. הדבר השני שהקונה רואה. ═══ */}
+      <BuilderSection
+        num={num("quote")}
+        seed={{ eventType: seedEventType }}
+        offerAtRestaurant={offerAtRestaurant}
+        title="התפריט לאירוע שלכם"
+        lede="כמה אנשים, מתי, ואיפה. אין שדה תקציב. ההצעה חוזרת בכתב."
+      />
+
+      {/* המסלול השני. הפקד הירוק הממולא היחיד בעמוד.
+          `showQuote={false}` — הבנאי נמצא ממש מעליו. */}
+      <section className="sec sec--tight">
+        <div className="wrap">
+          <ContactBar
+            waLocation="quote_alt"
+            callLocation="quote_alt"
+            answers={seedEventType ? { eventType: seedEventType } : undefined}
+            showQuote={false}
+            labels={{ wa: "עדיף לי בוואטסאפ", phoneLead: "או פשוט חייגו" }}
+          />
+        </div>
+      </section>
+
       <HostingSection num={num("hosting")} />
 
       <AtRestaurantSection num={num("at-restaurant")} />
+
+      {/* ‏04 §5 — שכבת האמון. שתי הרצועות ריקות היום ולכן אינן קיימות:
+          לא מסגרת אפורה, לא «בקרוב», ולא רשת עם תאים ריקים. */}
+      {showProof ? (
+        <section id="reviews" className="sec sec--alt">
+          <div className="wrap">
+            <ReviewsBlock eyebrow="מה אומרים" title="ביקורות בגוגל" headingAs="h2" />
+          </div>
+        </section>
+      ) : null}
+
+      {showGallery ? (
+        <section id="gallery" className="sec">
+          <div className="wrap">
+            <Gallery eyebrow="מהאירועים" title="איך זה נראה בפועל" columns={3} />
+          </div>
+        </section>
+      ) : null}
 
       <KitchenNote num={num("kitchen")} />
 
@@ -464,32 +568,54 @@ export default function CateringPrivate() {
         flagshipLabelHe={null}
       />
 
-      <QuoteCta
-        num={num("quote")}
-        sourcePage={SOURCE_PAGE}
-        seed={{ eventType: seedEventType }}
-        offerAtRestaurant={offerAtRestaurant}
-        title="התפריט לאירוע שלכם"
-        lede="ארבע שאלות על האירוע, ואז פרטים ליצירת קשר. אין שדה תקציב."
-      />
+      {/* הקריאה הארוכה על קרקע קרמית — מדיניות ההחלפה ב־`index.css`. */}
+      {faqs.some((f) => f.answerHe) ? (
+        <div data-band="cream">
+          <FaqBand
+            id="faq"
+            num={num("faq")}
+            items={faqs}
+            eyebrow="לפני שמזמינים"
+            title="שאלות שנשאלות בטלפון"
+            lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
+          />
+        </div>
+      ) : null}
 
-      <WhatsAppBand
-        waLocation="quote_alt"
-        answers={seedEventType ? { eventType: seedEventType } : undefined}
-        title="מעדיפים לכתוב?"
-        lede="אפשר לשלוח את פרטי האירוע בהודעה, ולהמשיך משם."
-        labelHe="עדיף לי בוואטסאפ"
-        callLocation="quote_alt"
-      />
+      {/* קישור פנימי + המרה: קונה מקמפיין רחב אינו יודע שיש דף שמדבר
+          בדיוק על האירוע שלו. הרשת נגזרת מ־`buildableOccasions()`, ולכן
+          מסלול חסום פשוט אינו קיים בה ואין כאן 404 בקמפיין משלם. השער
+          חוזר גם כאן, כדי שלא תיוותר רצועה ריקה אם כולם ייחסמו. */}
+      {otherOccasions.length > 0 ? (
+        <section id="occasions" className="sec sec--alt">
+          <div className="wrap">
+            <OccasionGrid
+              eyebrow="לאיזה אירוע"
+              title="מה עוד יוצא מהמטבח"
+              exclude={[OCCASION.id]}
+            />
+          </div>
+        </section>
+      ) : null}
 
-      <FaqBand
-        num={num("faq")}
-        items={faqs}
-        title="שאלות שנשאלות בטלפון"
-        lede="ומה שאין עליו תשובה כאן — שאלו אותנו ישירות."
-      />
-
-      <NextSteps sourcePage={SOURCE_PAGE} links={NEXT} />
+      {/* הבאנד הסוגר. הענבר חוזר להיות הפקד הממולא. */}
+      <section id="contact" className="sec sec--tight">
+        <div className="wrap">
+          <SectionHeader
+            eyebrow="לסגור את האירוע"
+            title="נבנה לכם תפריט"
+            lede="ספרו לנו כמה אנשים, מתי ואיפה, ונחזור עם תפריט והצעה בכתב."
+          />
+          <ContactBar
+            waLocation="footer"
+            callLocation="footer"
+            primary="quote"
+            quoteHref="#quote"
+            answers={seedEventType ? { eventType: seedEventType } : undefined}
+            labels={{ quote: "לבנות את התפריט", wa: "לכתוב לנו בוואטסאפ" }}
+          />
+        </div>
+      </section>
     </>
   );
 }

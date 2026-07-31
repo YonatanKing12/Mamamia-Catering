@@ -18,6 +18,7 @@ import { storage } from "./storage";
 import { pingDatabase, hasDatabase } from "./db";
 import { log } from "./vite";
 import { registerSeoRoutes } from "./sitemap";
+import { registerGeoRoutes } from "./geo";
 import {
   quoteLeadSchema, waIntentSchema, draftSchema,
   toE164, GUEST_BANDS_VERSION, LEAD_STATUSES,
@@ -176,6 +177,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
      ולכן הגרסה הדינמית — זו שנושאת כתובת מוחלטת בשורת Sitemap — גוברת
      על client/public/robots.txt הסטטי. */
   registerSeoRoutes(app);
+
+  /* ───── /llms.txt ─────
+     שכבת ה־GEO. `registerGeoRoutes` רושם את `/llms.txt` בלבד; `/robots.txt`
+     נשאר בבעלות `registerSeoRoutes` לעיל, ובלוק זחלני ה־AI מוזרק לתוכו
+     מבפנים (`robotsTxt()` קורא ל־`aiCrawlerPolicy`). רישום שני של
+     `/robots.txt` כאן היה נבלע בשקט — באקספרס המטפל הראשון מנצח. */
+  registerGeoRoutes(app);
 
   /* ───── בדיקת חיים ───── */
   app.get("/api/health", async (_req, res) => {

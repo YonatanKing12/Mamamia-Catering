@@ -31,6 +31,123 @@ Disallow: /summary
 Disallow: /thanks
 Disallow: /unsubscribe
 
+# ── זחלני מנועי תשובות ──────────────────────────────────────────
+# מותרים במכוון: המטרה היא להיות מצוטט בתשובות AI, לא רק מדורג.
+# כל קבוצה חוזרת על מלוא ה־Disallow — זחלן ששמו נקוב מתעלם מקבוצת *.
+
+# OpenAI — סריקה
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# OpenAI — אינדקס החיפוש שמזין ציטוטים ב־ChatGPT
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# OpenAI — שליפה ביוזמת משתמש
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# Anthropic — סריקה
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# Anthropic — אינדקס החיפוש
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# Anthropic — שליפה ביוזמת משתמש
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# Perplexity — סריקה ואינדקס
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# Perplexity — שליפה ביוזמת משתמש
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# גוגל — פקד שימוש בסקירות AI וב־Gemini. אינו סורק.
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# אפל — פקד שימוש. אינו סורק.
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# Common Crawl — הארכיון שמזין מודלים רבים
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /lp
+Disallow: /summary
+Disallow: /thanks
+Disallow: /unsubscribe
+
+# ── קבוצות זחלני ה־AI נגזרות מ־server/geo.ts#aiCrawlerPolicy. אין
+#    לערוך ביד: כל קבוצה חוזרת על מלוא ה־Disallow מפני ש־robots.txt
+#    אינו מצטבר, וזחלן ששמו נקוב מתעלם לחלוטין מקבוצת `*`.
 # יחסי מתוך הכרח: אין לנו דומיין לכתוב כאן, וכתובת מומצאת גרועה משורה
 # יחסית. הגרסה שהשרת מגיש נושאת את הכתובת המלאה.
 Sitemap: /sitemap.xml

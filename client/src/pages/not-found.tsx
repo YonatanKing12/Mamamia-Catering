@@ -7,24 +7,34 @@
  * add the page to the router?" — בלי כותרת, בלי פוטר ובלי דרך חזרה.
  * זו שאלה למפתח, על מסך של לקוח.
  *
- * ‎**404 באתר לידים הוא דף התאוששות.** הוא יושב בתוך `PageShell` (הכותרת
- * והפוטר מגיעים מ־`App.tsx`), הוא עברי ו־RTL, והוא נותן שלוש דרכים
- * להמשיך: לחזור לבית, לבנות תפריט, או פשוט לדבר עם מישהו.
+ * ‎**404 באתר לידים הוא דף התאוששות, ולכן הוא גם דף המרה.** הוא יושב
+ * בתוך `PageShell` (הכותרת והפוטר מגיעים מ־`App.tsx`), הוא עברי ו־RTL,
+ * ומי שנחת עליו קיבל כאן בדיוק את מה שהיה מקבל בכל דף אחר — באותה
+ * היררכיה שמחזיקה את ששת העמודים:
+ *
+ *   1. **בנייה — פקד ענבר ממולא אחד,** ל־`/quote`. מי שהגיע מקישור שבור
+ *      עדיין מחפש קייטרינג; רשימת ניווט לבדה מבקשת ממנו לחפש שוב.
+ *   2. **וואטסאפ — ghost אחד.** «תגידו לנו מה חיפשתם» הוא גם הערוץ
+ *      המהיר ביותר וגם הדיווח הזול ביותר על קישור שבור.
+ *   3. **טלפון — קישור טקסט.**
+ *
+ * ואחריהם, ולא לפניהם, רשימת ההתאוששות.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  הקישורים
  * ─────────────────────────────────────────────────────────────────────
- * המפרט מונה גם `/menus` וגם `/kitchens`. שני המסלולים טרם נבנו, ולכן
- * הם אינם מקושרים כאן: **דף 404 שמוביל ל־404 נוסף הוא כשל חמור יותר
- * מהראשון.** כשהעמודים ינחתו, מוסיפים אותם לרשימת `RECOVERY` למטה.
+ * ‎**דף 404 שמוביל ל־404 נוסף הוא כשל חמור יותר מהראשון.** לכן כל יעד
+ * ברשימה עובר `isServedPath()` בזמן רינדור — הוא קורא את `enabled`
+ * וה־`blockedBy` של `shared/routes.ts`, שהוא מקור האמת היחיד. יעד
+ * שנחסם נעלם מהרשימה מעצמו, בלי שאיש יזכור לעדכן כאן מערך.
  *
  * ─────────────────────────────────────────────────────────────────────
  *  מדידה
  * ─────────────────────────────────────────────────────────────────────
  * כפתור הוואטסאפ כאן אינו עובר ב־`captureWaIntent()`. `WA_LOCATIONS`
- * ב־`shared/lead-schema.ts` הוא איחוד סגור ואין בו ערך שמתאר 404;
+ * ב־`shared/lead-constants.ts` הוא איחוד סגור ואין בו ערך שמתאר 404;
  * ‎`waLocation` שגוי היה מזהם את דוח הערוצים. הקישור נשאר `wa.me` רגיל
- * עד שיתווסף ערך אמיתי לסכימה.
+ * עד שיתווסף ערך אמיתי לסכימה — מדווח בדוח החזרה.
  *
  * ‎`Head` מקבל את רשומת `/404` (`noindex, follow`). השרת אחראי להחזיר
  * סטטוס 404 אמיתי לנתיב שאינו `/api` — 01 §4 P-25.
@@ -32,20 +42,31 @@
 
 import { Link } from "wouter";
 import { Head } from "@/components/seo/head";
-import { Button, Num, Prose, Rule } from "@/components/primitives";
+import { CtaPair, Num, Prose } from "@/components/primitives";
 import { PHONE, telLink, waLink } from "@/content/business";
 import { capturePhoneClick } from "@/lib/lead-client";
 import { PAGE_META } from "@/lib/seo";
+import { isServedPath } from "@shared/routes";
 
 const META = PAGE_META["/404"];
 
-/** מסלולים שקיימים בפועל. אין לרשום כאן יעד שאין לו קובץ עמוד. */
+/**
+ * יעדי ההתאוששות. `/quote` **אינו** ברשימה — הוא פקד הענבר למעלה, ושורה
+ * שחוזרת על פקד שכבר נלחץ עליה מדללת אותו.
+ */
 const RECOVERY = [
   { href: "/", label: "לעמוד הבית", note: "מי אנחנו, ומאיפה האוכל יוצא." },
-  { href: "/quote", label: "בנו תפריט לאירוע", note: "ארבע שאלות, ואנחנו חוזרים אליכם." },
+  { href: "/menus", label: "התפריטים", note: "איך נבנה תפריט לאירוע." },
+  { href: "/catering", label: "לפי סוג האירוע", note: "לאיזה אירועים אנחנו נכנסים." },
+  { href: "/kitchen", label: "המטבח", note: "מי מבשל את האוכל, ואיפה." },
 ] as const;
 
+const WA_OPENER = "היי, הגעתי מהאתר ולא מצאתי את מה שחיפשתי.";
+
 export default function NotFound() {
+  /* מסנן בזמן רינדור מול מקור האמת, ולא רשימה שנכתבה ביד ותתיישן. */
+  const links = RECOVERY.filter((item) => isServedPath(item.href));
+
   return (
     <>
       <Head meta={META} />
@@ -59,53 +80,55 @@ export default function NotFound() {
 
             <Prose size="lede" measure="lede" className="mt-5">
               <p>
-                יכול להיות שהכתובת השתנתה, או שהקישור נשבר בדרך. אלה הדפים
-                שכן קיימים:
+                יכול להיות שהכתובת השתנתה, או שהקישור נשבר בדרך. אם הגעתם לכאן
+                בשביל קייטרינג — אפשר להתחיל מכאן.
               </p>
             </Prose>
 
-            <ul className="mt-8 m-0 list-none p-0">
-              {RECOVERY.map((item, i) => (
-                <li key={item.href} className="m-0">
-                  {i > 0 ? <Rule /> : null}
-                  <Link
-                    href={item.href}
-                    className="block py-5 text-fg no-underline hover:text-accent"
-                  >
-                    <span className="block font-serif text-lg font-bold">{item.label}</span>
-                    <span className="mt-1 block text-xs text-fg-muted">{item.note}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <CtaPair
+              className="mt-8"
+              primary={{ label: "בנו תפריט לאירוע", href: "/quote" }}
+              secondary={{
+                label: "תגידו לנו מה חיפשתם",
+                variant: "ghost",
+                href: waLink(WA_OPENER),
+                target: "_blank",
+                rel: "noopener noreferrer",
+              }}
+            />
 
-            <Rule />
+            <p className="mt-5 text-xs text-fg-subtle">
+              או בטלפון{" "}
+              <a
+                href={telLink()}
+                data-tel=""
+                className="font-semibold text-fg no-underline hover:text-accent"
+                onClick={() => capturePhoneClick({ callLocation: "not_found" })}
+              >
+                <Num>{PHONE.display}</Num>
+              </a>
+            </p>
 
-            <div className="pt-8">
-              <Prose size="note" measure="answer">
-                <p>או פשוט תגידו לנו מה חיפשתם:</p>
-              </Prose>
+            {/* רשימה ריקה ⇒ אין כותרת ואין רשת. אותו כלל כמו בכל באנד. */}
+            {links.length > 0 ? (
+              <div className="mt-10">
+                <p className="eyebrow m-0">או המשיכו מכאן</p>
 
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <Button
-                  variant="wa"
-                  size="sm"
-                  href={waLink("היי, הגעתי מהאתר ולא מצאתי את מה שחיפשתי.")}
-                  target="_blank"
-                >
-                  וואטסאפ
-                </Button>
-
-                <a
-                  href={telLink()}
-                  data-tel=""
-                  className="text-sm text-fg no-underline hover:text-accent"
-                  onClick={() => capturePhoneClick({ callLocation: "not_found" })}
-                >
-                  <Num>{PHONE.display}</Num>
-                </a>
+                <ul className="mt-4 grid list-none gap-grid p-0 min-[600px]:grid-cols-2">
+                  {links.map((item) => (
+                    <li key={item.href} className="m-0">
+                      <Link
+                        href={item.href}
+                        className="block rounded-card border border-solid border-[color:var(--rule)] bg-bg-form p-card text-fg no-underline transition-colors duration-state ease-house hover:border-accent hover:text-accent"
+                      >
+                        <span className="block text-lg font-bold">{item.label}</span>
+                        <span className="mt-1 block text-xs text-fg-muted">{item.note}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </section>

@@ -18,7 +18,9 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { telLink, waLink } from "@/content/business";
+import { telLink } from "@/content/business";
+import { buildWaHref, captureWaIntent, capturePhoneClick, newRef } from "@/lib/lead-client";
+import { track } from "@/lib/analytics";
 import { WhatsAppGlyph } from "./brand-icons";
 
 export type StickyCtaMode = "quote" | "phone" | "none";
@@ -65,6 +67,36 @@ export const StickyCta = React.forwardRef<HTMLElement, StickyCtaProps>(function 
   },
   ref,
 ) {
+  /*
+   * ═══ קליטה, ולא רק קישור ═══
+   *
+   * הסרגל הזה הוא הפקד הכי נלחץ באתר — הוא ה־CTA הממולא היחיד ב־17 מתוך
+   * 20 המסלולים, וכמעט כל תנועת הקייטרינג היא ניידת. עד עכשיו הוא היה
+   * עוגן חשוף: בלי onClick, בלי קליטה, בלי מספר פנייה ובלי אירוע מדידה.
+   * קונה שלחץ עליו יצא לוואטסאפ ולא נשאר ממנו זכר — לא במסד, לא בייחוס,
+   * ולא בהמרות של הקמפיין ששילם על הקליק.
+   *
+   * החוזה זהה ל־WhatsAppBand, שכבר עושה את זה נכון:
+   *   ref נוצר פעם אחת בהרכבה  →  ה־href הסטטי כבר נושא אותו, ולכן הוא
+   *   תקין גם בלי JS ובפתיחה בלשונית חדשה  →  בקליק: קליטה «שגר ושכח»
+   *   וניווט **באותו tick**. בלי await: ספארי חוסם פתיחה ברגע שה־promise
+   *   נכנע, וזה מפיל בדיוק את הפלטפורמה שרוב התנועה מגיעה ממנה.
+   */
+  const [ref_] = React.useState(() => newRef());
+  const resolvedWaHref = waHref ?? buildWaHref({}, ref_);
+
+  const onWa = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      track("whatsapp_click", { wa_location: "sticky", has_lead: false });
+      captureWaIntent({ waLocation: "sticky", ref: ref_ });
+      track("whatsapp_handoff", { lead_ref: ref_, wa_location: "sticky" });
+      window.location.href = resolvedWaHref;
+    },
+    [ref_, resolvedWaHref],
+  );
+
   if (mode === "none") return null;
 
   const waLabel = labels?.wa ?? "וואטסאפ";
@@ -91,11 +123,20 @@ export const StickyCta = React.forwardRef<HTMLElement, StickyCtaProps>(function 
         )}
         {...rest}
       >
-        <a href={waHref ?? waLink(waMessage)} className={cn(LINK, FILLED)}>
+        <a href={resolvedWaHref} onClick={onWa} className={cn(LINK, FILLED)}>
           <WhatsAppGlyph />
           {waLabel}
         </a>
-        <a href={secondary.href} className={cn(LINK, GHOST)}>
+        <a
+          href={secondary.href}
+          /* הפקד השני הוא טלפון במצב phone — גם הוא נקודת קליטה */
+          onClick={
+            mode === "phone"
+              ? () => capturePhoneClick({ callLocation: "sticky" })
+              : undefined
+          }
+          className={cn(LINK, GHOST)}
+        >
           {secondary.label}
         </a>
       </nav>

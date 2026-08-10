@@ -266,7 +266,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : undefined;
 
       const fields: Partial<InsertLead> = {
-        ...attributionOf(v),
+...attributionOf(v),
         name: v.name,
         phone: v.phone,
         phoneE164: e164,
@@ -334,7 +334,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : undefined;
 
       const fields: Partial<InsertLead> = {
-        ...attributionOf(v),
+...attributionOf(v),
         waLocation: v.waLocation,
         branch: v.branch ?? null,
         eventType: v.eventType ?? null,
@@ -406,15 +406,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/leads/:id", requireAdmin, async (req, res, next) => {
     try {
       const body = z
-        .object({
+.object({
           status: z.enum(LEAD_STATUSES).optional(),
           lostReason: z.string().max(200).optional(),
           quotedValueIls: z.coerce.number().int().min(0).max(10_000_000).optional(),
           wonValueIls: z.coerce.number().int().min(0).max(10_000_000).optional(),
           notes: z.string().max(2000).optional(),
         })
-        .strict()
-        .parse(req.body);
+.strict()
+.parse(req.body);
 
       const now = new Date();
       const patch: Partial<InsertLead> = { ...body };

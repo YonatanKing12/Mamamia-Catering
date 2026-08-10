@@ -54,7 +54,7 @@
  * ```ts
  * {
  *   id: "shef-italki",
- *   nameHe: "תפריט שף איטלקי",
+ *   nameHe: "תפריט שף ",
  *   kickerHe: "המנות שהמסעדה מוציאה בערב רגיל",
  *   dishIds: ["antipasti-misto", "tagliatelle-ragu", "tiramisu"],
  *   serviceFormats: ["buffet_on_site", "plated_staffed"],

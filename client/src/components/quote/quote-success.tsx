@@ -70,12 +70,12 @@ export function QuoteSuccess({
       ref: leadRef,
       waLocation: "thanks",
       branch: answers.branch,
-      ...(answers.eventType ? { eventType: answers.eventType } : {}),
-      ...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
-      ...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
-      ...(answers.area ? { area: answers.area.slice(0, 60) } : {}),
+...(answers.eventType ? { eventType: answers.eventType } : {}),
+...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers.area ? { area: answers.area.slice(0, 60) } : {}),
       serviceFormat: answers.serviceFormat,
-      ...(answers.dishes.length ? { dishIds: answers.dishes.map((d) => d.id) } : {}),
+...(answers.dishes.length ? { dishIds: answers.dishes.map((d) => d.id) } : {}),
     });
 
     track("whatsapp_click", { wa_location: "thanks", has_lead: true });
@@ -87,11 +87,11 @@ export function QuoteSuccess({
 
     const href = buildWaHref(
       {
-        ...(answers.eventType ? { eventType: answers.eventType } : {}),
-        ...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
-        ...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers.eventType ? { eventType: answers.eventType } : {}),
+...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
         dateFlexible: answers.dateFlexible,
-        ...(answers.area ? { area: answers.area } : {}),
+...(answers.area ? { area: answers.area } : {}),
         branch: answers.branch,
         dishNames: answers.dishes.map((d) => d.name),
       },

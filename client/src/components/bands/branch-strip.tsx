@@ -165,9 +165,9 @@ export function BranchStrip({
       {/* המרזבים הם הקווים (§3.4 טכניקה 2). עמודה אחת בנייד. */}
       <div
         className={cn(
-          "grid gap-px overflow-hidden rounded border border-solid",
-          "border-[color:var(--rule)] bg-[color:var(--rule)]",
-          "[grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]",
+"grid gap-px overflow-hidden rounded border border-solid",
+"border-[color:var(--rule)] bg-[color:var(--rule)]",
+"[grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]",
         )}
       >
         {ordered.map((branch) => {

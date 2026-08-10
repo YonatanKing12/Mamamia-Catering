@@ -318,7 +318,7 @@ function faqItems(): PageFaq[] {
       id: "faq-who-cooks",
       questionHe: "מי מבשל את האוכל?",
       answerHe:
-        "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
+"המטבח של מסעדה פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
     },
     {
       id: "faq-tasting",
@@ -368,11 +368,11 @@ export default function CateringBarMitzvah() {
 
   /* ‏§3.1 — מקור המספור היחיד. */
   const order = [
-    "quote",
-    "guests",
-    "date",
-    "kitchen",
-    "branches",
+"quote",
+"guests",
+"date",
+"kitchen",
+"branches",
     faqs.some((f) => f.answerHe) ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
@@ -387,7 +387,7 @@ export default function CateringBarMitzvah() {
     hasKashrutWording({ requireWritten: true }) ? (
       <KashrutBadge key="kashrut" variant="pill" requireWritten />
     ) : null,
-    "מטבח של מסעדה איטלקית פעילה",
+"מטבח של מסעדה פעילה",
   ].filter(Boolean);
 
   const cities = cateringServiceCities();
@@ -425,7 +425,7 @@ export default function CateringBarMitzvah() {
             מהמטבח של המסעדה, אצלכם.
           </>
         }
-        lede="אירוע שמתכננים חודשים מראש ובודקים מול כמה ספקים. האוכל יוצא מהמטבח של מסעדה איטלקית פעילה, והתפריט נסגר איתכם מנה־מנה."
+        lede="אירוע שמתכננים חודשים מראש ובודקים מול כמה ספקים. האוכל יוצא מהמטבח של מסעדה פעילה, והתפריט נסגר איתכם מנה־מנה."
         facts={facts}
         primary={{ label: "לבנות את התפריט", href: "#quote" }}
         secondary={{
@@ -512,7 +512,7 @@ export default function CateringBarMitzvah() {
         sourcePage={SOURCE_PAGE}
         eyebrow="ההקשר"
         title="המסעדות שמאחורי הקייטרינג"
-        lede="מסעדות איטלקיות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
+        lede="מסעדות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
         flagshipLabelHe={null}
       />
 

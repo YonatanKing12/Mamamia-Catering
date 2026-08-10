@@ -111,8 +111,8 @@ export function RunningSummary({
                   type="button"
                   onClick={() => onEditCategory(line.category.id)}
                   className={cn(
-                    "min-h-[44px] px-1 text-3xs text-accent underline",
-                    "decoration-rule underline-offset-[.22em] hover:decoration-accent",
+"min-h-[44px] px-1 text-3xs text-accent underline",
+"decoration-rule underline-offset-[.22em] hover:decoration-accent",
                   )}
                 >
                   {COPY.edit}
@@ -132,9 +132,9 @@ export function RunningSummary({
                     type="button"
                     onClick={() => onRemove(line.category.id, dish.id)}
                     className={cn(
-                      "grid h-[44px] w-[44px] shrink-0 place-items-center rounded",
-                      "text-fg-subtle transition-colors duration-state ease-house",
-                      "hover:text-danger",
+"grid h-[44px] w-[44px] shrink-0 place-items-center rounded",
+"text-fg-subtle transition-colors duration-state ease-house",
+"hover:text-danger",
                     )}
                   >
                     <X aria-hidden="true" className="h-[1rem] w-[1rem]" />
@@ -182,8 +182,8 @@ export function RunningSummary({
       <aside
         aria-label={COPY.summaryTitle}
         className={cn(
-          "sticky top-[96px] hidden self-start rounded-lg border border-solid border-rule",
-          "bg-bg-form p-card min-[980px]:block",
+"sticky top-[96px] hidden self-start rounded-lg border border-solid border-rule",
+"bg-bg-form p-card min-[980px]:block",
           className,
         )}
       >
@@ -206,9 +206,9 @@ export function RunningSummary({
   return (
     <div
       className={cn(
-        "fixed inset-x-0 bottom-0 z-40 min-[980px]:hidden",
-        "border-t border-solid border-rule-control bg-bg-form shadow-sticky",
-        "pb-[env(safe-area-inset-bottom)]",
+"fixed inset-x-0 bottom-0 z-40 min-[980px]:hidden",
+"border-t border-solid border-rule-control bg-bg-form shadow-sticky",
+"pb-[env(safe-area-inset-bottom)]",
         className,
       )}
       data-configurator-dock=""
@@ -237,7 +237,7 @@ export function RunningSummary({
           <ChevronUp
             aria-hidden="true"
             className={cn(
-              "h-[1.1rem] w-[1.1rem] shrink-0 text-accent transition-transform duration-state ease-house",
+"h-[1.1rem] w-[1.1rem] shrink-0 text-accent transition-transform duration-state ease-house",
               open && "rotate-180",
             )}
           />

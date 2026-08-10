@@ -106,9 +106,9 @@ export function CategoryStep({
       <p
         aria-live="polite"
         className={cn(
-          "flex flex-wrap items-center gap-x-[.6rem] gap-y-[.25rem]",
-          "rounded border border-solid border-rule bg-bg-alt px-[.9rem] py-[.6rem]",
-          "text-sm font-semibold",
+"flex flex-wrap items-center gap-x-[.6rem] gap-y-[.25rem]",
+"rounded border border-solid border-rule bg-bg-alt px-[.9rem] py-[.6rem]",
+"text-sm font-semibold",
           extras > 0 && "border-accent",
         )}
       >

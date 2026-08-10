@@ -352,13 +352,13 @@ function faqItems(): PageFaq[] {
       id: "faq-origin",
       questionHe: "האוכל מגיע מהמסעדה עצמה?",
       answerHe:
-        "כן. הוא מבושל במטבח של מסעדה איטלקית פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
+"כן. הוא מבושל במטבח של מסעדה פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
     },
     {
       id: "faq-how-to-order",
       questionHe: "איך מתחילים?",
       answerHe:
-        "בונים את התפריט כאן בעמוד ומשאירים פרטים, או כותבים לנו בוואטסאפ. חוזרים אליכם, עוברים על האירוע, ומרכיבים תפריט לפי מה שסיפרתם.",
+"בונים את התפריט כאן בעמוד ומשאירים פרטים, או כותבים לנו בוואטסאפ. חוזרים אליכם, עוברים על האירוע, ומרכיבים תפריט לפי מה שסיפרתם.",
     },
     {
       id: "faq-staffing",
@@ -425,11 +425,11 @@ export default function CateringPrivate() {
 
   /* ‏§3.1 — מקור המספור היחיד. */
   const order = [
-    "quote",
-    "hosting",
+"quote",
+"hosting",
     offerAtRestaurant ? "at-restaurant" : null,
-    "kitchen",
-    "branches",
+"kitchen",
+"branches",
     faqs.some((f) => f.answerHe) ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
@@ -442,7 +442,7 @@ export default function CateringPrivate() {
      מצטט את המשבצת, וכשאין נוסח אין תג ואין רווח שמור. */
   const facts: React.ReactNode[] = [
     hasKashrutWording() ? <KashrutBadge key="kashrut" variant="pill" /> : null,
-    "מטבח של מסעדה איטלקית פעילה",
+"מטבח של מסעדה פעילה",
   ].filter(Boolean);
 
   const cities = cateringServiceCities();
@@ -564,7 +564,7 @@ export default function CateringPrivate() {
         sourcePage={SOURCE_PAGE}
         eyebrow="ההקשר"
         title="המסעדות שמאחורי הקייטרינג"
-        lede="מסעדות איטלקיות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
+        lede="מסעדות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
         flagshipLabelHe={null}
       />
 

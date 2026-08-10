@@ -61,11 +61,11 @@ import type { ServiceFormat, WaLocation } from "@shared/lead-constants";
 /* ═══════════════════ הפקדים ═══════════════════ */
 
 const CONTROL =
-  "inline-flex min-h-[48px] items-center justify-center gap-2 " +
-  "rounded-pill border border-solid px-[1.5rem] py-[.8rem] " +
-  "font-sans text-sm font-bold leading-none no-underline text-center " +
-  "transition-[background-color,color,border-color,transform] duration-state ease-house " +
-  "hover:-translate-y-px motion-reduce:hover:translate-y-0";
+"inline-flex min-h-[48px] items-center justify-center gap-2 " +
+"rounded-pill border border-solid px-[1.5rem] py-[.8rem] " +
+"font-sans text-sm font-bold leading-none no-underline text-center " +
+"transition-[background-color,color,border-color,transform] duration-state ease-house " +
+"hover:-translate-y-px motion-reduce:hover:translate-y-0";
 
 /* לבן על --wa. הירוק של וואטסאפ הוא זיהוי ערוץ, לא צבע מותג שלנו. */
 const WA_FILLED = "bg-wa text-white border-wa hover:bg-wa-dk hover:border-wa-dk";
@@ -78,10 +78,10 @@ const WA_OUTLINE = "bg-transparent text-fg border-rule-control hover:text-accent
  * כשהוא נוחת על הבאנד הבהיר. שני הטוקנים קיימים בדיוק בשביל זה.
  */
 const QUOTE_FILLED =
-  "bg-accent text-accent-foreground border-accent-edge " +
-  "hover:bg-accent-hover hover:border-accent-hover";
+"bg-accent text-accent-foreground border-accent-edge " +
+"hover:bg-accent-hover hover:border-accent-hover";
 const QUOTE_OUTLINE =
-  "bg-transparent text-accent border-accent hover:bg-accent hover:text-accent-foreground";
+"bg-transparent text-accent border-accent hover:bg-accent hover:text-accent-foreground";
 
 /** נייד: אותה לשונית. לשונית ריקה שנשארת מאחור נקראת כאתר שבור. */
 function isMobile(): boolean {
@@ -139,7 +139,7 @@ export function ContactBar({
   privacyLabelHe = "מדיניות הפרטיות",
   framed = true,
   className,
-  ...rest
+...rest
 }: ContactBarProps) {
   /* מזהה אחד למחזור החיים של הרצועה: ה־href הסטטי והקליטה נושאים אותו יחד. */
   const [ref] = React.useState(() => newRef());
@@ -156,12 +156,12 @@ export function ContactBar({
         ref,
         waLocation,
         branch: answers?.branch ?? null,
-        ...(answers?.eventType ? { eventType: answers.eventType.slice(0, 60) } : {}),
-        ...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
-        ...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
-        ...(answers?.area ? { area: answers.area.trim().slice(0, 60) } : {}),
+...(answers?.eventType ? { eventType: answers.eventType.slice(0, 60) } : {}),
+...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers?.area ? { area: answers.area.trim().slice(0, 60) } : {}),
         serviceFormat,
-        ...(dishIds?.length ? { dishIds: dishIds.slice(0, 40) } : {}),
+...(dishIds?.length ? { dishIds: dishIds.slice(0, 40) } : {}),
       });
 
       track("whatsapp_handoff", {
@@ -199,9 +199,9 @@ export function ContactBar({
        בקורא מסך, ולא מבנה. */
     <div
       className={cn(
-        "flex flex-col gap-[.9rem]",
+"flex flex-col gap-[.9rem]",
         framed &&
-          "rounded-xl border border-solid border-[color:var(--rule)] bg-bg-alt p-[1.2rem]",
+"rounded-xl border border-solid border-[color:var(--rule)] bg-bg-alt p-[1.2rem]",
         className,
       )}
       {...rest}

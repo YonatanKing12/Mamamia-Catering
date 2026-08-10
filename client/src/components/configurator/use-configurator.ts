@@ -342,10 +342,10 @@ export function useConfigurator(opts: UseConfiguratorOptions): ConfiguratorApi {
     saveDraft({
       draftId: snapshot.draftId,
       step: draftStep,
-      ...(band ? { guestBand: band } : {}),
-      ...(snapshot.eventType ? { eventType: snapshot.eventType } : {}),
-      ...(cleanArea ? { area: cleanArea } : {}),
-      ...(dishes.length ? { selectedDishes: dishes.slice(0, 40) } : {}),
+...(band ? { guestBand: band } : {}),
+...(snapshot.eventType ? { eventType: snapshot.eventType } : {}),
+...(cleanArea ? { area: cleanArea } : {}),
+...(dishes.length ? { selectedDishes: dishes.slice(0, 40) } : {}),
     });
   }, []);
 
@@ -401,7 +401,7 @@ export function useConfigurator(opts: UseConfiguratorOptions): ConfiguratorApi {
       const alreadyIn = chosen.includes(dishId);
 
       const write = (ids: readonly DishId[]) => ({
-        ...prev,
+...prev,
         byCategory: { ...prev.byCategory, [categoryId]: ids },
       });
 
@@ -446,7 +446,7 @@ export function useConfigurator(opts: UseConfiguratorOptions): ConfiguratorApi {
       const chosen = prev.byCategory[categoryId] ?? [];
       if (!chosen.includes(dishId)) return;
       const selection: Selection = {
-        ...prev,
+...prev,
         byCategory: { ...prev.byCategory, [categoryId]: chosen.filter((id) => id !== dishId) },
       };
       apply({ selection });
@@ -493,7 +493,7 @@ export function useConfigurator(opts: UseConfiguratorOptions): ConfiguratorApi {
       track("quote_step_complete", {
         step_index: 2,
         step_id: "guests",
-        ...(band ? { guest_band: band } : {}),
+...(band ? { guest_band: band } : {}),
       });
     }
 

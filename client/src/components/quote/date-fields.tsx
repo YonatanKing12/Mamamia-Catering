@@ -28,8 +28,8 @@ export interface DateFieldsProps {
 }
 
 const PART_CLASS =
-  "num text-center px-2 [appearance:textfield] " +
-  "[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
+"num text-center px-2 [appearance:textfield] " +
+"[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
 
 export function DateFields({
   value,

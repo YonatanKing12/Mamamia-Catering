@@ -47,7 +47,7 @@ import {
 /* ═══════════════════ הכוכבים ═══════════════════ */
 
 const STAR_PATH =
-  "M12 2.6l2.72 5.51 6.08.89-4.4 4.29 1.04 6.06L12 16.49l-5.44 2.86 1.04-6.06-4.4-4.29 6.08-.89z";
+"M12 2.6l2.72 5.51 6.08.89-4.4 4.29 1.04 6.06L12 16.49l-5.44 2.86 1.04-6.06-4.4-4.29 6.08-.89z";
 
 function StarRow({ className }: { className?: string }) {
   return (
@@ -168,8 +168,8 @@ function Quote({ item }: { item: Testimonial }) {
   return (
     <figure
       className={cn(
-        "m-0 rounded-card border border-solid border-[color:var(--rule)]",
-        "bg-bg-alt p-[1.1rem]",
+"m-0 rounded-card border border-solid border-[color:var(--rule)]",
+"bg-bg-alt p-[1.1rem]",
       )}
     >
       <blockquote className="m-0">
@@ -206,7 +206,7 @@ export function ReviewsBlock({
   quoteLimit,
   ratingOnly = false,
   className,
-  ...rest
+...rest
 }: ReviewsBlockProps) {
   const rating = googleReviews();
   const quotes = ratingOnly ? [] : publishableTestimonials(quoteLimit);

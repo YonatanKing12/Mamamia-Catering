@@ -95,7 +95,7 @@ export function OpsFacts({
     >
       <dl
         className={cn(
-          "m-0 grid gap-x-grid",
+"m-0 grid gap-x-grid",
           /* שורה אחת נראית מכוונת בעמודה אחת; ארבע מתפרסות לשתיים. */
           strip
             ? "[grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]"
@@ -106,8 +106,8 @@ export function OpsFacts({
           <div
             key={row.id ?? `${row.labelHe}-${i}`}
             className={cn(
-              "grid grid-cols-[1fr_auto] items-baseline gap-x-[.9rem] py-[.7rem]",
-              "border-b border-dotted border-b-[color:var(--rule)]",
+"grid grid-cols-[1fr_auto] items-baseline gap-x-[.9rem] py-[.7rem]",
+"border-b border-dotted border-b-[color:var(--rule)]",
             )}
           >
             {/* ‎collapse="menu" (§7.9): התווית לובשת את תפקיד שם המנה,

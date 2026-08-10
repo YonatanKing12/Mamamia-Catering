@@ -77,7 +77,7 @@ export function BandSection({
   before,
   className,
   children,
-  ...rest
+...rest
 }: BandSectionProps) {
   const ink = tone === "ink";
 

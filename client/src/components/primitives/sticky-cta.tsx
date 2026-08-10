@@ -44,9 +44,9 @@ export interface StickyCtaProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const LINK =
-  "flex flex-1 items-center justify-center gap-2 rounded border border-solid " +
-  "min-h-[48px] px-[.4rem] py-[.85rem] text-center no-underline " +
-  "font-sans text-sm font-semibold leading-tight";
+"flex flex-1 items-center justify-center gap-2 rounded border border-solid " +
+"min-h-[48px] px-[.4rem] py-[.85rem] text-center no-underline " +
+"font-sans text-sm font-semibold leading-tight";
 
 /* לבן על --wa הוא 5.42:1. זהו הפקד הממולא היחיד בסרגל. */
 const FILLED = "bg-wa text-white border-wa";
@@ -63,7 +63,7 @@ export const StickyCta = React.forwardRef<HTMLElement, StickyCtaProps>(function 
     labels,
     spacer = true,
     className,
-    ...rest
+...rest
   },
   ref,
 ) {
@@ -114,11 +114,11 @@ export const StickyCta = React.forwardRef<HTMLElement, StickyCtaProps>(function 
         aria-label="פעולות מהירות"
         data-print="hide"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-[85] hidden gap-2 print:hidden",
-          "max-[760px]:flex",
-          "bg-bg shadow-sticky",
-          "border-t-[length:var(--bw)] border-t-[color:var(--rule)]",
-          "px-[.8rem] pt-[.6rem] pb-[calc(.6rem_+_env(safe-area-inset-bottom))]",
+"fixed inset-x-0 bottom-0 z-[85] hidden gap-2 print:hidden",
+"max-[760px]:flex",
+"bg-bg shadow-sticky",
+"border-t-[length:var(--bw)] border-t-[color:var(--rule)]",
+"px-[.8rem] pt-[.6rem] pb-[calc(.6rem_+_env(safe-area-inset-bottom))]",
           className,
         )}
         {...rest}

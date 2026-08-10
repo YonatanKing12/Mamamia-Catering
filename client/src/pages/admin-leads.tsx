@@ -224,9 +224,9 @@ function FilterChip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-solid px-4",
-        "font-sans text-2xs font-semibold",
-        "transition-[background-color,color,border-color] duration-state ease-house",
+"inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-solid px-4",
+"font-sans text-2xs font-semibold",
+"transition-[background-color,color,border-color] duration-state ease-house",
         active
           ? "border-btn-bg bg-btn-bg text-btn-fg"
           : "border-rule-control bg-transparent text-fg-muted hover:border-accent hover:text-accent",
@@ -322,9 +322,9 @@ function LeadRecord({
     <li className="m-0 border-t border-solid border-[color:var(--rule)]">
       <div
         className={cn(
-          "grid gap-5 py-6",
-          "lg:grid-cols-[minmax(10rem,1fr)_minmax(9rem,1fr)_minmax(11rem,1.1fr)_minmax(13rem,1fr)]",
-          "lg:gap-6",
+"grid gap-5 py-6",
+"lg:grid-cols-[minmax(10rem,1fr)_minmax(9rem,1fr)_minmax(11rem,1.1fr)_minmax(13rem,1fr)]",
+"lg:gap-6",
           busy && "opacity-60",
         )}
       >
@@ -382,7 +382,7 @@ function LeadRecord({
                 {dateFlag ? <span className="text-fg-subtle"> · {dateFlag}</span> : null}
               </>
             ) : lead.dateFlexible ? (
-              "עוד לא נקבע"
+"עוד לא נקבע"
             ) : null}
           </Fact>
           <Fact label="אזור">{lead.area}</Fact>
@@ -702,8 +702,8 @@ export default function AdminLeads() {
       counts.set(key, (counts.get(key) ?? 0) + 1);
     }
     return [...counts.entries()]
-      .map(([key, count]) => ({ key, count, label: channelLabel(key) }))
-      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "he"));
+.map(([key, count]) => ({ key, count, label: channelLabel(key) }))
+.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "he"));
   }, [all]);
 
   const visible = React.useMemo(
@@ -772,7 +772,7 @@ export default function AdminLeads() {
                 <Num className="text-lg font-bold">{unmarked}</Num> לידים לא מסומנים
               </>
             ) : (
-              "כל הלידים סומנו."
+"כל הלידים סומנו."
             )}
             <span className="text-fg-subtle">
               {" · "}

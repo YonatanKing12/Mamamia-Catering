@@ -105,7 +105,7 @@ export function KashrutBadge({
   requireWritten = false,
   size = "xs",
   className,
-  ...rest
+...rest
 }: KashrutBadgeProps) {
   const wording = kashrutWording({ requireWritten });
 
@@ -118,7 +118,7 @@ export function KashrutBadge({
     return (
       <p
         className={cn(
-          "m-0 flex items-center gap-[.5rem] font-semibold leading-[1.5] text-fg",
+"m-0 flex items-center gap-[.5rem] font-semibold leading-[1.5] text-fg",
           text,
           className,
         )}
@@ -138,9 +138,9 @@ export function KashrutBadge({
       className={cn(
         /* גלולה 50px (04 §4). מסגרת ענבר ולא מילוי ענבר: מילוי היה קורא
            כפקד לחיץ, וזו הצהרה ולא פעולה. */
-        "inline-flex max-w-full items-center gap-[.45rem] rounded-pill",
-        "border border-solid border-accent px-[.85rem] py-[.35rem]",
-        "font-semibold leading-[1.45] text-accent",
+"inline-flex max-w-full items-center gap-[.45rem] rounded-pill",
+"border border-solid border-accent px-[.85rem] py-[.35rem]",
+"font-semibold leading-[1.45] text-accent",
         text,
         className,
       )}

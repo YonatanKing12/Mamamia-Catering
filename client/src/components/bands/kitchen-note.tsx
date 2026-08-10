@@ -52,8 +52,8 @@ import { BandSection, type BandTone } from "./section";
 export const KITCHEN_NOTE_TITLE_HE = "מטבח של מסעדה, לא מטבח ייצור";
 
 export const KITCHEN_NOTE_STATEMENT_HE =
-  "הקייטרינג מבושל במטבח של מסעדה פעילה — מטבח שמבשל לסועדים שיושבים בו, " +
-  "ולא מטבח שנפתח כדי לשרת אירועים.";
+"הקייטרינג מבושל במטבח של מסעדה פעילה — מטבח שמבשל לסועדים שיושבים בו, " +
+"ולא מטבח שנפתח כדי לשרת אירועים.";
 
 export interface KitchenNoteProps {
   id?: string;

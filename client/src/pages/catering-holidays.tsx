@@ -255,13 +255,13 @@ function faqItems(): PageFaq[] {
       id: "faq-who-cooks",
       questionHe: "מי מבשל את האוכל?",
       answerHe:
-        "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
+"המטבח של מסעדה פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
     },
     {
       id: "faq-how-to-order",
       questionHe: "איך מזמינים ארוחת חג?",
       answerHe:
-        "בונים את התפריט כאן בעמוד ומשאירים פרטים, או כותבים לנו בוואטסאפ. חוזרים אליכם, עוברים על מספר הסועדים ועל מה שכבר יש לכם על השולחן, וההצעה נשלחת בכתב.",
+"בונים את התפריט כאן בעמוד ומשאירים פרטים, או כותבים לנו בוואטסאפ. חוזרים אליכם, עוברים על מספר הסועדים ועל מה שכבר יש לכם על השולחן, וההצעה נשלחת בכתב.",
     },
     {
       id: "faq-lead-time",
@@ -281,8 +281,8 @@ function faqItems(): PageFaq[] {
             SLOTS.priceIncludes.join(" · "),
             filled(SLOTS.priceExcludes) ? `לא כלול: ${SLOTS.priceExcludes.join(" · ")}` : null,
           ]
-            .filter(Boolean)
-            .join(". ")
+.filter(Boolean)
+.join(". ")
         : null,
     },
     {
@@ -307,12 +307,12 @@ const HOLIDAY_POINTS = [
   {
     titleHe: "כולם יושבים יחד, בבת אחת",
     bodyHe:
-      "ארוחת חג אינה בופה שנפתח לאורך ערב. יש שעה אחת שבה כולם מסובים, וממנה נגזר איך התפריט נבנה ומה מגיע מוכן לגמרי.",
+"ארוחת חג אינה בופה שנפתח לאורך ערב. יש שעה אחת שבה כולם מסובים, וממנה נגזר איך התפריט נבנה ומה מגיע מוכן לגמרי.",
   },
   {
     titleHe: "המארח רוצה גם לשבת",
     bodyHe:
-      "מי שמארח חג בבית מבשל בדרך כלל יומיים. החלק שאפשר להוציא החוצה הוא בדיוק החלק שגוזל את היומיים האלה.",
+"מי שמארח חג בבית מבשל בדרך כלל יומיים. החלק שאפשר להוציא החוצה הוא בדיוק החלק שגוזל את היומיים האלה.",
   },
   {
     titleHe: "בשולחן יושבים גם מי שלא אוכל הכול",
@@ -396,12 +396,12 @@ export default function CateringHolidays() {
 
   /* ‏§3.1 — מקור המספור היחיד. סקשן שנשמט אינו משאיר חור ברצף. */
   const order = [
-    "quote",
-    "holiday-table",
+"quote",
+"holiday-table",
     showMenuSheet ? "menu" : null,
     showFormats ? "formats" : null,
-    "kitchen",
-    "branches",
+"kitchen",
+"branches",
     faqs.some((f) => f.answerHe) ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
@@ -414,7 +414,7 @@ export default function CateringHolidays() {
      מצטט את המשבצת, וכשאין נוסח אין תג ואין רווח שמור. */
   const facts: React.ReactNode[] = [
     hasKashrutWording() ? <KashrutBadge key="kashrut" variant="pill" /> : null,
-    "מטבח של מסעדה איטלקית פעילה",
+"מטבח של מסעדה פעילה",
   ].filter(Boolean);
 
   return (
@@ -547,7 +547,7 @@ export default function CateringHolidays() {
         sourcePage={SOURCE_PAGE}
         eyebrow="ההקשר"
         title="המסעדות שמאחורי הקייטרינג"
-        lede="מסעדות איטלקיות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
+        lede="מסעדות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
         flagshipLabelHe={null}
       />
 

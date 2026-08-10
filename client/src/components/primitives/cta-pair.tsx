@@ -30,8 +30,8 @@ export const CtaPair = React.forwardRef<HTMLDivElement, CtaPairProps>(function C
 ) {
   if (import.meta.env.DEV && secondary && (secondary.variant ?? "link") === "primary") {
     throw new Error(
-      "CtaPair: שני פקדים ממולאים באותו מקבץ. L-10 מתיר primary אחד בלבד — " +
-        "העבירו ל־secondary את variant 'ghost' או 'link'.",
+"CtaPair: שני פקדים ממולאים באותו מקבץ. L-10 מתיר primary אחד בלבד — " +
+"העבירו ל־secondary את variant 'ghost' או 'link'.",
     );
   }
 

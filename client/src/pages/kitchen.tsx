@@ -164,7 +164,7 @@ const KitchenHero = () => {
 
         <Prose size="lede" measure="lede" className="mt-6">
           <p>
-            קייטרינג מאמאמיה מבושל במטבח של מסעדה איטלקית פעילה. מטבח שמבשל
+            קייטרינג מאמאמיה מבושל במטבח של מסעדה פעילה. מטבח שמבשל
             לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.
           </p>
         </Prose>
@@ -234,7 +234,7 @@ const DifferenceSection = ({ num }: { num?: string }) => {
       title: "עסק רשום מאחורי האוכל",
       body: (
         <>
-          לא מטבח רפאים ולא בישול ביתי. מאחורי הקייטרינג עומדת מסעדה איטלקית
+          לא מטבח רפאים ולא בישול ביתי. מאחורי הקייטרינג עומדת מסעדה פעילה
           שפועלת לקהל הרחב
           {legal ? <>, ומאחוריה ישות רשומה — {legal}</> : null}.
         </>
@@ -326,8 +326,8 @@ const RestaurantsSection = ({ num }: { num?: string }) => {
   if (RESTAURANTS.length === 0) return null;
 
   const lede = kitchen
-    ? `מסעדות איטלקיות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של המסעדה ב${kitchen.cityHe}.`
-    : "מסעדות איטלקיות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן.";
+    ? `מסעדות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של המסעדה ב${kitchen.cityHe}.`
+    : "מסעדות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן.";
 
   return (
     <section id="restaurants" className="sec sec--alt">
@@ -495,11 +495,11 @@ export default function Kitchen() {
   const showGallery = hasGallery();
 
   const order = [
-    "difference",
+"difference",
     showRestaurants ? "restaurants" : null,
     showReviews ? "reviews" : null,
     showGallery ? "gallery" : null,
-    "quote",
+"quote",
   ].filter((k): k is string => k !== null);
 
   const num = (key: string) => {

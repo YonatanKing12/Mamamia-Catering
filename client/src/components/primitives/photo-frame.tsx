@@ -29,21 +29,21 @@ export type PhotoRatio = "4/5" | "4/3" | "3/4" | "3/2" | "9/7" | "1200/630";
 /* מחרוזות מלאות, לא מורכבות בזמן ריצה — סורק התוכן של Tailwind קורא קוד
    מקור ולא ערכים מחושבים. */
 const RATIO: Record<PhotoRatio, string> = {
-  "4/5": "aspect-[4/5]",
-  "4/3": "aspect-[4/3]",
-  "3/4": "aspect-[3/4]",
-  "3/2": "aspect-[3/2]",
-  "9/7": "aspect-[9/7]",
-  "1200/630": "aspect-[1200/630]",
+"4/5": "aspect-[4/5]",
+"4/3": "aspect-[4/3]",
+"3/4": "aspect-[3/4]",
+"3/2": "aspect-[3/2]",
+"9/7": "aspect-[9/7]",
+"1200/630": "aspect-[1200/630]",
 };
 
 const RATIO_NARROW: Record<PhotoRatio, string> = {
-  "4/5": "max-[860px]:aspect-[4/5]",
-  "4/3": "max-[860px]:aspect-[4/3]",
-  "3/4": "max-[860px]:aspect-[3/4]",
-  "3/2": "max-[860px]:aspect-[3/2]",
-  "9/7": "max-[860px]:aspect-[9/7]",
-  "1200/630": "max-[860px]:aspect-[1200/630]",
+"4/5": "max-[860px]:aspect-[4/5]",
+"4/3": "max-[860px]:aspect-[4/3]",
+"3/4": "max-[860px]:aspect-[3/4]",
+"3/2": "max-[860px]:aspect-[3/2]",
+"9/7": "max-[860px]:aspect-[9/7]",
+"1200/630": "max-[860px]:aspect-[1200/630]",
 };
 
 interface PhotoFrameBase extends Omit<React.HTMLAttributes<HTMLElement>, "children"> {
@@ -92,7 +92,7 @@ export const PhotoFrame = React.forwardRef<HTMLElement, PhotoFrameProps>(functio
       React.HTMLAttributes<HTMLElement>;
 
   const frame = cn(
-    "relative grid place-items-center overflow-hidden rounded",
+"relative grid place-items-center overflow-hidden rounded",
     RATIO[ratio],
     ratioNarrow && RATIO_NARROW[ratioNarrow],
   );
@@ -111,9 +111,9 @@ export const PhotoFrame = React.forwardRef<HTMLElement, PhotoFrameProps>(functio
         <div
           className={cn(
             frame,
-            "bg-[linear-gradient(135deg,var(--paper-2),var(--paper-3))]",
-            "shadow-[inset_0_0_0_1px_var(--rule)]",
-            "[[data-band=ink]_&]:bg-[linear-gradient(135deg,#2c2622,#3a332c)]",
+"bg-[linear-gradient(135deg,var(--paper-2),var(--paper-3))]",
+"shadow-[inset_0_0_0_1px_var(--rule)]",
+"[[data-band=ink]_&]:bg-[linear-gradient(135deg,#2c2622,#3a332c)]",
           )}
         >
           <span className="max-w-[22ch] p-[1.2rem] text-center font-sans text-xs font-semibold leading-[1.6] tracking-[.06em] text-fg-subtle">
@@ -148,8 +148,8 @@ export const PhotoFrame = React.forwardRef<HTMLElement, PhotoFrameProps>(functio
       {caption ? (
         <figcaption
           className={cn(
-            "mt-[.7rem] max-w-caption pt-[.7rem] text-xs leading-[1.6] text-fg-subtle",
-            "border-t-[length:var(--bw)] border-t-[color:var(--rule)]",
+"mt-[.7rem] max-w-caption pt-[.7rem] text-xs leading-[1.6] text-fg-subtle",
+"border-t-[length:var(--bw)] border-t-[color:var(--rule)]",
           )}
         >
           {typeof index === "number" ? (

@@ -32,14 +32,14 @@ export interface RadioCardProps
 }
 
 const FACE_BASE =
-  "block rounded border border-solid border-rule-control bg-bg text-fg " +
-  "transition-[background-color,color,border-color] duration-state ease-house " +
-  "peer-hover:border-fg-subtle " +
-  "peer-checked:bg-fg peer-checked:text-bg peer-checked:border-fg peer-checked:font-semibold " +
-  "peer-checked:[&_[data-desc]]:text-bg " +
-  "peer-focus-visible:outline peer-focus-visible:outline-2 " +
-  "peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus " +
-  "peer-disabled:opacity-[.55] peer-disabled:border-ink-4";
+"block rounded border border-solid border-rule-control bg-bg text-fg " +
+"transition-[background-color,color,border-color] duration-state ease-house " +
+"peer-hover:border-fg-subtle " +
+"peer-checked:bg-fg peer-checked:text-bg peer-checked:border-fg peer-checked:font-semibold " +
+"peer-checked:[&_[data-desc]]:text-bg " +
+"peer-focus-visible:outline peer-focus-visible:outline-2 " +
+"peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus " +
+"peer-disabled:opacity-[.55] peer-disabled:border-ink-4";
 
 const FACE: Record<RadioCardVariant, string> = {
   card: "min-h-[48px] px-[1.2rem] py-4 text-sm",
@@ -53,7 +53,7 @@ export const RadioCard = React.forwardRef<HTMLInputElement, RadioCardProps>(func
   return (
     <label
       className={cn(
-        "relative cursor-pointer",
+"relative cursor-pointer",
         variant === "chip" ? "inline-flex" : "block",
         disabled && "cursor-not-allowed",
         className,
@@ -104,8 +104,8 @@ export const RadioCardGroup = React.forwardRef<HTMLFieldSetElement, RadioCardGro
     const hintId = id ? `${id}-hint` : undefined;
     const errorId = id ? `${id}-err` : undefined;
     const describedBy = [error ? errorId : null, hint ? hintId : null]
-      .filter(Boolean)
-      .join(" ");
+.filter(Boolean)
+.join(" ");
 
     return (
       <fieldset

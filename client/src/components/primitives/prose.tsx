@@ -39,11 +39,11 @@ const MEASURE: Record<ProseMeasure, string> = {
 /* העוטף הוא שקובע את המידה, ולכן הפסקאות מוותרות על ה־max-width של כלל
    הבסיס — אחרת מתקבלות שתי תקרות שונות באותו גוש. */
 const RHYTHM =
-  "[&_p]:max-w-none [&_p]:mb-[1.1em] [&_p:last-child]:mb-0 " +
-  "[&_ul]:ps-[1.15em] [&_ol]:ps-[1.15em] [&_ul]:list-disc [&_ol]:list-decimal " +
-  "[&_li]:mb-[.35em] [&_li::marker]:text-accent " +
-  "[&_a]:underline [&_a]:underline-offset-[.22em] " +
-  "[&_h3]:mt-[1.6em] [&_h3]:mb-[.5em] [&_h3:first-child]:mt-0";
+"[&_p]:max-w-none [&_p]:mb-[1.1em] [&_p:last-child]:mb-0 " +
+"[&_ul]:ps-[1.15em] [&_ol]:ps-[1.15em] [&_ul]:list-disc [&_ol]:list-decimal " +
+"[&_li]:mb-[.35em] [&_li::marker]:text-accent " +
+"[&_a]:underline [&_a]:underline-offset-[.22em] " +
+"[&_h3]:mt-[1.6em] [&_h3]:mb-[.5em] [&_h3:first-child]:mt-0";
 
 export interface ProseProps extends React.HTMLAttributes<HTMLElement> {
   as?: "div" | "section" | "article" | "aside";

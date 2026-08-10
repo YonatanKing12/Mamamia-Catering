@@ -127,7 +127,7 @@ function faqItems(): PageFaq[] {
       id: "faq-how",
       questionHe: "איך מזמינים?",
       answerHe:
-        "בטלפון. אומרים לכמה אנשים, לאיזו כתובת ולאיזה יום, ואנחנו חוזרים עם מה שהמטבח יכול להוציא. אין טופס למלא.",
+"בטלפון. אומרים לכמה אנשים, לאיזו כתובת ולאיזה יום, ואנחנו חוזרים עם מה שהמטבח יכול להוציא. אין טופס למלא.",
     },
     {
       id: "faq-lead-time",
@@ -246,7 +246,7 @@ export default function CateringShiva() {
      ולא כתג מבצע. */
   const facts: React.ReactNode[] = [
     hasKashrutWording() ? <KashrutBadge key="kashrut" variant="pill" /> : null,
-    "מטבח של מסעדה איטלקית פעילה",
+"מטבח של מסעדה פעילה",
   ].filter(Boolean);
 
   return (
@@ -336,7 +336,7 @@ export default function CateringShiva() {
             >
               אפשר להשאיר אותם כאן
             </Link>
-            , ואנחנו נחזור אליכם.
+, ואנחנו נחזור אליכם.
           </p>
         </div>
       </section>

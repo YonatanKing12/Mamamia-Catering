@@ -162,10 +162,10 @@ export type AnalyticsEventName = keyof AnalyticsEventMap;
  * זו גם הסיבה ש־`gaClientId` נשמר על שורת הליד.
  */
 export const SERVER_SIDE_EVENTS = [
-  "working_lead",
-  "qualify_lead",
-  "close_convert_lead",
-  "close_unconvert_lead",
+"working_lead",
+"qualify_lead",
+"close_convert_lead",
+"close_unconvert_lead",
 ] as const;
 
 /* ═══════════════════ הגשר לתג ═══════════════════ */

@@ -131,12 +131,12 @@ export function WhatsAppBand({
         ref,
         waLocation,
         branch: answers?.branch ?? null,
-        ...(answers?.eventType ? { eventType: answers.eventType.slice(0, 60) } : {}),
-        ...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
-        ...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
-        ...(answers?.area ? { area: answers.area.trim().slice(0, 60) } : {}),
+...(answers?.eventType ? { eventType: answers.eventType.slice(0, 60) } : {}),
+...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers?.area ? { area: answers.area.trim().slice(0, 60) } : {}),
         serviceFormat,
-        ...(dishIds?.length ? { dishIds: dishIds.slice(0, 40) } : {}),
+...(dishIds?.length ? { dishIds: dishIds.slice(0, 40) } : {}),
       });
 
       track("whatsapp_handoff", {
@@ -192,7 +192,7 @@ export function WhatsAppBand({
           size="fine"
           measure="body"
           className={cn(
-            "mt-5 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]",
+"mt-5 border-s border-solid border-s-[color:var(--rule)] ps-[.9rem]",
           )}
         >
           <p>

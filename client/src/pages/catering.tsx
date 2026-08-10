@@ -95,7 +95,7 @@ const SOURCE_PAGE = "/catering";
  * ל«שלושה מטבחים» בעריכה הבאה.
  */
 const KITCHEN_FACT_HE =
-  "הקייטרינג מבושל במטבח של מסעדה איטלקית פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח לצורך אירועים.";
+"הקייטרינג מבושל במטבח של מסעדה פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח לצורך אירועים.";
 
 /* ═══════════════════ מסלול הוואטסאפ בהירו ═══════════════════ */
 
@@ -177,7 +177,7 @@ function faqItems(occasionNamesHe: readonly string[]): PageFaq[] {
       id: "faq-how",
       questionHe: "איך מקבלים הצעה?",
       answerHe:
-        "בונים את התפריט כאן בדף ומשאירים פרטים, או שולחים את פרטי האירוע בוואטסאפ. אנחנו חוזרים אליכם, עוברים על מספר הסועדים ועל התאריך, ושולחים הצעה בכתב.",
+"בונים את התפריט כאן בדף ומשאירים פרטים, או שולחים את פרטי האירוע בוואטסאפ. אנחנו חוזרים אליכם, עוברים על מספר הסועדים ועל התאריך, ושולחים הצעה בכתב.",
     },
     {
       id: "faq-lead-time",
@@ -276,9 +276,9 @@ export default function Catering() {
      הבאנד הסוגר אינו ממוספר: הוא אינו פרק, הוא הדרך לפנות. */
   const order = [
     servedIds.length > 0 ? "events" : null,
-    "quote",
+"quote",
     proof ? "proof" : null,
-    "kitchen",
+"kitchen",
     answered.length > 0 ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
@@ -288,7 +288,7 @@ export default function Catering() {
   };
 
   /* גיזום ברמת הפסוקית (G5). הכשרות נקראת מהמשבצת ולא נכתבת קשיח. */
-  const facts = ["מטבח של מסעדה איטלקית פעילה", kashrutClauseHe("general")].filter(
+  const facts = ["מטבח של מסעדה פעילה", kashrutClauseHe("general")].filter(
     (c): c is string => Boolean(c),
   );
 
@@ -340,7 +340,7 @@ export default function Catering() {
                 <li
                   key={fact}
                   className={[
-                    "m-0 rounded-pill border border-solid px-[.9rem] py-[.4rem] text-2xs font-semibold",
+"m-0 rounded-pill border border-solid px-[.9rem] py-[.4rem] text-2xs font-semibold",
                     /* פסוקית הכשרות היא הראשונה שקונה מחפש בקטגוריה, ולכן
                        היא זו שנושאת את הענבר. */
                     i === facts.length - 1 && facts.length > 1

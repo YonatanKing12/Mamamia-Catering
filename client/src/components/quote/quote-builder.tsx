@@ -323,12 +323,12 @@ export function QuoteBuilder({
         const { ref } = await submitQuote({
           name: name.trim(),
           phone: phone.trim(),
-          ...(email.trim() ? { email: email.trim() } : {}),
+...(email.trim() ? { email: email.trim() } : {}),
           contactChannel,
           eventType: answers.eventType!,
           guestBand: answers.guestBand!,
           guestBandVersion: GUEST_BANDS_VERSION,
-          ...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
           dateFlexible: answers.dateFlexible,
           area: answers.area.trim(),
           areaIsFreeText: answers.areaIsFreeText,
@@ -398,14 +398,14 @@ export function QuoteBuilder({
     const ref = captureWaIntent({
       waLocation: "quote_alt",
       branch: answers.branch,
-      ...(answers.eventType ? { eventType: answers.eventType } : {}),
-      ...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
-      ...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
-      ...(answers.area ? { area: answers.area.trim().slice(0, 60) } : {}),
+...(answers.eventType ? { eventType: answers.eventType } : {}),
+...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers.area ? { area: answers.area.trim().slice(0, 60) } : {}),
       serviceFormat: answers.serviceFormat,
-      ...(answers.dishes.length ? { dishIds: answers.dishes.map((d) => d.id) } : {}),
-      ...(trimmedName ? { name: trimmedName.slice(0, 80) } : {}),
-      ...(trimmedPhone ? { phone: trimmedPhone.slice(0, 25) } : {}),
+...(answers.dishes.length ? { dishIds: answers.dishes.map((d) => d.id) } : {}),
+...(trimmedName ? { name: trimmedName.slice(0, 80) } : {}),
+...(trimmedPhone ? { phone: trimmedPhone.slice(0, 25) } : {}),
     });
 
     track("whatsapp_click", { wa_location: "quote_alt", has_lead: Boolean(answers.eventType) });
@@ -417,11 +417,11 @@ export function QuoteBuilder({
 
     const href = buildWaHref(
       {
-        ...(answers.eventType ? { eventType: answers.eventType } : {}),
-        ...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
-        ...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers.eventType ? { eventType: answers.eventType } : {}),
+...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
         dateFlexible: answers.dateFlexible,
-        ...(answers.area ? { area: answers.area.trim() } : {}),
+...(answers.area ? { area: answers.area.trim() } : {}),
         branch: answers.branch,
         dishNames: answers.dishes.map((d) => d.name),
       },
@@ -536,11 +536,11 @@ export function QuoteBuilder({
               <span
                 aria-hidden="true"
                 className={
-                  "grid h-[24px] w-[24px] shrink-0 place-items-center rounded border border-solid " +
-                  "border-rule-control bg-bg text-bg transition-colors duration-state ease-house " +
-                  "peer-checked:border-fg peer-checked:bg-fg " +
-                  "peer-focus-visible:outline peer-focus-visible:outline-2 " +
-                  "peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus"
+"grid h-[24px] w-[24px] shrink-0 place-items-center rounded border border-solid " +
+"border-rule-control bg-bg text-bg transition-colors duration-state ease-house " +
+"peer-checked:border-fg peer-checked:bg-fg " +
+"peer-focus-visible:outline peer-focus-visible:outline-2 " +
+"peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus"
                 }
               >
                 <svg viewBox="0 0 16 16" className="h-[12px] w-[12px]" focusable="false">

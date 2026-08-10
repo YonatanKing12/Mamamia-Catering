@@ -229,12 +229,12 @@ export const TITLE_PRICE_APPROVAL: TitlePriceApproval | null = null;
  * זו רשת ביטחון, לא תחליף לכך שאיש לא יכתוב אותם.
  */
 const FORBIDDEN_KEYS = new Set([
-  "priceRange",
-  "aggregateRating",
-  "review",
-  "reviews",
-  "ratingValue",
-  "hasCertification",
+"priceRange",
+"aggregateRating",
+"review",
+"reviews",
+"ratingValue",
+"hasCertification",
 ]);
 
 /* ═══════════════════ origin ו־URL ═══════════════════ */
@@ -247,7 +247,7 @@ const FORBIDDEN_KEYS = new Set([
  */
 export function siteOrigin(): string {
   const fromEnv = (import.meta as unknown as { env?: Record<string, string | undefined> })
-    .env?.VITE_SITE_ORIGIN;
+.env?.VITE_SITE_ORIGIN;
   if (typeof fromEnv === "string" && fromEnv.trim() !== "") {
     return fromEnv.trim().replace(/\/+$/, "");
   }
@@ -332,7 +332,7 @@ export function headTagsFor(
     { kind: "meta", attr: "name", key: "description", content: meta.descriptionHe },
     { kind: "meta", attr: "name", key: "robots", content: robots },
     { kind: "link", rel: "canonical", href: canonical },
-    ...alternateLinks(meta, origin).map(
+...alternateLinks(meta, origin).map(
       (a): HeadTag => ({ kind: "link", rel: "alternate", href: a.href, hreflang: a.hreflang }),
     ),
     { kind: "meta", attr: "property", key: "og:type", content: "website" },
@@ -442,9 +442,9 @@ export function compact<T extends JsonLdNode>(node: T): T | null {
  */
 export function buildGraph(nodes: Array<JsonLdNode | null | undefined>): JsonLdNode | null {
   const clean = nodes
-    .filter((n): n is JsonLdNode => !!n)
-    .map((n) => compact(n))
-    .filter((n): n is JsonLdNode => !!n);
+.filter((n): n is JsonLdNode => !!n)
+.map((n) => compact(n))
+.filter((n): n is JsonLdNode => !!n);
   if (clean.length === 0) return null;
 
   const seen = new Set<string>();
@@ -459,9 +459,9 @@ export function buildGraph(nodes: Array<JsonLdNode | null | undefined>): JsonLdN
   }
 
   const identity = [buildOrganization(), buildWebSite({})]
-    .map((n) => compact(n))
-    .filter((n): n is JsonLdNode => !!n)
-    .filter((n) => !seen.has(n["@id"] as string));
+.map((n) => compact(n))
+.filter((n): n is JsonLdNode => !!n)
+.filter((n) => !seen.has(n["@id"] as string));
 
   return { "@context": "https://schema.org", "@graph": [...identity, ...deduped] };
 }
@@ -482,10 +482,10 @@ export function serializeJsonLd(node: JsonLdNode | null): string | null {
  * מקור: הלקוח, 30 ביולי 2026 (`business.ts`,
  * `COOKED_IN_ACTIVE_RESTAURANT_KITCHEN`). לא «שלושה מטבחים», לא עיר.
  */
-export const ORIGIN_HE = "מבושל במטבח של מסעדה איטלקית פעילה";
+export const ORIGIN_HE = "מבושל במטבח של מסעדה פעילה";
 
 /** אותה טענה בנטייה שמשתלבת אחרי שם עצם. */
-export const FROM_ORIGIN_HE = "מהמטבח של מסעדה איטלקית פעילה";
+export const FROM_ORIGIN_HE = "מהמטבח של מסעדה פעילה";
 
 /**
  * «כשר X» כפי שנמסר בעל־פה, מ־`SLOTS.kashrutByBranch`. מוחזר **רק** אם
@@ -579,8 +579,8 @@ function approvedOpeningPrice(): number | null {
   if (!filled(table)) return null;
 
   const lows = Object.values(table)
-    .map((range) => range?.from)
-    .filter((n): n is number => typeof n === "number" && Number.isFinite(n) && n > 0);
+.map((range) => range?.from)
+.filter((n): n is number => typeof n === "number" && Number.isFinite(n) && n > 0);
   if (lows.length === 0) return null;
 
   return Math.min(...lows);
@@ -685,8 +685,8 @@ export function buildOrganization(
   const sameAs = opts.sameAs ?? SOCIAL_PROFILES;
 
   return {
-    "@type": "Organization",
-    "@id": orgId(origin),
+"@type": "Organization",
+"@id": orgId(origin),
     name: SITE_NAME_HE,
     legalName: opts.legalName ?? SLOTS.legalName,
     taxID: opts.taxId ?? SLOTS.companyId,
@@ -703,14 +703,14 @@ export function buildOrganization(
        שיווקי בתוך נתון מובנה הוא רעש. */
     contactPoint: [
       {
-        "@type": "ContactPoint",
+"@type": "ContactPoint",
         contactType: "sales",
         telephone,
         email,
         availableLanguage: LANG,
       },
       {
-        "@type": "ContactPoint",
+"@type": "ContactPoint",
         contactType: "sales",
         name: "וואטסאפ",
         url: `https://wa.me/${PHONE.wa}`,
@@ -745,20 +745,20 @@ export function buildWebSite(
   const template = filled(opts.searchUrlTemplate) ? opts.searchUrlTemplate : null;
 
   return {
-    "@type": "WebSite",
-    "@id": websiteId(origin),
+"@type": "WebSite",
+"@id": websiteId(origin),
     name: SITE_NAME_HE,
     url: absoluteUrl("/", origin),
     inLanguage: LANG,
     publisher: ref(orgId(origin)),
     potentialAction: template
       ? {
-          "@type": "SearchAction",
+"@type": "SearchAction",
           target: {
-            "@type": "EntryPoint",
+"@type": "EntryPoint",
             urlTemplate: absoluteUrl(template, origin),
           },
-          "query-input": "required name=search_term_string",
+"query-input": "required name=search_term_string",
         }
       : null,
   };
@@ -787,8 +787,8 @@ export function buildWebPage(
   const mainEntityId = opts.mainEntityId ?? null;
 
   return {
-    "@type": opts.type ?? "WebPage",
-    "@id": pageId(meta.path, origin),
+"@type": opts.type ?? "WebPage",
+"@id": pageId(meta.path, origin),
     url: absoluteUrl(meta.path, origin),
     name: meta.titleHe,
     description: meta.descriptionHe,
@@ -826,8 +826,8 @@ export function buildService(opts: {
   const cities = opts.areaServedHe ?? cateringServiceCities();
 
   return {
-    "@type": "Service",
-    "@id": serviceId(opts.path, origin),
+"@type": "Service",
+"@id": serviceId(opts.path, origin),
     serviceType: "Catering",
     name: opts.nameHe,
     description: opts.descriptionHe ?? null,
@@ -843,10 +843,10 @@ export function buildService(opts: {
     /* הערוץ שבו מתחילים בפועל: טופס ההצעה, הטלפון והוואטסאפ. שלושתם
        קיימים, ולכן שלושתם מוצהרים. */
     availableChannel: {
-      "@type": "ServiceChannel",
+"@type": "ServiceChannel",
       serviceUrl: absoluteUrl("/quote", origin),
       servicePhone: {
-        "@type": "ContactPoint",
+"@type": "ContactPoint",
         contactType: "sales",
         telephone: PHONE.tel,
         availableLanguage: LANG,
@@ -873,10 +873,10 @@ export function buildBreadcrumbList(
   if (items.length < 2) return null;
   const self = items[items.length - 1];
   return {
-    "@type": "BreadcrumbList",
-    "@id": breadcrumbId(self.path, origin),
+"@type": "BreadcrumbList",
+"@id": breadcrumbId(self.path, origin),
     itemListElement: items.map((c, i) => ({
-      "@type": "ListItem",
+"@type": "ListItem",
       position: i + 1,
       name: c.labelHe,
       item: absoluteUrl(c.path, origin),
@@ -907,12 +907,12 @@ export function buildFaqPage(
 
   const path = opts.path;
   return {
-    "@type": "FAQPage",
-    "@id": path ? faqId(path, origin) : null,
+"@type": "FAQPage",
+"@id": path ? faqId(path, origin) : null,
     inLanguage: LANG,
     isPartOf: path ? ref(pageId(path, origin)) : null,
     mainEntity: answered.map((i) => ({
-      "@type": "Question",
+"@type": "Question",
       name: i.questionHe,
       acceptedAnswer: { "@type": "Answer", text: (i.answerHe as string).trim() },
     })),
@@ -936,12 +936,12 @@ export function buildItemList(opts: {
   const items = opts.items.filter((i) => i.path.trim() !== "" && i.nameHe.trim() !== "");
   if (items.length === 0) return null;
   return {
-    "@type": "ItemList",
-    "@id": `${absoluteUrl(opts.path, origin)}#list`,
+"@type": "ItemList",
+"@id": `${absoluteUrl(opts.path, origin)}#list`,
     name: opts.nameHe,
     numberOfItems: items.length,
     itemListElement: items.map((item, i) => ({
-      "@type": "ListItem",
+"@type": "ListItem",
       position: i + 1,
       name: item.nameHe,
       url: absoluteUrl(item.path, origin),
@@ -968,20 +968,20 @@ export function buildMenu(
   const filledSections = sections.filter((s) => s.items.length > 0);
   if (filledSections.length === 0) return null;
   return {
-    "@type": "Menu",
-    "@id": `${absoluteUrl("/menus", origin)}#menu`,
+"@type": "Menu",
+"@id": `${absoluteUrl("/menus", origin)}#menu`,
     url: absoluteUrl("/menus", origin),
     inLanguage: LANG,
     hasMenuSection: filledSections.map((section) => ({
-      "@type": "MenuSection",
+"@type": "MenuSection",
       name: section.nameHe,
       hasMenuItem: section.items.map((item) => ({
-        "@type": "MenuItem",
+"@type": "MenuItem",
         name: item.nameHe,
         description: item.descriptionHe ?? null,
         offers: item.price
           ? {
-              "@type": "Offer",
+"@type": "Offer",
               price: item.price.amount,
               priceCurrency: item.price.currency ?? "ILS",
             }
@@ -1026,17 +1026,17 @@ const STATIC_META: PageMeta[] = [
     id: "P-01",
     path: "/",
     /*
-     * הנושא: «קייטרינג איטלקי לאירועים». הכותרת שהייתה כאן פתחה בשם
+     * הנושא: «קייטרינג בשרי כשר לאירועים». הכותרת שהייתה כאן פתחה בשם
      * המותג ונשאה את המחרוזת «כשר בד״ץ» כטקסט קשיח — כלומר בזבזה את
      * הקדמה על מי שכבר מכיר אותנו, וגם הייתה שורדת התרוקנות של המשבצת.
      * שני הפגמים נסגרים באותה שורה.
      */
-    topicHe: "קייטרינג איטלקי לאירועים",
+    topicHe: "קייטרינג בשרי כשר לאירועים",
     kashrutTier: "general",
-    titleHe: composeTitle({ topicHe: "קייטרינג איטלקי לאירועים", kashrut: "general" }),
+    titleHe: composeTitle({ topicHe: "קייטרינג בשרי כשר לאירועים", kashrut: "general" }),
     descriptionHe: withKashrut(
       `התפריט של ${CATERING_NAME}, אצלכם באירוע. ${ORIGIN_HE}.`,
-      "general",
+"general",
     ),
     robots: "index,follow",
     ogImage: "auto",
@@ -1057,7 +1057,7 @@ const STATIC_META: PageMeta[] = [
       kashrut: "general",
     }),
     descriptionHe:
-      "בונים את התפריט שלכם בארבע שאלות, ומדברים עם מטבח. בלי שדה תקציב ובלי טופס ארוך.",
+"בונים את התפריט שלכם בארבע שאלות, ומדברים עם מטבח. בלי שדה תקציב ובלי טופס ארוך.",
     robots: "index,follow",
     ogImage: "auto",
     breadcrumb: [HOME, { labelHe: "בקשת הצעה", path: "/quote" }],
@@ -1080,7 +1080,7 @@ const STATIC_META: PageMeta[] = [
     kashrutTier: "none",
     titleHe: composeTitle({ topicHe: "מדיניות פרטיות" }),
     descriptionHe:
-      "אילו פרטים נאספים בטופס הפנייה, מה נאסף טכנית, למה זה משמש, מי רואה את זה, ואיך מבקשים לעיין או למחוק.",
+"אילו פרטים נאספים בטופס הפנייה, מה נאסף טכנית, למה זה משמש, מי רואה את זה, ואיך מבקשים לעיין או למחוק.",
     robots: "index,follow",
     ogImage: "auto",
     breadcrumb: [HOME, { labelHe: "מדיניות פרטיות", path: "/privacy" }],
@@ -1092,7 +1092,7 @@ const STATIC_META: PageMeta[] = [
     kashrutTier: "none",
     titleHe: composeTitle({ topicHe: "תקנון ותנאי שימוש" }),
     descriptionHe:
-      "התנאים שחלים על הזמנת קייטרינג ועל השימוש באתר: מי הצד המתקשר, מה נדרש בפנייה, ומה נחשב הצעה מחייבת.",
+"התנאים שחלים על הזמנת קייטרינג ועל השימוש באתר: מי הצד המתקשר, מה נדרש בפנייה, ומה נחשב הצעה מחייבת.",
     robots: "index,follow",
     ogImage: "auto",
     breadcrumb: [HOME, { labelHe: "תקנון", path: "/terms" }],
@@ -1104,7 +1104,7 @@ const STATIC_META: PageMeta[] = [
     kashrutTier: "none",
     titleHe: composeTitle({ topicHe: "הצהרת נגישות" }),
     descriptionHe:
-      "מה כבר מיושם באתר, מה עוד לא נבדק, למי פונים כשמשהו לא עובד, ואיך מקבלים את אותו שירות בערוץ אחר.",
+"מה כבר מיושם באתר, מה עוד לא נבדק, למי פונים כשמשהו לא עובד, ואיך מקבלים את אותו שירות בערוץ אחר.",
     robots: "index,follow",
     ogImage: "auto",
     breadcrumb: [HOME, { labelHe: "נגישות", path: "/accessibility" }],
@@ -1179,12 +1179,12 @@ export function holidayMeta(
   const tier = base.kashrutTier ?? "written";
   const topicHe = `קייטרינג ל${seasonNameHe} ${year}`;
   return {
-    ...base,
+...base,
     topicHe,
     titleHe: composeTitle({ topicHe, kashrut: tier }),
     descriptionHe: withKashrut(`ארוחת ${seasonNameHe} ${FROM_ORIGIN_HE}.`, tier),
     breadcrumb: [
-      ...base.breadcrumb.slice(0, -1),
+...base.breadcrumb.slice(0, -1),
       { labelHe: seasonNameHe, path: "/catering/holidays" },
     ],
   };
@@ -1241,23 +1241,23 @@ export function campaignMeta(args: {
  * מסך מקריא מתוך רשימת קישורים מנותקת מהקשר.
  */
 export const ANCHOR_HE: Readonly<Record<string, string>> = Object.freeze({
-  "/": "קייטרינג מאמאמיה — דף הבית",
-  "/catering": "כל סוגי האירועים",
-  "/catering/business": "קייטרינג לחברות ולישיבות",
-  "/catering/private-events": "קייטרינג לאירוע פרטי",
-  "/catering/bar-mitzvah": "קייטרינג לבר מצווה ולבת מצווה",
-  "/catering/shiva": "אוכל לשבעה ולאזכרה",
-  "/catering/holidays": "קייטרינג לחגים",
-  "/catering/fun-day": "קייטרינג ליום גיבוש",
-  "/catering/dairy": "קייטרינג חלבי איטלקי",
-  "/menus": "התפריטים של המטבח",
-  "/kitchen": "המטבח שמבשל את הקייטרינג",
-  "/pasta-bar": "עמדת פסטה לאירועים",
-  "/urgent": "קייטרינג להיום",
-  "/quote": "בקשת הצעה לאירוע",
-  "/privacy": "מדיניות פרטיות",
-  "/terms": "תקנון ותנאי שימוש",
-  "/accessibility": "הצהרת נגישות",
+"/": "קייטרינג מאמאמיה — דף הבית",
+"/catering": "כל סוגי האירועים",
+"/catering/business": "קייטרינג לחברות ולישיבות",
+"/catering/private-events": "קייטרינג לאירוע פרטי",
+"/catering/bar-mitzvah": "קייטרינג לבר מצווה ולבת מצווה",
+"/catering/shiva": "אוכל לשבעה ולאזכרה",
+"/catering/holidays": "קייטרינג לחגים",
+"/catering/fun-day": "קייטרינג ליום גיבוש",
+"/catering/dairy": "קייטרינג חלבי",
+"/menus": "התפריטים של המטבח",
+"/kitchen": "המטבח שמבשל את הקייטרינג",
+"/pasta-bar": "עמדת פסטה לאירועים",
+"/urgent": "קייטרינג להיום",
+"/quote": "בקשת הצעה לאירוע",
+"/privacy": "מדיניות פרטיות",
+"/terms": "תקנון ותנאי שימוש",
+"/accessibility": "הצהרת נגישות",
 });
 
 /** עוגן לנתיב, או `null` כשאין לו טקסט מאושר. אין ברירת מחדל גנרית. */
@@ -1266,14 +1266,14 @@ export const anchorFor = (path: string): string | null =>
 
 /** טקסטים שאסור שיופיעו כעוגן. `auditInternalLinks()` אוכף. */
 export const FORBIDDEN_ANCHORS_HE: readonly string[] = [
-  "לחצו כאן",
-  "לחץ כאן",
-  "כאן",
-  "קרא עוד",
-  "קראו עוד",
-  "עוד",
-  "לפרטים",
-  "המשך",
+"לחצו כאן",
+"לחץ כאן",
+"כאן",
+"קרא עוד",
+"קראו עוד",
+"עוד",
+"לפרטים",
+"המשך",
 ];
 
 /**
@@ -1300,47 +1300,47 @@ export const FORBIDDEN_ANCHORS_HE: readonly string[] = [
  */
 export const REQUIRED_LINKS: Readonly<Record<string, readonly string[]>> = Object.freeze({
   /* דף הבית פורש את כל מפת האירועים, את המפרק, ואת דף המטבח. */
-  "/": [
-    "/catering",
-    "/kitchen",
-    "/quote",
-    "/menus",
-    "/catering/business",
-    "/catering/private-events",
-    "/catering/bar-mitzvah",
-    "/catering/holidays",
-    "/catering/dairy",
-    "/catering/shiva",
-    "/catering/fun-day",
-    "/urgent",
-    "/pasta-bar",
+"/": [
+"/catering",
+"/kitchen",
+"/quote",
+"/menus",
+"/catering/business",
+"/catering/private-events",
+"/catering/bar-mitzvah",
+"/catering/holidays",
+"/catering/dairy",
+"/catering/shiva",
+"/catering/fun-day",
+"/urgent",
+"/pasta-bar",
   ],
-  "/catering": [
-    "/kitchen",
-    "/quote",
-    "/menus",
-    "/catering/business",
-    "/catering/private-events",
-    "/catering/bar-mitzvah",
-    "/catering/holidays",
-    "/catering/dairy",
-    "/catering/shiva",
-    "/catering/fun-day",
-    "/urgent",
-    "/pasta-bar",
+"/catering": [
+"/kitchen",
+"/quote",
+"/menus",
+"/catering/business",
+"/catering/private-events",
+"/catering/bar-mitzvah",
+"/catering/holidays",
+"/catering/dairy",
+"/catering/shiva",
+"/catering/fun-day",
+"/urgent",
+"/pasta-bar",
   ],
-  "/catering/business": ["/catering", "/quote"],
-  "/catering/private-events": ["/catering", "/quote"],
-  "/catering/bar-mitzvah": ["/catering", "/quote"],
-  "/catering/holidays": ["/catering", "/quote"],
-  "/catering/dairy": ["/catering", "/quote"],
-  "/catering/shiva": ["/catering"],
-  "/catering/fun-day": ["/catering", "/quote"],
-  "/menus": ["/catering", "/quote"],
-  "/pasta-bar": ["/catering", "/quote"],
-  "/kitchen": ["/catering", "/quote"],
-  "/urgent": ["/quote"],
-  "/quote": ["/catering"],
+"/catering/business": ["/catering", "/quote"],
+"/catering/private-events": ["/catering", "/quote"],
+"/catering/bar-mitzvah": ["/catering", "/quote"],
+"/catering/holidays": ["/catering", "/quote"],
+"/catering/dairy": ["/catering", "/quote"],
+"/catering/shiva": ["/catering"],
+"/catering/fun-day": ["/catering", "/quote"],
+"/menus": ["/catering", "/quote"],
+"/pasta-bar": ["/catering", "/quote"],
+"/kitchen": ["/catering", "/quote"],
+"/urgent": ["/quote"],
+"/quote": ["/catering"],
 });
 
 /**
@@ -1349,11 +1349,11 @@ export const REQUIRED_LINKS: Readonly<Record<string, readonly string[]>> = Objec
  * הרשימה מתארת את מה שקיים, ומזינה את חישוב עומק הקליקים.
  */
 export const GLOBAL_NAV_LINKS: readonly string[] = Object.freeze([
-  "/",
-  "/quote",
-  "/privacy",
-  "/terms",
-  "/accessibility",
+"/",
+"/quote",
+"/privacy",
+"/terms",
+"/accessibility",
 ]);
 
 /** הנתיבים המוגשים והאינדקסביליים היום, לפי `shared/routes.ts`. */
@@ -1429,8 +1429,8 @@ export function auditInternalLinks(): LinkAudit {
     danglingLinks,
     missingAnchors: served.filter((p) => anchorFor(p) === null),
     weakAnchors: served
-      .map((p) => ({ path: p, anchorHe: anchorFor(p) ?? "" }))
-      .filter((r) => FORBIDDEN_ANCHORS_HE.includes(r.anchorHe.trim())),
+.map((p) => ({ path: p, anchorHe: anchorFor(p) ?? "" }))
+.filter((r) => FORBIDDEN_ANCHORS_HE.includes(r.anchorHe.trim())),
   };
 }
 
@@ -1545,7 +1545,7 @@ export function auditPageMeta(
       const badge = kashrutBadgeHe(tier);
       if (!clause && !badge) {
         push(
-          "kashrut-tier",
+"kashrut-tier",
           `טענת כשרות במפלס "${tier}" שאין לו נוסח מאושר. ראו CATERING_KASHRUT_STATEMENT.`,
         );
       }
@@ -1569,7 +1569,7 @@ export function auditPageMeta(
     }
     if (meta.robots === "index,follow" && meta.descriptionHe.length < DESCRIPTION_MIN) {
       push(
-        "description-short",
+"description-short",
         `${meta.descriptionHe.length} תווים; מתחת ל־${DESCRIPTION_MIN} גוגל כותב תיאור משלו.`,
       );
     }
@@ -1593,7 +1593,7 @@ export function auditPageMeta(
       const doesIndex = meta.robots === "index,follow";
       if (shouldIndex !== doesIndex) {
         push(
-          "robots-mismatch",
+"robots-mismatch",
           `shared/routes.ts קובע indexable=${shouldIndex}, והמטא אומרת "${meta.robots}".`,
         );
       }

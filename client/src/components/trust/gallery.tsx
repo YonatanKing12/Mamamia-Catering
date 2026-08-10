@@ -52,10 +52,10 @@ import { galleryImages, type GalleryImage, type GalleryRatio } from "@/content/p
 /* מחרוזות מלאות, לא מורכבות בזמן ריצה — סורק התוכן של Tailwind קורא
    קוד מקור ולא ערכים מחושבים. */
 const RATIO: Record<GalleryRatio, string> = {
-  "4/3": "aspect-[4/3]",
-  "3/2": "aspect-[3/2]",
-  "1/1": "aspect-[1/1]",
-  "4/5": "aspect-[4/5]",
+"4/3": "aspect-[4/3]",
+"3/2": "aspect-[3/2]",
+"1/1": "aspect-[1/1]",
+"4/5": "aspect-[4/5]",
 };
 
 const COLUMNS: Record<2 | 3, string> = {
@@ -123,7 +123,7 @@ export function Gallery({
   limit,
   columns = 3,
   className,
-  ...rest
+...rest
 }: GalleryProps) {
   const images = galleryImages(limit);
 

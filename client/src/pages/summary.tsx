@@ -181,12 +181,12 @@ function pickAllowed(raw: unknown): SummaryRecord | null {
 
   const dishIds = Array.isArray(src.selectedDishes ?? src.dishIds)
     ? ((src.selectedDishes ?? src.dishIds) as unknown[])
-        .filter((d): d is string => typeof d === "string")
-        .slice(0, 40)
+.filter((d): d is string => typeof d === "string")
+.slice(0, 40)
     : [];
 
   const answers: QuoteAnswers = {
-    ...EMPTY,
+...EMPTY,
     /* סוג אירוע מתקבל רק אם הוא אחד מהצ׳יפים המוכרים. מחרוזת חופשית
        שהגיעה מהשרת אינה מוצגת במסמך שנפתח בקבוצת צ׳אט. */
     eventType: eventType && isKnownEventType(eventType) ? eventType : null,
@@ -437,13 +437,13 @@ function ContactBlock({ record, leadRef }: { record: SummaryRecord | null; leadR
      נשלח כמות שהוא, כדי שהשיחה תיתפר לאותה שורת ליד ולא תיצור שנייה. */
   const waAnswers = React.useMemo(
     () => ({
-      ...(answers?.eventType ? { eventType: answers.eventType } : {}),
-      ...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
-      ...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
-      ...(answers?.dateFlexible ? { dateFlexible: true } : {}),
-      ...(answers?.area ? { area: answers.area } : {}),
+...(answers?.eventType ? { eventType: answers.eventType } : {}),
+...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers?.dateFlexible ? { dateFlexible: true } : {}),
+...(answers?.area ? { area: answers.area } : {}),
       branch: answers?.branch ?? null,
-      ...(answers?.dishes.length ? { dishNames: answers.dishes.map((d) => d.name) } : {}),
+...(answers?.dishes.length ? { dishNames: answers.dishes.map((d) => d.name) } : {}),
     }),
     [answers],
   );
@@ -462,10 +462,10 @@ function ContactBlock({ record, leadRef }: { record: SummaryRecord | null; leadR
       ref: leadRef,
       waLocation: "quote_alt",
       branch: answers?.branch ?? null,
-      ...(answers?.eventType ? { eventType: answers.eventType } : {}),
-      ...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
-      ...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
-      ...(answers?.area ? { area: answers.area } : {}),
+...(answers?.eventType ? { eventType: answers.eventType } : {}),
+...(answers?.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers?.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers?.area ? { area: answers.area } : {}),
     });
     track("whatsapp_handoff", { lead_ref: leadRef, wa_location: "quote_alt" });
     window.location.href = href;
@@ -639,7 +639,7 @@ export default function Summary() {
                         הסיכום משקף את הפרטים שנשלחו ב־<Num>{submittedOn}</Num>.
                       </>
                     ) : (
-                      "הסיכום משקף את הפרטים שנשלחו בפנייה הזאת."
+"הסיכום משקף את הפרטים שנשלחו בפנייה הזאת."
                     )}{" "}
                     הצעת המחיר עצמה נשלחת בנפרד בכתב.
                   </p>

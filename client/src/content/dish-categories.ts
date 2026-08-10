@@ -248,8 +248,8 @@ export const DISH_CATEGORIES: readonly DishCategory[] = [];
  * ─────────────────────────────────────────────────────────────────────
  * ```ts
  * {
- *   "tagliatelle-ragu": { category: "mains", surcharge: 0,    image: "/images/dishes/tagliatelle-ragu.webp" },
- *   "carpaccio":        { category: "starters", surcharge: 12, image: null },
+ *"tagliatelle-ragu": { category: "mains", surcharge: 0,    image: "/images/dishes/tagliatelle-ragu.webp" },
+ *"carpaccio":        { category: "starters", surcharge: 12, image: null },
  * }
  * ```
  */

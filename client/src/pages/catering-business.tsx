@@ -366,7 +366,7 @@ function faqItems(): PageFaq[] {
       id: "faq-who-cooks",
       questionHe: "מי מבשל את האוכל?",
       answerHe:
-        "המטבח של מסעדה איטלקית פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
+"המטבח של מסעדה פעילה — מטבח שמבשל לסועדים שיושבים בו, ולא מטבח שנפתח כדי לשרת אירועים.",
     },
     {
       id: "faq-entity",
@@ -377,7 +377,7 @@ function faqItems(): PageFaq[] {
       id: "faq-how-to-order",
       questionHe: "איך מזמינים?",
       answerHe:
-        "בונים את התפריט כאן בעמוד ומשאירים פרטים, או כותבים לנו בוואטסאפ. בשני המסלולים חוזרים אליכם, עוברים על הפרטים, וההצעה נשלחת בכתב.",
+"בונים את התפריט כאן בעמוד ומשאירים פרטים, או כותבים לנו בוואטסאפ. בשני המסלולים חוזרים אליכם, עוברים על הפרטים, וההצעה נשלחת בכתב.",
     },
     {
       id: "faq-lead-time",
@@ -437,11 +437,11 @@ export default function CateringBusiness() {
   /* ‏§3.1 — מקור המספור היחיד. רצועות ההמרה, האמון והעובדות אינן
      ממוספרות: הן אינן פרקים בגיליון, הן הדרך לפנות ולהאמין. */
   const order = [
-    "quote",
-    "checklist",
-    "gibush",
-    "kitchen",
-    "branches",
+"quote",
+"checklist",
+"gibush",
+"kitchen",
+"branches",
     faqs.some((f) => f.answerHe) ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
@@ -454,7 +454,7 @@ export default function CateringBusiness() {
      פעמיים: `KashrutBadge` מצטט את המשבצת, וכשאין נוסח אין תג ואין רווח. */
   const facts: React.ReactNode[] = [
     hasKashrutWording() ? <KashrutBadge key="kashrut" variant="pill" /> : null,
-    "מטבח של מסעדה איטלקית פעילה",
+"מטבח של מסעדה פעילה",
   ].filter(Boolean);
 
   const cities = cateringServiceCities();
@@ -589,7 +589,7 @@ export default function CateringBusiness() {
         sourcePage={SOURCE_PAGE}
         eyebrow="ההקשר"
         title="המסעדות שמאחורי הקייטרינג"
-        lede="מסעדות איטלקיות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
+        lede="מסעדות שפועלות לקהל הרחב. הקייטרינג הוא עיסוק נפרד שעובד לפי הזמנה, והוא מבושל במטבח של אחת מהן."
         flagshipLabelHe={null}
       />
 

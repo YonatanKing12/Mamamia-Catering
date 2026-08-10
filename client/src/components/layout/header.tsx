@@ -103,7 +103,7 @@ export const Header = ({ faqHref }: HeaderProps) => {
   /* `ROUTES` קפוא ו־`isServedPath` טהורה — הרשימה נחתכת פעם אחת למודול. */
   const nav = React.useMemo(
     () => [
-      ...NAV_CANDIDATES.filter((item) => isServedPath(item.href)),
+...NAV_CANDIDATES.filter((item) => isServedPath(item.href)),
       { href: faqHref ?? (location === "/" ? "#faq" : "/catering#faq"), label: "שאלות" },
     ],
     [faqHref, location],
@@ -126,8 +126,8 @@ export const Header = ({ faqHref }: HeaderProps) => {
          מייצר ליד כפול ב־16 מקומות שכבר קולטים בעצמם. */
       onClick={() => capturePhoneClick({ callLocation: "header" })}
       className={
-        "inline-flex min-h-[44px] items-center text-sm font-medium " +
-        "text-fg no-underline transition-colors duration-state ease-house hover:text-accent"
+"inline-flex min-h-[44px] items-center text-sm font-medium " +
+"text-fg no-underline transition-colors duration-state ease-house hover:text-accent"
       }
     >
       <Num>{PHONE.display}</Num>
@@ -138,8 +138,8 @@ export const Header = ({ faqHref }: HeaderProps) => {
     <header
       className={cn(
         /* .head — גיליון ההדפסה (§11) מסתיר את הכותרת דרך שם המחלקה הזה. */
-        "head sticky top-0 z-[80] bg-bg",
-        "border-b border-solid transition-colors duration-slow ease-house",
+"head sticky top-0 z-[80] bg-bg",
+"border-b border-solid transition-colors duration-slow ease-house",
         /* צבע כערך מפורש: `rule` מוגדר בקונפיג גם ב־borderWidth (2px) וגם
            ב־colors, ולכן צורת הקיצור של גבול תחתון בשם הזה פולטת גם רוחב
            2px. (השם אינו כתוב כאן כלשונו — הזכרה בהערה פולטת אותו לגיליון.) */
@@ -169,8 +169,8 @@ export const Header = ({ faqHref }: HeaderProps) => {
               href={item.href}
               aria-current={current(item.href)}
               className={cn(
-                "border-b border-solid pb-1 text-sm no-underline",
-                "transition-colors duration-state ease-house",
+"border-b border-solid pb-1 text-sm no-underline",
+"transition-colors duration-state ease-house",
                 current(item.href)
                   ? "border-b-accent text-fg"
                   : "border-b-transparent text-fg-muted hover:border-b-accent hover:text-fg",
@@ -195,10 +195,10 @@ export const Header = ({ faqHref }: HeaderProps) => {
             <button
               type="button"
               className={
-                "ms-auto inline-flex min-h-[44px] items-center rounded border border-solid " +
-                "border-rule-control px-4 font-sans text-sm font-semibold text-fg " +
-                "transition-colors duration-state ease-house hover:border-accent hover:text-accent " +
-                "min-[860px]:hidden"
+"ms-auto inline-flex min-h-[44px] items-center rounded border border-solid " +
+"border-rule-control px-4 font-sans text-sm font-semibold text-fg " +
+"transition-colors duration-state ease-house hover:border-accent hover:text-accent " +
+"min-[860px]:hidden"
               }
             >
               ניווט
@@ -210,10 +210,10 @@ export const Header = ({ faqHref }: HeaderProps) => {
             <Dialog.Content
               aria-describedby={undefined}
               className={
-                "fixed inset-y-0 end-0 z-[95] flex w-[min(88vw,24em)] flex-col gap-6 " +
-                "overflow-y-auto overscroll-contain border-s border-solid " +
-                "border-s-[color:var(--rule)] " +
-                "bg-bg px-gutter py-6"
+"fixed inset-y-0 end-0 z-[95] flex w-[min(88vw,24em)] flex-col gap-6 " +
+"overflow-y-auto overscroll-contain border-s border-solid " +
+"border-s-[color:var(--rule)] " +
+"bg-bg px-gutter py-6"
               }
             >
               <div className="flex items-center justify-between gap-4">
@@ -222,9 +222,9 @@ export const Header = ({ faqHref }: HeaderProps) => {
                   <button
                     type="button"
                     className={
-                      "inline-flex min-h-[44px] items-center rounded border border-solid " +
-                      "border-rule-control px-3 font-sans text-sm font-semibold text-fg " +
-                      "transition-colors duration-state ease-house hover:border-accent hover:text-accent"
+"inline-flex min-h-[44px] items-center rounded border border-solid " +
+"border-rule-control px-3 font-sans text-sm font-semibold text-fg " +
+"transition-colors duration-state ease-house hover:border-accent hover:text-accent"
                     }
                   >
                     סגירה
@@ -254,8 +254,8 @@ export const Header = ({ faqHref }: HeaderProps) => {
                     onClick={close}
                     aria-current={current(item.href)}
                     className={cn(
-                      "flex min-h-[48px] items-center text-base no-underline",
-                      "transition-colors duration-state ease-house",
+"flex min-h-[48px] items-center text-base no-underline",
+"transition-colors duration-state ease-house",
                       current(item.href) ? "text-fg" : "text-fg-muted hover:text-fg",
                     )}
                   >
@@ -274,8 +274,8 @@ export const Header = ({ faqHref }: HeaderProps) => {
                       window.requestAnimationFrame(() => window.print());
                     }}
                     className={
-                      "flex min-h-[48px] items-center text-start text-sm font-semibold " +
-                      "text-fg-muted transition-colors duration-state ease-house hover:text-fg"
+"flex min-h-[48px] items-center text-start text-sm font-semibold " +
+"text-fg-muted transition-colors duration-state ease-house hover:text-fg"
                     }
                   >
                     הדפיסו את התפריט
@@ -292,8 +292,8 @@ export const Header = ({ faqHref }: HeaderProps) => {
                     href={item.href}
                     onClick={close}
                     className={
-                      "inline-flex min-h-[44px] items-center text-xs text-fg-subtle no-underline " +
-                      "transition-colors duration-state ease-house hover:text-fg"
+"inline-flex min-h-[44px] items-center text-xs text-fg-subtle no-underline " +
+"transition-colors duration-state ease-house hover:text-fg"
                     }
                   >
                     {item.label}

@@ -73,22 +73,22 @@ export function originFor(req: Request): string {
 /** ‏`&` ו־`<` אינם יכולים להופיע ב־slug היום, אבל XML לא נסמך על «היום». */
 const xmlEscape = (value: string): string =>
   value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+.replace(/&/g, "&amp;")
+.replace(/</g, "&lt;")
+.replace(/>/g, "&gt;")
+.replace(/"/g, "&quot;");
 
 export function sitemapXml(origin: string): string {
   const urls = sitemapPaths()
-    .map(({ path }) => `  <url><loc>${xmlEscape(`${origin}${path}`)}</loc></url>`)
-    .join("\n");
+.map(({ path }) => `  <url><loc>${xmlEscape(`${origin}${path}`)}</loc></url>`)
+.join("\n");
 
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     urls,
-    "</urlset>",
-    "",
+"</urlset>",
+"",
   ].join("\n");
 }
 
@@ -123,20 +123,20 @@ export function robotsTxt(origin: string): string {
    */
   if (process.env.SITE_NOINDEX === "1") {
     return [
-      "# תצוגה מקדימה — SITE_NOINDEX=1. אין לאנדקס.",
-      "",
-      "User-agent: *",
-      "Disallow: /",
-      "",
+"# תצוגה מקדימה — SITE_NOINDEX=1. אין לאנדקס.",
+"",
+"User-agent: *",
+"Disallow: /",
+"",
     ].join("\n");
   }
 
   const lines = [
-    "# נגזר מ־shared/routes.ts. אין לערוך ביד.",
-    "",
-    "User-agent: *",
-    "Allow: /",
-    ...disallowPrefixes().map((prefix) => `Disallow: ${prefix}`),
+"# נגזר מ־shared/routes.ts. אין לערוך ביד.",
+"",
+"User-agent: *",
+"Allow: /",
+...disallowPrefixes().map((prefix) => `Disallow: ${prefix}`),
   ];
 
   /* ‏קבוצות זחלני מנועי התשובות. `robots.txt` אינו מצטבר — זחלן ששמו נקוב
@@ -170,17 +170,17 @@ export function registerSeoRoutes(app: Express): void {
       return;
     }
     res
-      .status(200)
-      .type("application/xml; charset=utf-8")
-      .set("Cache-Control", "public, max-age=3600")
-      .send(sitemapXml(origin));
+.status(200)
+.type("application/xml; charset=utf-8")
+.set("Cache-Control", "public, max-age=3600")
+.send(sitemapXml(origin));
   });
 
   app.get("/robots.txt", (req: Request, res: Response) => {
     res
-      .status(200)
-      .type("text/plain; charset=utf-8")
-      .set("Cache-Control", "public, max-age=3600")
-      .send(robotsTxt(originFor(req)));
+.status(200)
+.type("text/plain; charset=utf-8")
+.set("Cache-Control", "public, max-age=3600")
+.send(robotsTxt(originFor(req)));
   });
 }

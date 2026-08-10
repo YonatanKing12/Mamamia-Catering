@@ -102,10 +102,10 @@ function LegalEntity() {
             {name}
             {filled(SLOTS.companyId) ? (
               <>
-                , ח.פ. <Num inline>{SLOTS.companyId}</Num>
+, ח.פ. <Num inline>{SLOTS.companyId}</Num>
               </>
             ) : null}
-            .
+.
           </p>
         </Prose>
       </section>

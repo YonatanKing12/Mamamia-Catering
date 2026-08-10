@@ -217,8 +217,8 @@ function ConfiguratorBody({
       track("quote_step_complete", {
         step_index: 4,
         step_id: "area",
-        ...(c.eventType ? { event_type: c.eventType } : {}),
-        ...(c.guestBand ? { guest_band: c.guestBand } : {}),
+...(c.eventType ? { event_type: c.eventType } : {}),
+...(c.guestBand ? { guest_band: c.guestBand } : {}),
         area: area.trim(),
       });
     }
@@ -278,7 +278,7 @@ function ConfiguratorBody({
         const { ref } = await submitQuote({
           name: contact.name.trim(),
           phone: contact.phone.trim(),
-          ...(contact.email.trim() ? { email: contact.email.trim() } : {}),
+...(contact.email.trim() ? { email: contact.email.trim() } : {}),
           contactChannel: contact.channel,
           eventType: c.eventType,
           guestBand: c.guestBand,
@@ -345,13 +345,13 @@ function ConfiguratorBody({
     const ref = captureWaIntent({
       waLocation: "quote_alt",
       branch: null,
-      ...(c.eventType ? { eventType: c.eventType } : {}),
-      ...(c.guestBand ? { guestBand: c.guestBand } : {}),
-      ...(area.trim() ? { area: area.trim().slice(0, 60) } : {}),
+...(c.eventType ? { eventType: c.eventType } : {}),
+...(c.guestBand ? { guestBand: c.guestBand } : {}),
+...(area.trim() ? { area: area.trim().slice(0, 60) } : {}),
       serviceFormat: null,
-      ...(dishIds.length ? { dishIds } : {}),
-      ...(trimmedName ? { name: trimmedName.slice(0, 80) } : {}),
-      ...(trimmedPhone ? { phone: trimmedPhone.slice(0, 25) } : {}),
+...(dishIds.length ? { dishIds } : {}),
+...(trimmedName ? { name: trimmedName.slice(0, 80) } : {}),
+...(trimmedPhone ? { phone: trimmedPhone.slice(0, 25) } : {}),
     });
 
     track("whatsapp_click", { wa_location: "quote_alt", has_lead: dishIds.length > 0 });
@@ -512,9 +512,9 @@ function ConfiguratorBody({
         /* ריפוד תחתון שמפנה מקום למזח במובייל. במסכים רחבים המזח אינו
            קיים והריפוד מתאפס. */
         className={cn(
-          "grid gap-col",
+"grid gap-col",
           showSummary &&
-            "pb-[8.5rem] min-[980px]:grid-cols-[minmax(0,1fr)_300px] min-[980px]:pb-0",
+"pb-[8.5rem] min-[980px]:grid-cols-[minmax(0,1fr)_300px] min-[980px]:pb-0",
         )}
       >
         <div ref={stepRef} className="grid gap-6">

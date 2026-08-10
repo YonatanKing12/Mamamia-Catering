@@ -258,7 +258,7 @@ export function initAttribution(): void {
 
   if (isFirstInTab) {
     const first: Touch = {
-      ...(fresh ?? { at: new Date().toISOString() }),
+...(fresh ?? { at: new Date().toISOString() }),
       lp: currentPath(),
       ref: externalReferrer(),
     };

@@ -67,10 +67,10 @@ export async function setupVite(app: Express, server: Server) {
   };
 
   const vite = await createViteServer({
-    ...viteConfig,
+...viteConfig,
     configFile: false,
     customLogger: {
-      ...viteLogger,
+...viteLogger,
       error: (msg, options) => {
         viteLogger.error(msg, options);
         process.exit(1);
@@ -88,9 +88,9 @@ export async function setupVite(app: Express, server: Server) {
     try {
       const clientTemplate = path.resolve(
         import.meta.dirname,
-        "..",
-        "client",
-        "index.html",
+"..",
+"client",
+"index.html",
       );
 
       // always reload the index.html file from disk incase it changes
@@ -101,9 +101,9 @@ export async function setupVite(app: Express, server: Server) {
       );
       const page = await vite.transformIndexHtml(url, template);
       res
-        .status(shellStatus(req))
-        .set({ "Content-Type": "text/html; charset=utf-8" })
-        .end(page);
+.status(shellStatus(req))
+.set({ "Content-Type": "text/html; charset=utf-8" })
+.end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);
@@ -137,8 +137,8 @@ export function serveStatic(app: Express) {
 
   app.use("*", (req, res) => {
     res
-      .status(shellStatus(req))
-      .set({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" })
-      .end(shell);
+.status(shellStatus(req))
+.set({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" })
+.end(shell);
   });
 }

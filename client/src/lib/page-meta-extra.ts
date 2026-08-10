@@ -43,7 +43,7 @@
  *
  * תיאור כאן רשאי לומר **רק** את אלה:
  *   1. שמדובר בקייטרינג מאמאמיה;
- *   2. שהוא מבושל במטבח של מסעדה איטלקית **פעילה** — לשון יחיד;
+ *   2. שהוא מבושל במטבח של מסעדה פעילה **פעילה** — לשון יחיד;
  *   3. שהוא כשר, **ורק בנוסח שמחזיר `kashrutClauseHe()`**;
  *   4. מה האירוע שהדף עוסק בו.
  *
@@ -203,14 +203,14 @@ function records(): PageMetaExtra[] {
       topicHe: "המטבח שמבשל את הקייטרינג",
       kashrut: "general",
       descriptionHe:
-        "מי מבשל את הקייטרינג של מאמאמיה: מטבח של מסעדה איטלקית פעילה, ולא מטבח ייצור שנפתח לאירועים.",
+"מי מבשל את הקייטרינג של מאמאמיה: מטבח של מסעדה פעילה, ולא מטבח ייצור שנפתח לאירועים.",
       breadcrumb: [HOME, { labelHe: "המטבח", path: "/kitchen" }],
       occasion: null,
       note: "בלוק פרטי המסעדות נשען על anyRestaurantDetail() — false היום. הדף עומד על הטענה בלבד.",
     }),
 
     /* ─────────── P-07 · /catering ───────────
-     * הנושא נבדל מדף הבית בכוונה: הבית לוקח «קייטרינג איטלקי לאירועים»,
+     * הנושא נבדל מדף הבית בכוונה: הבית לוקח «קייטרינג בשרי כשר לאירועים»,
      * והמפרק לוקח את הניסוח שמתאר מפרק — «לפי סוג האירוע». שתי כותרות
      * שמתחילות באותן שתי מילים הן שתי תוצאות שמתחרות זו בזו. */
     entry({
@@ -320,9 +320,9 @@ function records(): PageMetaExtra[] {
     entry({
       id: "P-14",
       path: "/catering/dairy",
-      topicHe: "קייטרינג חלבי איטלקי",
+      topicHe: "קייטרינג חלבי",
       kashrut: "general",
-      descriptionHe: `תפריט חלבי איטלקי לאירוע, ${FROM_ORIGIN_HE}. פסטות, אנטיפסטי וקינוחים.`,
+      descriptionHe: `תפריט חלבי לאירוע, ${FROM_ORIGIN_HE}. פסטות, אנטיפסטי וקינוחים.`,
       breadcrumb: [HOME, CATERING, { labelHe: "קייטרינג חלבי", path: "/catering/dairy" }],
       occasion: "dairy",
       note: "אין טענת מחיר משווה. «אותו תקציב, שולחן עשיר יותר» נדחתה בביקורת (§A2).",
@@ -417,8 +417,8 @@ export function pageMetaExtraList(): PageMetaExtra[] {
  * עם המקור אם הרשימה תשתנה.
  */
 export const SUPERSEDED_PATHS: readonly string[] = Object.freeze([
-  "/kitchens",
-  ...BRANCHES.map((b) => `/kitchens/${b.id.replace(/_/g, "-")}`),
+"/kitchens",
+...BRANCHES.map((b) => `/kitchens/${b.id.replace(/_/g, "-")}`),
 ]);
 
 /**
@@ -483,8 +483,8 @@ export function resolveSiteMeta(pathname: string): PageMeta | null {
  */
 export function indexableExtraPaths(): string[] {
   return pageMetaExtraList()
-    .filter((m) => m.robots === "index,follow")
-    .map((m) => m.path);
+.filter((m) => m.robots === "index,follow")
+.map((m) => m.path);
 }
 
 /**

@@ -102,9 +102,9 @@ function hasBody(f: ServiceFormatSpec): boolean {
 }
 
 const BULLET_BASE =
-  "relative m-0 mb-[.5rem] ps-[1.15rem] text-sm text-fg-muted " +
-  "before:absolute before:top-[.72em] before:h-[5px] before:w-[5px] " +
-  "before:content-[''] before:[inset-inline-start:0] before:[border-radius:50%]";
+"relative m-0 mb-[.5rem] ps-[1.15rem] text-sm text-fg-muted " +
+"before:absolute before:top-[.72em] before:h-[5px] before:w-[5px] " +
+"before:content-[''] before:[inset-inline-start:0] before:[border-radius:50%]";
 
 /** נכלל: נקודה מלאה באקסנט ב־55%. לא נכלל: טבעת חלולה, אותו משקל בדיוק. */
 const BULLET_IN = `${BULLET_BASE} before:bg-accent before:opacity-[.55]`;
@@ -144,7 +144,7 @@ function FormatCard({
   return (
     <article
       className={cn(
-        "flex flex-col bg-bg p-card",
+"flex flex-col bg-bg p-card",
         /* הכרטיס המסומן: קו כותר של 2px בדיו (§3.4 טכניקה 1), לא צל. */
         format.flagged && "rule-top",
       )}
@@ -152,7 +152,7 @@ function FormatCard({
       {format.kickerHe ? (
         <p
           className={cn(
-            "eyebrow m-0 mb-[.6rem] max-w-none",
+"eyebrow m-0 mb-[.6rem] max-w-none",
             format.flagged && "text-accent",
           )}
         >
@@ -256,9 +256,9 @@ export function ServiceFormats({
       {/* המרזבים הם הקווים — §3.4 טכניקה 2. אין צללים ואין מסגרות כפולות. */}
       <div
         className={cn(
-          "grid gap-px overflow-hidden rounded border border-solid",
-          "border-[color:var(--rule)] bg-[color:var(--rule)]",
-          "[grid-template-columns:repeat(auto-fit,minmax(275px,1fr))]",
+"grid gap-px overflow-hidden rounded border border-solid",
+"border-[color:var(--rule)] bg-[color:var(--rule)]",
+"[grid-template-columns:repeat(auto-fit,minmax(275px,1fr))]",
         )}
       >
         {visible.map((format) => (

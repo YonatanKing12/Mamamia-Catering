@@ -224,7 +224,7 @@ export const RESTAURANTS: readonly RestaurantLocation[] = BRANCHES.map((b) => ({
   nameHe: b.name,
   cityHe: b.name,
   isFlagship: b.isFlagship,
-  ...DETAIL[b.id],
+...DETAIL[b.id],
 }));
 
 const BY_ID = new Map<string, RestaurantLocation>(RESTAURANTS.map((r) => [r.id, r]));
@@ -308,7 +308,7 @@ export function postalAddressFor(
   return {
     streetAddress: a.streetHe,
     addressLocality: restaurantById(id).cityHe,
-    ...(filled(a.postalCode) ? { postalCode: a.postalCode } : {}),
+...(filled(a.postalCode) ? { postalCode: a.postalCode } : {}),
   };
 }
 

@@ -94,7 +94,7 @@ export const Money = React.forwardRef<HTMLSpanElement, MoneyProps>(function Mone
    * הסימנים מיותרים כאן ממילא: המכולה עצמה נושאת את הכיוון.
    */
   const parts = ils.formatToParts(value).map((p) => ({
-    ...p,
+...p,
     value: p.value.replace(/[‎‏]/g, ""),
   }));
 

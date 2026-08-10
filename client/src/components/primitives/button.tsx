@@ -23,28 +23,28 @@ export type ButtonVariant = "primary" | "ghost" | "wa" | "whatsapp" | "link";
 export type ButtonSize = "md" | "sm";
 
 const BASE =
-  "inline-flex items-center justify-center gap-2 rounded border border-solid " +
-  "font-sans text-sm font-semibold leading-none no-underline text-center " +
-  "transition-[background-color,color,border-color,transform] duration-state ease-house " +
-  "aria-disabled:cursor-not-allowed aria-disabled:opacity-[.55] aria-disabled:pointer-events-none";
+"inline-flex items-center justify-center gap-2 rounded border border-solid " +
+"font-sans text-sm font-semibold leading-none no-underline text-center " +
+"transition-[background-color,color,border-color,transform] duration-state ease-house " +
+"aria-disabled:cursor-not-allowed aria-disabled:opacity-[.55] aria-disabled:pointer-events-none";
 
 const VARIANT: Record<Exclude<ButtonVariant, "whatsapp">, string> = {
   /* 16.31:1 במנוחה · 5.72:1 ב־hover. על הבאנד הכהה: 16.31 ו־8.37. */
   primary:
-    "bg-btn-bg text-btn-fg border-btn-bg " +
-    "hover:bg-accent hover:border-accent hover:-translate-y-px " +
-    "motion-reduce:hover:translate-y-0",
+"bg-btn-bg text-btn-fg border-btn-bg " +
+"hover:bg-accent hover:border-accent hover:-translate-y-px " +
+"motion-reduce:hover:translate-y-0",
   /* מסגרת --rule-control (3.69:1) — 1.4.11. לעולם לא --rule. */
   ghost:
-    "bg-transparent text-fg border-rule-control " +
-    "hover:text-accent hover:border-accent",
+"bg-transparent text-fg border-rule-control " +
+"hover:text-accent hover:border-accent",
   /* לבן על --wa 5.42:1 · על --wa-dk 6.27:1. לא הירוק של המותג — §2.1. */
   wa: "bg-wa text-white border-wa hover:bg-wa-dk hover:border-wa-dk",
   /* הטלפון הוא link, לא primary — L-10. */
   link:
-    "bg-transparent border-transparent text-fg-subtle underline " +
-    "decoration-rule underline-offset-[.22em] " +
-    "hover:text-fg hover:decoration-accent",
+"bg-transparent border-transparent text-fg-subtle underline " +
+"decoration-rule underline-offset-[.22em] " +
+"hover:text-fg hover:decoration-accent",
 };
 
 const SIZE: Record<ButtonSize, string> = {
@@ -67,7 +67,7 @@ export type ButtonClickHandler = React.MouseEventHandler<HTMLButtonElement & HTM
 export interface ButtonProps
   extends Omit<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
-    "type" | "disabled" | "onClick"
+"type" | "disabled" | "onClick"
   > {
   onClick?: ButtonClickHandler;
   variant?: ButtonVariant;
@@ -103,7 +103,7 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
       className,
       children,
       onClick,
-      ...rest
+...rest
     },
     ref,
   ) {
@@ -138,7 +138,7 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
       <span className="grid">
         <span
           className={cn(
-            "col-start-1 row-start-1 flex items-center justify-center gap-2",
+"col-start-1 row-start-1 flex items-center justify-center gap-2",
             loading && "invisible",
           )}
           aria-hidden={loading || undefined}
@@ -148,7 +148,7 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
         </span>
         <span
           className={cn(
-            "col-start-1 row-start-1 flex items-center justify-center",
+"col-start-1 row-start-1 flex items-center justify-center",
             !loading && "invisible",
           )}
           aria-hidden={!loading || undefined}
@@ -161,9 +161,9 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
     const shared = {
       className: classes,
       onClick: handleClick,
-      "aria-disabled": inert || undefined,
-      "aria-busy": loading || undefined,
-      "data-loading": loading ? "" : undefined,
+"aria-disabled": inert || undefined,
+"aria-busy": loading || undefined,
+"data-loading": loading ? "" : undefined,
     } as const;
 
     if (href !== undefined) {

@@ -163,9 +163,9 @@ export function NextSteps({
         {/* המרזבים הם הקווים (§3.4 טכניקה 2). עמודה אחת בנייד. */}
         <ul
           className={cn(
-            "m-0 grid list-none gap-px overflow-hidden rounded border border-solid p-0",
-            "border-[color:var(--rule)] bg-[color:var(--rule)]",
-            "[grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]",
+"m-0 grid list-none gap-px overflow-hidden rounded border border-solid p-0",
+"border-[color:var(--rule)] bg-[color:var(--rule)]",
+"[grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]",
           )}
         >
           {visible.map((link) => {
@@ -185,9 +185,9 @@ export function NextSteps({
             /* כל הכרטיס הוא יעד המגע — 44px הוא רצפה, לא תקרה. הצבע
                אינו נושא המידע: הכותרת מסומנת בקו תחתון בריחוף/מיקוד. */
             const cls = cn(
-              "flex min-h-[44px] flex-col bg-bg p-card no-underline",
-              "transition-colors duration-state ease-house",
-              "hover:bg-[color:var(--surface-hover)] hover:text-accent",
+"flex min-h-[44px] flex-col bg-bg p-card no-underline",
+"transition-colors duration-state ease-house",
+"hover:bg-[color:var(--surface-hover)] hover:text-accent",
             );
 
             return (

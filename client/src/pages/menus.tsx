@@ -406,11 +406,11 @@ export default function Menus() {
      במספור הוא האות הרועשת ביותר ל«תבנית עם חלקים חסרים». */
   const order = [
     showMenuSheet ? "menu" : null,
-    "how-menu",
-    "kitchen",
+"how-menu",
+"kitchen",
     showReviews ? "reviews" : null,
     showGallery ? "gallery" : null,
-    "quote",
+"quote",
     faqs.some((f) => f.answerHe) ? "faq" : null,
   ].filter((k): k is string => k !== null);
 
@@ -423,7 +423,7 @@ export default function Menus() {
      הפסוקית שלו בלבד. הכשרות נקראת מהמשבצת דרך `kashrutClauseHe`
      ולעולם אינה נכתבת כמחרוזת קשיחה (LAW 1). */
   const kashrut = kashrutClauseHe("general");
-  const facts = ["מטבח של מסעדה איטלקית פעילה", kashrut].filter(
+  const facts = ["מטבח של מסעדה פעילה", kashrut].filter(
     (c): c is string => Boolean(c),
   );
 
@@ -471,7 +471,7 @@ export default function Menus() {
             </>
           )
         }
-        lede="קייטרינג מאמאמיה מבושל במטבח של מסעדה איטלקית פעילה. מה שיוצא ממנו לסועדים של המסעדה הוא מה שנכנס לתפריט של האירוע."
+        lede="קייטרינג מאמאמיה מבושל במטבח של מסעדה פעילה. מה שיוצא ממנו לסועדים של המסעדה הוא מה שנכנס לתפריט של האירוע."
         facts={facts}
         primary={{ label: "בנו תפריט לאירוע", href: "#quote" }}
         secondary={{
@@ -556,7 +556,7 @@ export default function Menus() {
           {
             href: "/catering/dairy",
             titleHe: "קייטרינג חלבי",
-            descriptionHe: "תפריט חלבי איטלקי לאירוע.",
+            descriptionHe: "תפריט חלבי לאירוע.",
           },
         ]}
       />

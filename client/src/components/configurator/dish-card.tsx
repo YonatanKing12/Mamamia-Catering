@@ -96,15 +96,15 @@ export function DishCard({
 
       <span
         className={cn(
-          "flex h-full min-h-[44px] flex-col overflow-hidden rounded-lg border border-solid",
-          "border-rule-control bg-bg-form text-fg",
-          "transition-[background-color,border-color,color] duration-state ease-house",
-          "peer-hover:border-fg-subtle",
+"flex h-full min-h-[44px] flex-col overflow-hidden rounded-lg border border-solid",
+"border-rule-control bg-bg-form text-fg",
+"transition-[background-color,border-color,color] duration-state ease-house",
+"peer-hover:border-fg-subtle",
           /* מצב נבחר: מילוי ענבר מלא. הניגודיות היחידה החוקית עליו היא
              ‎--accent-fg; לבן על ‎#F39402 הוא 2.32:1. */
-          "peer-checked:border-accent peer-checked:bg-accent peer-checked:text-accent-foreground",
-          "peer-focus-visible:outline peer-focus-visible:outline-2",
-          "peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus",
+"peer-checked:border-accent peer-checked:bg-accent peer-checked:text-accent-foreground",
+"peer-focus-visible:outline peer-focus-visible:outline-2",
+"peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus",
           inert && "opacity-[.55]",
         )}
       >
@@ -128,8 +128,8 @@ export function DishCard({
               className={cn(
                 /* `peer-checked:` דורש אח, לא צאצא — התיבה הזאת יושבת
                    בתוך הפָּנים ולכן היא נצבעת ממצב React ולא מהסלקטור. */
-                "mt-[.15em] grid h-[1.15rem] w-[1.15rem] shrink-0 place-items-center",
-                "rounded-sm border border-solid border-rule-control",
+"mt-[.15em] grid h-[1.15rem] w-[1.15rem] shrink-0 place-items-center",
+"rounded-sm border border-solid border-rule-control",
                 checked && "border-current",
               )}
             >
@@ -141,7 +141,7 @@ export function DishCard({
           {dish.descriptionHe ? (
             <span
               className={cn(
-                "block max-w-dish text-xs leading-tight",
+"block max-w-dish text-xs leading-tight",
                 checked ? "text-current opacity-90" : "text-fg-subtle",
               )}
             >
@@ -152,7 +152,7 @@ export function DishCard({
           {dietary.length > 0 ? (
             <span
               className={cn(
-                "mt-auto flex flex-wrap gap-[.3rem] pt-[.2rem] text-3xs",
+"mt-auto flex flex-wrap gap-[.3rem] pt-[.2rem] text-3xs",
                 checked ? "text-current opacity-90" : "text-fg-subtle",
               )}
             >
@@ -187,7 +187,7 @@ export function DishCard({
           {mark ? (
             <span
               className={cn(
-                "text-3xs leading-tight",
+"text-3xs leading-tight",
                 checked ? "text-current opacity-90" : "text-fg-subtle",
               )}
             >

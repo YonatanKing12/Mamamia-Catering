@@ -537,8 +537,8 @@ export function missingRequiredCategories(selection: Selection): DishCategory[] 
   const resolved = resolveSelection(selection);
   if (!resolved) return [];
   return resolved.categories
-    .filter((line) => line.category.required && line.count === 0)
-    .map((line) => line.category);
+.filter((line) => line.category.required && line.count === 0)
+.map((line) => line.category);
 }
 
 /** האם הבחירה שלמה: חבילה, מספר סועדים, וכל קטגוריות החובה. */

@@ -25,7 +25,7 @@ const SEED_FILE = path.resolve(process.cwd(), "content", "seed.json");
 
 const seedSchema = z.object({
   testimonials: z
-    .array(
+.array(
       z.object({
         name: z.string().min(1),
         eventType: z.string().min(1),
@@ -42,9 +42,9 @@ const seedSchema = z.object({
         }),
       }),
     )
-    .default([]),
+.default([]),
   blogPosts: z
-    .array(
+.array(
       z.object({
         title: z.string().min(1),
         slug: z.string().min(1),
@@ -55,9 +55,9 @@ const seedSchema = z.object({
         tags: z.array(z.string()).optional(),
       }),
     )
-    .default([]),
+.default([]),
   galleryItems: z
-    .array(
+.array(
       z.object({
         title: z.string().min(1),
         description: z.string().optional(),
@@ -67,7 +67,7 @@ const seedSchema = z.object({
         featured: z.boolean().optional(),
       }),
     )
-    .default([]),
+.default([]),
 });
 
 async function seedDatabase() {
@@ -126,11 +126,11 @@ async function seedDatabase() {
 }
 
 seedDatabase()
-  .then(async () => {
+.then(async () => {
     await closeDatabase();
     process.exit(0);
   })
-  .catch(async (error) => {
+.catch(async (error) => {
     console.error("✖ ההזרעה נכשלה:", error instanceof z.ZodError ? error.issues : error);
     await closeDatabase();
     process.exit(1);

@@ -183,7 +183,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "קייטרינג לחברות",
     intentHe: "ארוחת צוות, ישיבה או כנס — מי שמזמין צריך תאריך סגור ותהליך רכש מסודר.",
     serviceFormats: ["delivery", "buffet_on_site"],
-    menu: { menuTag: "business", courses: ["platters", "antipasti", "pasta", "dessert"], requiresDietary: null },
+    menu: { menuTag: "business", courses: ["salads", "sides", "chicken", "beef"], requiresDietary: null },
     gate: { kind: "open" },
     eventTypeSeed: "אירוע חברה",
     note: "חשבונית והזמנת רכש הן צורך של הקונה. ח.פ. עדיין `null` — אין להבטיח בדף.",
@@ -194,7 +194,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "שמחות פרטיות",
     intentHe: "אירוע משפחתי בבית או במקום שנבחר, שצריך תפריט שנסגר מראש.",
     serviceFormats: ["delivery", "buffet_on_site", "plated_staffed", "at_restaurant"],
-    menu: { menuTag: "private-events", courses: ["antipasti", "pasta", "mains", "dessert"], requiresDietary: null },
+    menu: { menuTag: "private-events", courses: ["salads", "fish", "beef", "chicken", "sides"], requiresDietary: null },
     /* הדף נבנה בכל מקרה; רק שורת «אירוח אצלנו במסעדה» והצ׳יפ המקביל
        בבנאי תלויים בקיבולת. spec 01 P-09. */
     gate: { kind: "soft", requires: ["private_event_capacity"] },
@@ -207,7 +207,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "בר מצווה ובת מצווה",
     intentHe: "אירוע שמתוכנן חודשים מראש ונבדק מול כמה ספקים.",
     serviceFormats: ["delivery", "buffet_on_site", "plated_staffed", "at_restaurant"],
-    menu: { menuTag: "bar-mitzvah", courses: ["antipasti", "pasta", "mains", "dessert"], requiresDietary: null },
+    menu: { menuTag: "bar-mitzvah", courses: ["salads", "fish", "beef", "chicken", "sides"], requiresDietary: null },
     /* רך ולא קשיח: spec 01 P-10 קובע במפורש שבלי נוסח כשרות הדף מוקם
        במסגור אגנוסטי לכשרות, והווריאנטים `ברית` / `שבת חתן` / `חינה`
        מנוטרלים כמילות שלילה במקום להיות מטרה. */
@@ -221,7 +221,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "אירוח שבעה ואזכרה",
     intentHe: "אוכל לבית אבלים, בלי שהמזמין יצטרך לנהל את זה.",
     serviceFormats: ["delivery"],
-    menu: { menuTag: "shiva", courses: ["platters", "antipasti"], requiresDietary: null },
+    menu: { menuTag: "shiva", courses: ["salads", "sides"], requiresDietary: null },
     /* השער הקשיח. spec 01 P-11. */
     gate: { kind: "hard", requires: ["kashrut_statement_written"] },
     /* אין בנאי בדף הזה, ולכן אין מה לזרוע. spec 01 P-11: בלי בנאי, בלי
@@ -235,7 +235,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "חגים",
     intentHe: "ארוחת חג לבית, שצריך לסגור לפני שהתאריך נתפס.",
     serviceFormats: ["delivery", "buffet_on_site"],
-    menu: { menuTag: "holidays", courses: ["antipasti", "pasta", "mains", "dessert"], requiresDietary: null },
+    menu: { menuTag: "holidays", courses: ["salads", "fish", "beef", "chicken", "sides"], requiresDietary: null },
     gate: { kind: "open" },
     eventTypeSeed: "אירוח משפחתי או חג",
     /* חלון החג ותאריך ההזמנה האחרון מגיעים מ־`content/seasons.ts`
@@ -249,7 +249,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "ימי גיבוש וימי כיף",
     intentHe: "יום צוות מחוץ למשרד, שבו האוכל הוא חלק מהאירוע ולא רק ארוחה.",
     serviceFormats: ["delivery", "buffet_on_site"],
-    menu: { menuTag: "fun-day", courses: ["pasta", "antipasti", "dessert"], requiresDietary: null },
+    menu: { menuTag: "fun-day", courses: ["salads", "sides", "chicken"], requiresDietary: null },
     /* spec 01 P-13: המסלול מקודם לעצמאי רק כשיש מגבלות תפעוליות אמיתיות
        לעמדה. עד אז הוא עוגן `#gibush` בתוך `/catering/business`, ואסור
        לשחרר אותו כ־P-08 עם מילים מוחלפות — זו תבנית דלת כניסה. */
@@ -261,9 +261,9 @@ export const OCCASIONS: readonly Occasion[] = [
     id: "dairy",
     route: "/catering/dairy",
     nameHe: "קייטרינג חלבי",
-    intentHe: "אירוע חלבי — קטגוריה שבה מטבח איטלקי הוא ההתאמה הטבעית.",
+    intentHe: "אירוע חלבי — קטגוריה שבה מטבח הוא ההתאמה הטבעית.",
     /* חיתוך תפריט, לא סוג אירוע: אותו קונה יכול להיות חברה, שמחה או חג. */
-    menu: { menuTag: "dairy", courses: ["antipasti", "pasta", "dessert"], requiresDietary: "dairy" },
+    menu: { menuTag: "dairy", courses: ["salads", "sides"], requiresDietary: "dairy" },
     serviceFormats: ["delivery", "buffet_on_site", "plated_staffed"],
     gate: { kind: "open" },
     /* אין זריעה: זריעת סוג אירוע כאן הייתה מתייגת ליד לא נכון, וזה כשל
@@ -278,7 +278,7 @@ export const OCCASIONS: readonly Occasion[] = [
     intentHe: "צריך אוכל היום — הקונה מחפש מי שיענה ויגיד כן או לא מיד.",
     serviceFormats: ["delivery"],
     /* אינו סוג אירוע ואינו מתויג ב־menus.ts — חיתוך גולמי בלבד. */
-    menu: { menuTag: null, courses: ["platters", "antipasti"], requiresDietary: null },
+    menu: { menuTag: null, courses: ["salads", "sides"], requiresDietary: null },
     /* רך: spec 01 P-15 — בלי שעת חיתום הדף עולה בלי טענת קאט־אוף,
        וקבוצת המודעות פשוט אינה רצה. שעת חיתום שלא נשמרת היא כשל מוניטין
        בלי דרך חזרה, בשוק שמונע מביקורות. */
@@ -293,7 +293,7 @@ export const OCCASIONS: readonly Occasion[] = [
     nameHe: "עמדת פסטה",
     intentHe: "עמדה שמבשלים בה במקום — מוצר, לא סוג אירוע.",
     serviceFormats: ["buffet_on_site"],
-    menu: { menuTag: null, courses: ["pasta"], requiresDietary: null },
+    menu: { menuTag: null, courses: ["sides"], requiresDietary: null },
     /* spec 01 P-16: הדף כולו חסום על מגבלות העמדה — טווח סועדים, חשמל,
        מים, מקום, והאם טבח נוסע. בלעדיהן אין כאן דף כן. */
     gate: { kind: "hard", requires: ["live_stations"] },

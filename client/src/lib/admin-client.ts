@@ -131,7 +131,7 @@ export type AdminErrorKind =
 const MESSAGE: Record<AdminErrorKind, string> = {
   unauthorized: "הטוקן שגוי. ודאו שהעתקתם אותו במלואו, בלי רווח בהתחלה או בסוף.",
   not_configured:
-    "המשתנה ADMIN_TOKEN אינו מוגדר בשרת, או קצר מ־24 תווים. זו תקלת תצורה בשרת ולא בטוקן שהקלדתם — צפייה בלידים מושבתת עד שיוגדר.",
+"המשתנה ADMIN_TOKEN אינו מוגדר בשרת, או קצר מ־24 תווים. זו תקלת תצורה בשרת ולא בטוקן שהקלדתם — צפייה בלידים מושבתת עד שיוגדר.",
   token_too_short: "הטוקן קצר מדי. ADMIN_TOKEN הוא לפחות 24 תווים.",
   invalid: "השרת דחה את העדכון.",
   not_found: "הליד לא נמצא. ייתכן שנמחק. רעננו את הרשימה.",
@@ -181,11 +181,11 @@ async function request<T>(
   let res: Response;
   try {
     res = await fetch(path, {
-      ...init,
+...init,
       cache: "no-store",
       credentials: "omit",
       headers: {
-        ...(init.headers ?? {}),
+...(init.headers ?? {}),
         Authorization: `Bearer ${clean}`,
       },
     });
@@ -344,7 +344,7 @@ export function formatDateTimeHe(
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-    ...(opts.dateOnly ? {} : { hour: "2-digit", minute: "2-digit" }),
+...(opts.dateOnly ? {} : { hour: "2-digit", minute: "2-digit" }),
   }).format(d);
 }
 
@@ -405,8 +405,8 @@ function csvStamp(iso: string | null): string {
     minute: "2-digit",
     hourCycle: "h23",
   })
-    .format(d)
-    .replace(", ", " ");
+.format(d)
+.replace(", ", " ");
 }
 
 function csvCell(value: unknown): string {
@@ -482,7 +482,7 @@ export function clickIdOf(lead: AdminLead): { name: string; value: string } | nu
 export function leadsToCsv(rows: AdminLead[]): string {
   const lines = [
     CSV_COLUMNS.map((c) => csvCell(c.header)).join(","),
-    ...rows.map((lead) => CSV_COLUMNS.map((c) => csvCell(c.value(lead))).join(",")),
+...rows.map((lead) => CSV_COLUMNS.map((c) => csvCell(c.value(lead))).join(",")),
   ];
   return `﻿${lines.join("\r\n")}\r\n`;
 }

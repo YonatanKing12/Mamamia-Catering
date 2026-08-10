@@ -19,7 +19,7 @@
  * ─────────────────────────────────────────────────────────────────────
  *  המיצוב — מה תוקן כאן, ולמה זה לא ניסוח
  * ─────────────────────────────────────────────────────────────────────
- * שורת התיאור תחת הלוגו אמרה «קייטרינג איטלקי משלושת המטבחים שלנו». זו
+ * שורת התיאור תחת הלוגו אמרה «קייטרינג בשרי כשר משלושת המטבחים שלנו». זו
  * בדיוק הטענה שהמיצוב (`content/business.ts`, 30 ביולי 2026) מוחק:
  * הקייטרינג מבושל במטבח של **אחת** מהמסעדות, ואיזו — לא נמסר. הקולופון
  * מופיע בכל מסלול באתר, ולכן זו הייתה הטענה השגויה בעותקים הרבים ביותר.
@@ -59,8 +59,8 @@ const LEGAL_NAV = [
 
 const COL_LABEL = "m-0 pb-3 font-sans text-2xs font-semibold tracking-[.09em] text-fg";
 const COL_LINK =
-  "block min-h-[44px] py-2 text-fg-muted no-underline " +
-  "transition-colors duration-state ease-house hover:text-fg";
+"block min-h-[44px] py-2 text-fg-muted no-underline " +
+"transition-colors duration-state ease-house hover:text-fg";
 
 /** השנה מחושבת ב־Asia/Jerusalem במפורש — לא לפי שעון המכשיר (§4.7). */
 const jerusalemYear = () =>
@@ -111,7 +111,7 @@ const BranchSentence = () => {
 
 export const Footer = () => {
   const branches = BRANCHES.map((branch) => ({
-    ...branch,
+...branch,
     address: pick(SLOTS.addresses, branch.id),
     hours: pick(SLOTS.openingHours, branch.id),
   }));
@@ -133,7 +133,7 @@ export const Footer = () => {
       <div className="wrap">
         <div
           className={cn(
-            "grid gap-x-grid gap-y-10 sm:grid-cols-2",
+"grid gap-x-grid gap-y-10 sm:grid-cols-2",
             hasBranchDetail
               ? "lg:grid-cols-[1.3fr_repeat(4,1fr)]"
               : "lg:grid-cols-[1.3fr_repeat(2,1fr)]",
@@ -142,7 +142,7 @@ export const Footer = () => {
           <div>
             <span className="block font-serif text-[1.35rem] font-bold text-fg">מאמא מיה</span>
             {/* מטבח אחד, לא שלושה. איזה — לא נמסר, ולכן אין כאן עיר. */}
-            <p className="m-0 pt-2 text-xs">קייטרינג איטלקי ממטבח של מסעדה פעילה</p>
+            <p className="m-0 pt-2 text-xs">קייטרינג בשרי כשר ממטבח של מסעדה פעילה</p>
           </div>
 
           {hasBranchDetail ? (

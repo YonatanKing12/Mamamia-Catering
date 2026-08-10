@@ -86,27 +86,27 @@ export function isKnownEventType(v: string, offerAtRestaurant = false): boolean 
  */
 export const GUEST_BAND_DISPLAY: Record<GuestBand, string> = {
   lt25: "עד 25",
-  "25_50": "בין 25 ל־50",
-  "50_100": "בין 50 ל־100",
-  "100_200": "בין 100 ל־200",
-  "200p": "200 ומעלה",
+"25_50": "בין 25 ל־50",
+"50_100": "בין 50 ל־100",
+"100_200": "בין 100 ל־200",
+"200p": "200 ומעלה",
 };
 
 /** רצפת הטווח — משמשת רק להשוואה מול מינימום/מקסימום שנמסרו. */
 export const GUEST_BAND_FLOOR: Record<GuestBand, number> = {
   lt25: 1,
-  "25_50": 25,
-  "50_100": 50,
-  "100_200": 100,
-  "200p": 200,
+"25_50": 25,
+"50_100": 50,
+"100_200": 100,
+"200p": 200,
 };
 
 export const GUEST_BAND_CEILING: Record<GuestBand, number | null> = {
   lt25: 25,
-  "25_50": 50,
-  "50_100": 100,
-  "100_200": 200,
-  "200p": null,
+"25_50": 50,
+"50_100": 100,
+"100_200": 200,
+"200p": null,
 };
 
 export const guestBandOptions = (): readonly GuestBand[] => GUEST_BANDS;
@@ -253,7 +253,7 @@ export const COPY = {
 
   /* spec 02 §3.8 — ניתן לאכיפה בעיצוב, בניגוד להצהרה שלא נאסוף קטינים. */
   ageAndMedicalNotice:
-    "הטופס מיועד לבני 18 ומעלה. אין למסור כאן מידע רפואי או פרטים של אנשים אחרים.",
+"הטופס מיועד לבני 18 ומעלה. אין למסור כאן מידע רפואי או פרטים של אנשים אחרים.",
 } as const;
 
 /** spec 02 §3.11 · spec 03 §10.9 — נוסחי השגיאה, מילה במילה. */

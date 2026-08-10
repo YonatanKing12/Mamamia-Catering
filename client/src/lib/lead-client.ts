@@ -122,7 +122,7 @@ type WithoutAttribution<T> = Omit<T, keyof Attribution>;
 /** מה שהבילדר מספק. הייחוס נוסף כאן, ולא באחריות הקומפוננטה. */
 export type QuoteSubmission = Omit<
   WithoutAttribution<QuoteLeadInput>,
-  "ref" | "contactChannel" | "dateFlexible" | "areaIsFreeText" | "selectedDishes" | "consentMarketing"
+"ref" | "contactChannel" | "dateFlexible" | "areaIsFreeText" | "selectedDishes" | "consentMarketing"
 > & {
   /** אם לא נמסר — נוצר כאן. */
   ref?: string;
@@ -262,7 +262,7 @@ export function capturePhoneClick(opts: {
 
   track("call_click", {
     call_location: opts.callLocation,
-    ...(typeof opts.isBusinessHours === "boolean" ? { is_business_hours: opts.isBusinessHours } : {}),
+...(typeof opts.isBusinessHours === "boolean" ? { is_business_hours: opts.isBusinessHours } : {}),
   });
 
   fireAndForget("/api/lead/phone", {
@@ -286,10 +286,10 @@ export function capturePhoneClick(opts: {
  */
 const WA_GUEST_BAND_LABELS: Record<GuestBand, string> = {
   lt25: "עד 25",
-  "25_50": "בין 25 ל־50",
-  "50_100": "בין 50 ל־100",
-  "100_200": "בין 100 ל־200",
-  "200p": "200 ומעלה",
+"25_50": "בין 25 ל־50",
+"50_100": "בין 50 ל־100",
+"100_200": "בין 100 ל־200",
+"200p": "200 ומעלה",
 };
 
 const BRANCH_NAMES: Record<string, string> = Object.fromEntries(
@@ -355,10 +355,10 @@ export function buildWaMessage(answers: WaMessageAnswers, ref: string): string {
 
     /* בלי תשובות בכלל, ההודעה היא פתיח ומזהה — ובלי שורה ריקה מיותמת */
     return [
-      "היי, הגעתי מהאתר ורוצה הצעה לקייטרינג.",
-      ...(facts.length ? ["", ...facts] : []),
-      "",
-      "מספר פנייה:",
+"היי, הגעתי מהאתר ורוצה הצעה לקייטרינג.",
+...(facts.length ? ["", ...facts] : []),
+"",
+"מספר פנייה:",
       ref,
     ].join("\n");
   };

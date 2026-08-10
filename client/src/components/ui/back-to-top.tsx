@@ -115,13 +115,13 @@ export const BackToTop = React.forwardRef<HTMLButtonElement, BackToTopProps>(
         data-print="hide"
         className={cn(
           /* מוצג רק היכן שהפס הדביק אינו — ראו הערת הראש. */
-          "fixed bottom-8 start-8 z-40 hidden min-[761px]:inline-flex",
-          "h-12 w-12 items-center justify-center print:hidden",
+"fixed bottom-8 start-8 z-40 hidden min-[761px]:inline-flex",
+"h-12 w-12 items-center justify-center print:hidden",
           /* rounded = 3px (§3.2). המסגרת היא --rule-control (3.69:1): היא
              הדבר היחיד שמזהה את הפקד, ולכן 1.4.11 חל עליה ו---rule אסורה. */
-          "rounded border border-solid border-rule-control bg-bg text-fg",
-          "transition-[color,border-color] duration-state ease-house",
-          "hover:border-accent hover:text-accent",
+"rounded border border-solid border-rule-control bg-bg text-fg",
+"transition-[color,border-color] duration-state ease-house",
+"hover:border-accent hover:text-accent",
           className,
         )}
         {...rest}

@@ -103,15 +103,15 @@ function AddToBrief({
         aria-pressed={added}
         onClick={() => onAdd(dish)}
         className={cn(
-          "inline-flex min-h-[44px] items-center gap-[.4rem] text-2xs font-semibold",
-          "underline decoration-rule underline-offset-[.22em] hover:decoration-accent",
-          "transition-opacity duration-state ease-house",
+"inline-flex min-h-[44px] items-center gap-[.4rem] text-2xs font-semibold",
+"underline decoration-rule underline-offset-[.22em] hover:decoration-accent",
+"transition-opacity duration-state ease-house",
           /* במכשיר הצבעה: מופיע על ריחוף, על מיקוד בתוך השורה, ועל מיקוד
              של הפקד עצמו. במגע — תמיד גלוי, כי אין hover. */
           !added &&
-            "[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 " +
-              "[@media(hover:hover)]:group-focus-within:opacity-100 " +
-              "[@media(hover:hover)]:focus-visible:opacity-100",
+"[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 " +
+"[@media(hover:hover)]:group-focus-within:opacity-100 " +
+"[@media(hover:hover)]:focus-visible:opacity-100",
           added ? "text-fg" : "text-fg-subtle",
         )}
       >
@@ -147,7 +147,7 @@ export function DishList({
   addLabel = "הוסיפו לתפריט שלי",
   addedLabel = "בתפריט שלכם",
   className,
-  ...rest
+...rest
 }: DishListProps) {
   if (dishes.length === 0) return null;
 
@@ -163,8 +163,8 @@ export function DishList({
           <li
             key={dish.id}
             className={cn(
-              "dish group m-0 grid items-baseline gap-x-[.9rem] py-[.7rem]",
-              "border-b border-dotted border-b-[color:var(--rule)] last:border-b-0",
+"dish group m-0 grid items-baseline gap-x-[.9rem] py-[.7rem]",
+"border-b border-dotted border-b-[color:var(--rule)] last:border-b-0",
               hasPrice ? "grid-cols-[1fr_auto]" : "grid-cols-[1fr]",
             )}
           >

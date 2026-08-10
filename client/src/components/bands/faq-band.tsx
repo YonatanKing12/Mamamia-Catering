@@ -113,9 +113,9 @@ export function FaqBand({
           >
             <summary
               className={cn(
-                "flex cursor-pointer list-none items-baseline justify-between gap-4",
-                "min-h-[56px] py-[1.3rem] text-start font-serif text-lg font-medium",
-                "hover:text-accent [&::-webkit-details-marker]:hidden",
+"flex cursor-pointer list-none items-baseline justify-between gap-4",
+"min-h-[56px] py-[1.3rem] text-start font-serif text-lg font-medium",
+"hover:text-accent [&::-webkit-details-marker]:hidden",
               )}
             >
               <span>{item.questionHe}</span>
@@ -123,10 +123,10 @@ export function FaqBand({
               <span
                 aria-hidden="true"
                 className={cn(
-                  "mt-[.45em] h-[9px] w-[9px] shrink-0 rotate-45",
-                  "border-b-chev border-e-chev border-solid border-b-[color:var(--accent)] border-e-[color:var(--accent)]",
-                  "transition-transform duration-slow ease-house",
-                  "group-open:rotate-[-135deg]",
+"mt-[.45em] h-[9px] w-[9px] shrink-0 rotate-45",
+"border-b-chev border-e-chev border-solid border-b-[color:var(--accent)] border-e-[color:var(--accent)]",
+"transition-transform duration-slow ease-house",
+"group-open:rotate-[-135deg]",
                 )}
               />
             </summary>

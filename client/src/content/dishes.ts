@@ -130,17 +130,18 @@ export type DishId = string;
  * סטייה כאן (למשל `desserts` ברבים) לא תיצור שגיאת קומפילציה אלא תגרום
  * לחתך הקינוחים בעמודי האירועים להחזיר אפס מנות בשקט.
  */
-export const COURSES = ["antipasti", "pasta", "mains", "dessert", "platters"] as const;
+export const COURSES = ["fish", "beef", "chicken", "vegetarian", "sides", "salads"] as const;
 
 export type Course = (typeof COURSES)[number];
 
 /** כותרות הקיבוץ, מילה במילה מ־01 §4 P-02. */
 export const COURSE_LABEL: Record<Course, string> = {
-  antipasti: "אנטיפסטי וכיבוד",
-  pasta: "פסטות",
-  mains: "מנות עיקריות",
-  dessert: "קינוחים",
-  platters: "מגשים",
+  fish: "דגים",
+  beef: "בקר",
+  chicken: "עוף",
+  vegetarian: "צמחוני",
+  sides: "תוספות",
+  salads: "סלטים",
 };
 
 /**
@@ -158,10 +159,10 @@ export const COURSE_LABEL: Record<Course, string> = {
  * ‎`/catering/dairy`; המזהה חייב להישאר זהה בשני הקבצים.
  */
 export const DIETARY_FLAGS = [
-  "vegetarian",
-  "vegan",
-  "gluten_free_ingredients",
-  "dairy",
+"vegetarian",
+"vegan",
+"gluten_free_ingredients",
+"dairy",
 ] as const;
 
 export type DietaryFlag = (typeof DIETARY_FLAGS)[number];
@@ -238,7 +239,219 @@ export interface Dish {
  * «רק כדי לראות איך זה נראה» — מנה מומצאת שמגיעה לענף ראשי היא מנה
  * שלקוח יזמין ושהמטבח לא יידע לבשל.
  */
-export const DISHES: readonly Dish[] = [];
+/**
+ * התפריט, כפי שנמסר על ידי הלקוח (תפריט מאמאמיה — טעמים של בית).
+ * השמות הם שמות המנות כלשונם בתפריט. תיאורים, תמונות ותוספות מחיר
+ * טרם נמסרו ולכן `null` — והקומפוננטות משמיטות אותם.
+ */
+export const DISHES: readonly Dish[] = [
+  /* ── fish ── */
+  { id: "fish-01", nameHe: "דג מרוקאי ברוטב", descriptionHe: null,
+    course: "fish", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "fish-02", nameHe: "שניצל דג מטוגן", descriptionHe: null,
+    course: "fish", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "fish-03", nameHe: "דג מרלוזה מטוגן", descriptionHe: null,
+    course: "fish", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "fish-04", nameHe: "קציצות דגים ברוטב", descriptionHe: null,
+    course: "fish", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "fish-05", nameHe: "דג נסיכה חריימה", descriptionHe: null,
+    course: "fish", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "fish-06", nameHe: "סלומון אפוי", descriptionHe: null,
+    course: "fish", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+
+  /* ── beef ── */
+  { id: "beef-01", nameHe: "צלי בקר", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-02", nameHe: "מוקפץ רוסבייף", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-03", nameHe: "מפרום ברוטב", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-04", nameHe: "קציצות בקר ברוטב", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-05", nameHe: "תבשיל גולש", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-06", nameHe: "קובה סלק/דלעת", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-07", nameHe: "קובה מטוגנת", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-08", nameHe: "מוסקה חצילים", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "beef-09", nameHe: "בסטיל", descriptionHe: null,
+    course: "beef", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+
+  /* ── chicken ── */
+  { id: "chicken-01", nameHe: "כרעיים בתנור", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-02", nameHe: "שניצלים מאמא", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-03", nameHe: "מוקפץ עוף", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-04", nameHe: "סטייק פרגית", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-05", nameHe: "קציצות עוף ברוטב", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-06", nameHe: "פרגית ממולא", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-07", nameHe: "חזה עוף ממולא", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-08", nameHe: "שווארמה פרגית", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-09", nameHe: "קבב על האש", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-10", nameHe: "מעורב ירושלמי", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+  { id: "chicken-11", nameHe: "חזה עוף בגריל", descriptionHe: null,
+    course: "chicken", cateringAvailable: true, dietary: [],
+    branches: [], menus: [] },
+
+  /* ── vegetarian ── */
+  { id: "vegetarian-01", nameHe: "קציצות ירק", descriptionHe: null,
+    course: "vegetarian", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "vegetarian-02", nameHe: "שווארמה צמחונית", descriptionHe: null,
+    course: "vegetarian", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+
+  /* ── sides ── */
+  { id: "sides-01", nameHe: "אורז לבן", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-02", nameHe: "אורז ירוק פרסי", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-03", nameHe: "אורז מקלובה", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-04", nameHe: "אורז מגדרה", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-05", nameHe: "אורז אדום", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-06", nameHe: "שעועית ירוקה ברוטב", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-07", nameHe: "שעועית לבנה ברוטב", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-08", nameHe: "שעועית צהובה עם ירקות", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-09", nameHe: "אנטיפסטי", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-10", nameHe: "זיתים מרוקאים ברוטב", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-11", nameHe: "קוסקוס ירקות", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-12", nameHe: "תפו״א אפוי בתנור", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-13", nameHe: "תפו״א פרוסות", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "sides-14", nameHe: "תפו״א סירה", descriptionHe: null,
+    course: "sides", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+
+  /* ── salads ── */
+  { id: "salads-01", nameHe: "חמוצי הבית", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-02", nameHe: "גזר בלימון", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-03", nameHe: "גזר מרוקאי", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-04", nameHe: "גרגירי חומוס", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-05", nameHe: "חומוס", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-06", nameHe: "טחינה", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-07", nameHe: "סחוג אדום", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-08", nameHe: "סחוג ירוק", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-09", nameHe: "פלפל חריף מטוגן", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-10", nameHe: "חצילים פיקנטי", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-11", nameHe: "חציל יווני", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-12", nameHe: "סלט ירקות קצוץ", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-13", nameHe: "סלט סלק", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-14", nameHe: "סלט תפו״א", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-15", nameHe: "מטבוחה", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-16", nameHe: "כרוב לבן בלימון", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-17", nameHe: "חציל במיונז", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-18", nameHe: "כרוב לבן במיונז", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-19", nameHe: "כרוב אדום במיונז", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-20", nameHe: "סלט בורגול", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-21", nameHe: "סלט טורקי", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-22", nameHe: "סלט עגבניות חריף", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+  { id: "salads-23", nameHe: "משוואיה עגבניות", descriptionHe: null,
+    course: "salads", cateringAvailable: true, dietary: ["vegetarian"],
+    branches: [], menus: [] },
+];
 
 /* ═══════════════════ שער התצוגה ═══════════════════ */
 
@@ -247,7 +460,19 @@ export const DISHES: readonly Dish[] = [];
  * ‎01 §6.2: `cateringAvailable === true && branches.length ≥ 1`.
  */
 export function isCateringDish(dish: Dish): boolean {
-  return dish.cateringAvailable === true && dish.branches.length > 0;
+  /*
+   * זמינות לקייטרינג היא תכונה של המנה, לא של סניף.
+   *
+   * הגרסה הקודמת דרשה גם `branches.length > 0`. הדרישה הזאת נולדה במודל
+   * המחוק שבו הקייטרינג יצא משלושה מטבחי מסעדה ומנה הייתה זמינה או לא
+   * זמינה לפי סניף. במיצוב הנכון הקייטרינג מבושל במטבח **אחד**, ואיזה —
+   * לא נמסר; `branches` ריק בכל 65 המנות, ולכן התנאי איפס את כל התפריט
+   * בשקט ודף התפריטים הוגש בלי מנה אחת.
+   *
+   * זה אותו סוג שריד כמו מסלולי `/kitchens/:slug` שנמחקו: שער שנשאר
+   * מהמודל הישן וחסם עובדה שכן בידינו.
+   */
+  return dish.cateringAvailable === true;
 }
 
 /** כל המנות שעברו את השער, בסדר שבו נמסרו. הרשימה שכל צרכן עובד מולה. */
@@ -270,8 +495,13 @@ export const cateringAvailableCount: number = CATERING_DISHES.length;
  * חסרת הגיבוי שהתג הדו־שכבתי נועד למנוע.
  */
 export function hasDishes(branch?: BranchId): boolean {
-  if (branch === undefined) return CATERING_DISHES.length > 0;
-  return CATERING_DISHES.some((d) => d.branches.includes(branch));
+  /*
+   * הארגומנט `branch` נשמר לתאימות קריאה, אך אינו מסנן: התפריט אינו
+   * מוגדר לפי סניף (ראו `isCateringDish`). קריאה עם סניף מחזירה את אותה
+   * תשובה כמו בלעדיו, ולא `false` שקרי.
+   */
+  void branch;
+  return CATERING_DISHES.length > 0;
 }
 
 /* ═══════════════════ רג'יסטר הפריסה (01 §3.3) ═══════════════════ */

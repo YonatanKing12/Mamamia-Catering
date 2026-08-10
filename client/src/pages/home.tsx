@@ -28,7 +28,7 @@
  *
  * שתי טענות שמותר לכתוב, ושתיהן דרך בורר ולא כליטרל:
  *   · הכשרות — `kashrutClauseHe("general")`, ההצהרה המסוכנת ביותר באתר.
- *   · המטבח — «מטבח של מסעדה איטלקית פעילה», **בלשון יחיד**. לא שלושה
+ *   · המטבח — «מטבח של מסעדה פעילה», **בלשון יחיד**. לא שלושה
  *     מטבחים, לא עיר כמוצא האוכל, לא «בואו לטעום הערב במסעדה».
  *     שמות המסעדות הם הקשר מותג בלבד; אין לגזור מהם היקף.
  *
@@ -93,7 +93,7 @@ const META = PAGE_META["/"];
  * גרסאות שאחת מהן תיסחף ל«שלושה מטבחים» בעריכה הבאה.
  */
 const KITCHEN_FACT_HE =
-  "הקייטרינג מבושל במטבח של מסעדה איטלקית פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח לצורך אירועים.";
+"הקייטרינג מבושל במטבח של מסעדה פעילה — מטבח שמבשל כל יום לסועדים שיושבים בו, ולא מטבח שנפתח לצורך אירועים.";
 
 /**
  * ‎`א, ב ו־ג` — שמות המסעדות אף פעם לא נכתבים ידנית בגוף העמוד, וגם
@@ -176,7 +176,7 @@ const WaNotice = ({ className }: { className?: string }) => (
     >
       מדיניות הפרטיות
     </a>
-    .
+.
   </p>
 );
 
@@ -242,7 +242,7 @@ const Hero = () => {
               <li
                 key={badge.key}
                 className={[
-                  "m-0 rounded-pill border border-solid px-[.9rem] py-[.4rem] text-2xs font-semibold",
+"m-0 rounded-pill border border-solid px-[.9rem] py-[.4rem] text-2xs font-semibold",
                   badge.accent
                     ? "border-accent text-accent"
                     : "border-rule-control text-fg-muted",
@@ -507,7 +507,7 @@ function faqItems(): { id: string; questionHe: string; answerHe: string | null }
       id: "faq-how",
       questionHe: "איך מזמינים?",
       answerHe:
-        "בונים את התפריט כאן באתר ומשאירים פרטים, או כותבים לנו בוואטסאפ. אנחנו חוזרים אליכם, עוברים על מספר הסועדים ועל התאריך, ושולחים הצעה בכתב.",
+"בונים את התפריט כאן באתר ומשאירים פרטים, או כותבים לנו בוואטסאפ. אנחנו חוזרים אליכם, עוברים על מספר הסועדים ועל התאריך, ושולחים הצעה בכתב.",
     },
     {
       id: "faq-lead-time",
@@ -590,12 +590,12 @@ export default function Home() {
   const occasionLinks = React.useMemo<NextStepLink[]>(
     () =>
       buildableOccasions()
-        .map((o) => ({
+.map((o) => ({
           href: o.route,
           titleHe: o.nameHe,
           descriptionHe: o.intentHe,
         }))
-        .filter((link) => {
+.filter((link) => {
           const path = normalizePath(link.href);
           return path !== "/" && isServedPath(path);
         }),
@@ -603,12 +603,12 @@ export default function Home() {
   );
 
   const order = [
-    "quote",
+"quote",
     cards.length > 0 ? "trust" : null,
     occasionLinks.length > 0 ? "occasions" : null,
-    "how",
+"how",
     answered.length > 0 ? "faq" : null,
-    "close",
+"close",
   ].filter((k): k is string => k !== null);
 
   const num = (key: string) => {

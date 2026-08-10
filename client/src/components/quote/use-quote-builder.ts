@@ -122,7 +122,7 @@ function readStoredDraft(): StoredDraft | null {
        ומפתח לא מוכר שנשמר פעם אינו זולג פנימה. */
     const a = parsed.answers as Partial<QuoteAnswers>;
     const answers: QuoteAnswers = {
-      ...EMPTY_ANSWERS,
+...EMPTY_ANSWERS,
       eventType: typeof a.eventType === "string" ? a.eventType : null,
       guestBand: (a.guestBand as GuestBand) ?? null,
       eventDate: typeof a.eventDate === "string" ? a.eventDate : "",
@@ -133,11 +133,11 @@ function readStoredDraft(): StoredDraft | null {
       serviceFormat: (a.serviceFormat as ServiceFormat) ?? null,
       dishes: Array.isArray(a.dishes)
         ? a.dishes
-            .filter(
+.filter(
               (d): d is DishSelection =>
                 !!d && typeof d.id === "string" && typeof d.name === "string",
             )
-            .slice(0, 40)
+.slice(0, 40)
         : [],
     };
     const step = ([1, 2, 3, 4, 5] as StepNumber[]).includes(parsed.step as StepNumber)
@@ -308,12 +308,12 @@ export function useQuoteBuilder(opts: UseQuoteBuilderOptions): QuoteBuilderApi {
       saveDraft({
         draftId,
         step: step as 1 | 2 | 3 | 4,
-        ...(answers.eventType ? { eventType: answers.eventType } : {}),
-        ...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
-        ...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
-        ...(answers.area ? { area: sanitiseAreaForDraft(answers.area) } : {}),
-        ...(answers.serviceFormat ? { serviceFormat: answers.serviceFormat } : {}),
-        ...(answers.dishes.length ? { selectedDishes: answers.dishes.map((d) => d.id) } : {}),
+...(answers.eventType ? { eventType: answers.eventType } : {}),
+...(answers.guestBand ? { guestBand: answers.guestBand } : {}),
+...(answers.eventDate ? { eventDate: answers.eventDate } : {}),
+...(answers.area ? { area: sanitiseAreaForDraft(answers.area) } : {}),
+...(answers.serviceFormat ? { serviceFormat: answers.serviceFormat } : {}),
+...(answers.dishes.length ? { selectedDishes: answers.dishes.map((d) => d.id) } : {}),
       });
     },
     [],
@@ -325,10 +325,10 @@ export function useQuoteBuilder(opts: UseQuoteBuilderOptions): QuoteBuilderApi {
       track("quote_step_complete", {
         step_index: step,
         step_id: STEP_ID_BY_NUMBER[step],
-        ...(answers.eventType ? { event_type: answers.eventType } : {}),
-        ...(answers.guestBand ? { guest_band: answers.guestBand } : {}),
-        ...(answers.area ? { area: answers.area } : {}),
-        ...(step === 3 ? { date_known: Boolean(answers.eventDate) } : {}),
+...(answers.eventType ? { event_type: answers.eventType } : {}),
+...(answers.guestBand ? { guest_band: answers.guestBand } : {}),
+...(answers.area ? { area: answers.area } : {}),
+...(step === 3 ? { date_known: Boolean(answers.eventDate) } : {}),
       });
     },
     [pushDraft],
@@ -338,7 +338,7 @@ export function useQuoteBuilder(opts: UseQuoteBuilderOptions): QuoteBuilderApi {
     (step: StepNumber) => {
       persistLocal(step, stateRef.current.answers, stateRef.current.draftId);
       setState((prev) => ({
-        ...prev,
+...prev,
         step,
         isBackwardVisit: visitedBackward.current.has(step),
         resumed: false,
@@ -374,7 +374,7 @@ export function useQuoteBuilder(opts: UseQuoteBuilderOptions): QuoteBuilderApi {
         const to = Math.min(from + 1, STEP_COUNT) as StepNumber;
         persistLocal(to, stateRef.current.answers, stateRef.current.draftId);
         setState((prev) => ({
-          ...prev,
+...prev,
           step: to,
           isBackwardVisit: visitedBackward.current.has(to),
           resumed: false,
@@ -434,7 +434,7 @@ export function useQuoteBuilder(opts: UseQuoteBuilderOptions): QuoteBuilderApi {
   const setAreaChip = React.useCallback(
     (label: string, branch: BranchId | null) => {
       chooseAndAdvance(4, {
-        ...stateRef.current.answers,
+...stateRef.current.answers,
         area: label,
         areaIsFreeText: false,
         branch,
@@ -527,7 +527,7 @@ export function useQuoteBuilder(opts: UseQuoteBuilderOptions): QuoteBuilderApi {
   }, [cancelAdvance]);
 
   return {
-    ...state,
+...state,
     setEventType,
     setGuestBand,
     setDate,

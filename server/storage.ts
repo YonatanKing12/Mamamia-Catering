@@ -77,10 +77,10 @@ export class DatabaseStorage implements IStorage {
 
   async updateLead(id: string, patch: Partial<InsertLead>) {
     const [row] = await this.d
-      .update(leads)
-      .set({ ...patch, updatedAt: new Date() })
-      .where(eq(leads.id, id))
-      .returning();
+.update(leads)
+.set({ ...patch, updatedAt: new Date() })
+.where(eq(leads.id, id))
+.returning();
     return row;
   }
 
@@ -97,11 +97,11 @@ export class DatabaseStorage implements IStorage {
   async findRecentLeadBySession(sessionId: string, withinMs: number) {
     const since = new Date(Date.now() - withinMs);
     const [row] = await this.d
-      .select()
-      .from(leads)
-      .where(and(eq(leads.sessionId, sessionId), dsql`${leads.createdAt} > ${since}`))
-      .orderBy(desc(leads.createdAt))
-      .limit(1);
+.select()
+.from(leads)
+.where(and(eq(leads.sessionId, sessionId), dsql`${leads.createdAt} > ${since}`))
+.orderBy(desc(leads.createdAt))
+.limit(1);
     return row;
   }
 
@@ -109,20 +109,20 @@ export class DatabaseStorage implements IStorage {
     const base = this.d.select().from(leads);
     const rows = q.status
       ? await base.where(dsql`${leads.status}::text = ${q.status}`)
-          .orderBy(desc(leads.createdAt)).limit(q.limit ?? 200).offset(q.offset ?? 0)
+.orderBy(desc(leads.createdAt)).limit(q.limit ?? 200).offset(q.offset ?? 0)
       : await base.orderBy(desc(leads.createdAt)).limit(q.limit ?? 200).offset(q.offset ?? 0);
     return rows;
   }
 
   async upsertDraft(draft: InsertQuoteDraft) {
     const [row] = await this.d
-      .insert(quoteDrafts)
-      .values(draft)
-      .onConflictDoUpdate({
+.insert(quoteDrafts)
+.values(draft)
+.onConflictDoUpdate({
         target: quoteDrafts.draftId,
         set: { ...draft, updatedAt: new Date() },
       })
-      .returning();
+.returning();
     return row;
   }
 
@@ -138,8 +138,8 @@ export class DatabaseStorage implements IStorage {
 
   async getLeadEvents(leadId: string) {
     return this.d.select().from(leadEvents)
-      .where(eq(leadEvents.leadId, leadId))
-      .orderBy(desc(leadEvents.createdAt));
+.where(eq(leadEvents.leadId, leadId))
+.orderBy(desc(leadEvents.createdAt));
   }
 
   async createBlogPost(p: InsertBlogPost) {
@@ -162,7 +162,7 @@ export class DatabaseStorage implements IStorage {
   }
   async getFeaturedTestimonials() {
     return this.d.select().from(testimonials)
-      .where(eq(testimonials.featured, true)).orderBy(desc(testimonials.createdAt));
+.where(eq(testimonials.featured, true)).orderBy(desc(testimonials.createdAt));
   }
   async createGalleryItem(g: InsertGalleryItem) {
     const [row] = await this.d.insert(galleryItems).values(g).returning();
@@ -173,7 +173,7 @@ export class DatabaseStorage implements IStorage {
   }
   async getFeaturedGalleryItems() {
     return this.d.select().from(galleryItems)
-      .where(eq(galleryItems.featured, true)).orderBy(desc(galleryItems.createdAt));
+.where(eq(galleryItems.featured, true)).orderBy(desc(galleryItems.createdAt));
   }
 }
 

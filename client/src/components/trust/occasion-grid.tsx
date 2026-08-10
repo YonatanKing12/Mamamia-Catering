@@ -79,11 +79,11 @@ function OccasionCard({ occasion }: { occasion: Occasion }) {
       href={occasion.route}
       onClick={handleClick}
       className={cn(
-        "group flex h-full flex-col gap-[.5rem] no-underline",
-        "rounded-card border border-solid border-[color:var(--rule-control)]",
-        "bg-bg-alt p-[1.05rem]",
-        "transition-[border-color,transform] duration-state ease-house",
-        "hover:border-accent hover:-translate-y-px motion-reduce:hover:translate-y-0",
+"group flex h-full flex-col gap-[.5rem] no-underline",
+"rounded-card border border-solid border-[color:var(--rule-control)]",
+"bg-bg-alt p-[1.05rem]",
+"transition-[border-color,transform] duration-state ease-house",
+"hover:border-accent hover:-translate-y-px motion-reduce:hover:translate-y-0",
       )}
     >
       <span className="flex items-center gap-[.45rem] text-md font-bold leading-tight text-fg group-hover:text-accent">
@@ -118,7 +118,7 @@ export function OccasionGrid({
   exclude,
   columns = 3,
   className,
-  ...rest
+...rest
 }: OccasionGridProps) {
   const items = React.useMemo(() => {
     const buildable = buildableOccasions();
@@ -127,8 +127,8 @@ export function OccasionGrid({
     /* `only` קובע גם סינון וגם סדר — «קודם עסקי» הוא החלטה של הדף. */
     const ordered = only
       ? only
-          .map((id) => buildable.find((o) => o.id === id))
-          .filter((o): o is Occasion => Boolean(o))
+.map((id) => buildable.find((o) => o.id === id))
+.filter((o): o is Occasion => Boolean(o))
       : buildable;
 
     return ordered.filter((o) => !excluded.has(o.id));

@@ -90,7 +90,7 @@ export function QuoteCta({
     <div
       id={id}
       className={cn(
-        "border-y border-solid border-y-[color:var(--rule)] bg-bg-form",
+"border-y border-solid border-y-[color:var(--rule)] bg-bg-form",
         className,
       )}
     >

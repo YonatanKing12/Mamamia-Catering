@@ -153,7 +153,7 @@ function ManualChannel({ className }: { className?: string }) {
           >
             <Num>{PHONE.display}</Num>
           </a>
-          .
+.
         </p>
       </Prose>
     </div>
@@ -275,7 +275,7 @@ export default function Unsubscribe() {
                 <a href="/privacy" className="underline underline-offset-[.22em]">
                   מדיניות הפרטיות
                 </a>
-                .
+.
               </p>
             </Prose>
           </div>

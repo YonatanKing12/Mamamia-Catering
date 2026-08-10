@@ -28,9 +28,9 @@ import { CONSENT_TEXT_VERSION, NOTICE_VERSION } from "./quote-config";
  * וברור שלא בשם מומצא. הרשימה מיוצאת כדי ששער בנייה יוכל לצרוך אותה.
  */
 export const COLLECTION_NOTICE_REQUIRED_SLOTS = [
-  "legalName",
-  "companyId",
-  "privacyEmail",
+"legalName",
+"companyId",
+"privacyEmail",
 ] as const;
 
 export function collectionNoticeMissingSlots(): string[] {
@@ -87,7 +87,7 @@ export function CollectionNotice({ id, className }: CollectionNoticeProps) {
       >
         מדיניות הפרטיות
       </a>
-      .
+.
     </p>
   );
 }
@@ -110,11 +110,11 @@ export const QuoteCheckbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         <span
           aria-hidden="true"
           className={
-            "mt-[.15em] grid h-[24px] w-[24px] shrink-0 place-items-center rounded border " +
-            "border-solid border-rule-control bg-bg text-bg transition-colors duration-state ease-house " +
-            "peer-checked:border-fg peer-checked:bg-fg " +
-            "peer-focus-visible:outline peer-focus-visible:outline-2 " +
-            "peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus"
+"mt-[.15em] grid h-[24px] w-[24px] shrink-0 place-items-center rounded border " +
+"border-solid border-rule-control bg-bg text-bg transition-colors duration-state ease-house " +
+"peer-checked:border-fg peer-checked:bg-fg " +
+"peer-focus-visible:outline peer-focus-visible:outline-2 " +
+"peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus"
           }
         >
           <svg viewBox="0 0 16 16" className="h-[12px] w-[12px]" focusable="false">
@@ -136,8 +136,8 @@ export const QuoteCheckbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 /* ═══════════════════ הסכמת דיוור ═══════════════════ */
 
 export const MARKETING_CONSENT_TEXT =
-  "אני מאשר/ת שמאמא מיה תשלח לי הצעות ועדכונים על קייטרינג בוואטסאפ, ב־SMS או במייל. " +
-  "ניתן להסיר את ההסכמה בכל הודעה.";
+"אני מאשר/ת שמאמא מיה תשלח לי הצעות ועדכונים על קייטרינג בוואטסאפ, ב־SMS או במייל. " +
+"ניתן להסיר את ההסכמה בכל הודעה.";
 
 export interface MarketingConsentProps {
   checked: boolean;
@@ -216,7 +216,7 @@ export function TermsStrip({ className }: { className?: string }) {
   return (
     <dl
       className={cn(
-        "hairline max-w-body grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 pt-4 text-3xs text-fg-subtle",
+"hairline max-w-body grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 pt-4 text-3xs text-fg-subtle",
         className,
       )}
     >

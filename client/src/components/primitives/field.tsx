@@ -28,9 +28,9 @@ import { cn } from "@/lib/utils";
 export interface FieldControlProps {
   id: string;
   required?: boolean;
-  "aria-required"?: true;
-  "aria-invalid"?: true;
-  "aria-describedby"?: string;
+"aria-required"?: true;
+"aria-invalid"?: true;
+"aria-describedby"?: string;
 }
 
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
@@ -54,15 +54,15 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(function Field
 
   /* השגיאה ראשונה ברשימה — סדר describedby הוא סדר ההקראה. */
   const describedBy = [error ? errorId : null, hint ? hintId : null]
-    .filter(Boolean)
-    .join(" ");
+.filter(Boolean)
+.join(" ");
 
   const control: FieldControlProps = {
     id,
     required: required || undefined,
-    "aria-required": required || undefined,
-    "aria-invalid": error ? true : undefined,
-    "aria-describedby": describedBy || undefined,
+"aria-required": required || undefined,
+"aria-invalid": error ? true : undefined,
+"aria-describedby": describedBy || undefined,
   };
 
   return (
@@ -103,14 +103,14 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(function Field
 /* ──────────────────── TextInput · Textarea ──────────────────── */
 
 const CONTROL =
-  "w-full rounded border border-solid border-rule-control bg-bg " +
-  "font-sans text-sm font-normal text-fg " +
-  "px-4 py-[.85rem] min-h-[48px] " +
-  "placeholder:text-fg-subtle " +
-  "transition-[border-color] duration-state ease-house " +
-  "focus:border-fg " +
-  "aria-[invalid=true]:border-2 aria-[invalid=true]:border-danger " +
-  "disabled:bg-bg-alt disabled:border-ink-4 disabled:text-ink-3 disabled:cursor-not-allowed";
+"w-full rounded border border-solid border-rule-control bg-bg " +
+"font-sans text-sm font-normal text-fg " +
+"px-4 py-[.85rem] min-h-[48px] " +
+"placeholder:text-fg-subtle " +
+"transition-[border-color] duration-state ease-house " +
+"focus:border-fg " +
+"aria-[invalid=true]:border-2 aria-[invalid=true]:border-danger " +
+"disabled:bg-bg-alt disabled:border-ink-4 disabled:text-ink-3 disabled:cursor-not-allowed";
 
 /**
  * סוג השדה קובע מקלדת, השלמה אוטומטית וכיוון — כל ארבעתם חסרים היום

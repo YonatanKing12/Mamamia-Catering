@@ -258,8 +258,13 @@ export const ROUTES: readonly RouteDef[] = [
     hasBuilder: true,
     indexable: true,
     inSitemap: true,
-    enabled: false,
-    blockedBy: ["catering_dishes"],
+    /*
+     * נפתח ב־31 ביולי 2026: הלקוח מסר את התפריט — 65 מנות בשש קטגוריות
+     * (דגים, בקר, עוף, צמחוני, תוספות, סלטים). השער `catering_dishes`
+     * היה תלוי בדיוק בזה, ו־`DISHES` כבר אינו ריק.
+     */
+    enabled: true,
+    blockedBy: [],
     launchReady: false,
     note: "דף תפריטים בלי מנה אחת הוא דף ריק. אין נפילה אחורה כמו ב־P-01.",
   },
@@ -430,12 +435,26 @@ export const ROUTES: readonly RouteDef[] = [
     stickyBar: "quote",
     ctaMode: "quote",
     hasBuilder: true,
-    indexable: true,
-    inSitemap: true,
-    enabled: true,
-    blockedBy: [],
+    indexable: false,
+    inSitemap: false,
+    /*
+     * ═══ סגור לצמיתות. לא שער שממתין לעובדה. ═══
+     *
+     * התפריט שנמסר (31 ביולי 2026) הוא **בשרי**: דגים, בקר, עוף, תוספות
+     * וסלטים. מטבח כשר בשרי אינו יכול להוציא קייטרינג חלבי, ולכן «קייטרינג
+     * חלבי» אינו מוצר חסר־נתונים — הוא מוצר שאינו קיים ואינו יכול להתקיים.
+     *
+     * הדף היה `enabled: true` בזמן ש־`DISHES` היה ריק, ולכן הוא הוגש. ברגע
+     * שהוזן התפריט הוא היה מתחיל להציג חתך חלבי מתוך מנות בשריות — סתירה
+     * הלכתית מול הקהל הרגיש ביותר, ובדיוק סוג הטענה ששורפת אמון ולא חוזרת.
+     *
+     * אין להפוך את זה חזרה. אם ייפתח בעתיד מערך חלבי נפרד עם הכשר משלו,
+     * זה מוצר אחר ומסלול אחר.
+     */
+    enabled: false,
+    blockedBy: ["catering_dishes"],
     launchReady: false,
-    note: "חתך תפריט, לא סוג אירוע. אין זריעת eventType.",
+    note: "סגור: התפריט בשרי וכשר. קייטרינג חלבי אינו יכול לצאת מאותו מטבח.",
   },
   {
     id: "P-15",

@@ -92,7 +92,7 @@ export function BriefCard({
   return (
     <div
       className={cn(
-        "rule-top max-w-confirm bg-bg-alt p-card",
+"rule-top max-w-confirm bg-bg-alt p-card",
         className,
       )}
     >
